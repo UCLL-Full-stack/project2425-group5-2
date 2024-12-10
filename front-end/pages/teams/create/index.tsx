@@ -1,7 +1,7 @@
-import Header from '@/components/header';
 import Head from 'next/head';
-import TeamCreator from '@/components/teams/TeamCreator';
+import TeamCreator from '@components/teams/TeamCreator';
 import { useRouter } from 'next/router';
+import Layout from '@components/layout/Layout';
 
 const TeamCreatePage: React.FC = () => {
     const router = useRouter();
@@ -11,15 +11,14 @@ const TeamCreatePage: React.FC = () => {
     };
 
     return (
-        <>
+        <Layout>
             <Head>
                 <title>Create Team - TeamTrack</title>
             </Head>
-            <Header />
             <main className="d-flex flex-column justify-content-center align-items-center">
                 <TeamCreator onTeamCreated={handleTeamCreated} />
             </main>
-        </>
+        </Layout>
     );
 };
 
