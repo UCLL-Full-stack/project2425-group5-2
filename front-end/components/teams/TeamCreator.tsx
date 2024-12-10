@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import TeamService from '@/services/TeamService';
-import { Team, Coach, Player } from '@/types';
-import CoachService from '@/services/CoachService';
-import PlayerService from '@/services/PlayerService';
+import TeamService from '@services/TeamService';
+import { Team, Coach, Player } from '@types';
+import CoachService from '@services/CoachService';
+import PlayerService from '@services/PlayerService';
 import router from 'next/router';
 
 type Props = {

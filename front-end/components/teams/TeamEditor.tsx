@@ -1,6 +1,6 @@
-import PlayerService from '@/services/PlayerService';
-import TeamService from '@/services/TeamService';
-import { Player, Team } from '@/types';
+import PlayerService from '@services/PlayerService';
+import TeamService from '@services/TeamService';
+import { Player, Team } from '../../types';
 import { useEffect, useState } from 'react';
 
 type Props = {

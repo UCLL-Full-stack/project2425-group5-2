@@ -44,11 +44,12 @@ const getTeamById = async (id: number): Promise<Team> => {
 };
 
 const createTeam = async (newTeam: Team): Promise<Team> => {
+    console.log("creating team", newTeam);
     try {
         const teamPrisma = await database.team.create({
             data: {
                 teamName: newTeam.getTeamName(),
-                coachId: newTeam.getCoach().getId()!,
+                coach: { connect: { id: newTeam.getCoach().getId() } },
                 players: {
                     connect: newTeam.getPlayers().map(player => ({ id: player.getId() }))
                 }
@@ -68,7 +69,7 @@ const updateTeam = async (updatedTeam: Team): Promise<Team> => {
             where: { id: updatedTeam.getId()! },
             data: {
                 teamName: updatedTeam.getTeamName(),
-                coachId: 7,
+                coachId: updatedTeam.getCoach().getId()!,
                 players: {
                     set: updatedTeam.getPlayers().map(player => ({ id: player.getId() }))
                 }
