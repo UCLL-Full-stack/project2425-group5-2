@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TeamService from '@services/TeamService';
-import { Team, Coach, Player } from '@types';
+import { Team, Coach, Player } from '../../types';
 import CoachService from '@services/CoachService';
 import PlayerService from '@services/PlayerService';
 import router from 'next/router';
@@ -119,7 +119,12 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
                     {player.firstName} {player.lastName}
                 </div>
             ))}
-            <button onClick={handleCreateTeam}>Create Team</button>
+            <button
+                onClick={handleCreateTeam}
+                className="bg-secondary hover:bg-accent hover:text-white transition-colors hover:shadow-heavy duration-200 py-2 px-4 rounded-md hover:bg-accent"
+            >
+                Create Team
+            </button>
         </div>
     );
 };

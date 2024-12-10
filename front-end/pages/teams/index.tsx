@@ -1,4 +1,3 @@
-import Nav from '@components/layout/Nav';
 import TeamOverviewTable from '../../components/teams/TeamOverviewTable';
 import TeamPlayers from '../../components/teams/TeamPlayers';
 import TeamService from '../../services/TeamService';
@@ -34,8 +33,10 @@ const Teams: React.FC = () => {
                 <title>Teams - TeamTrack</title>
             </Head>
             <div className="flex flex-col items-center justify-center space-y-8">
-                <h1 className='text-6xl font-bold text-center mt-3'>Teams</h1>
-                <section>
+                <h1 className="max-w-4xl mx-auto px-10 text-6xl font-bold text-center mt-3 border-b border-primary">
+                    Teams
+                </h1>
+                <section className='flex justify-between space-y-8'>
                     <h2>Team overview</h2>
                     {teams && <TeamOverviewTable teams={teams} selectTeam={setSelectedTeam} />}
                 </section>
@@ -45,8 +46,13 @@ const Teams: React.FC = () => {
                         {selectedTeam.players && <TeamPlayers players={selectedTeam.players} />}
                     </section>
                 )}
-                <button onClick={createTeamRoute}>Create Team</button>
-                </div>
+                <button
+                    onClick={createTeamRoute}
+                    className="bg-secondary hover:bg-accent text-white transition-colors hover:shadow-heavy duration-200 py-2 px-4 rounded-md hover:bg-accent"
+                >
+                    Create Team
+                </button>
+            </div>
         </Layout>
     );
 };
