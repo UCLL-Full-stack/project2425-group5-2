@@ -4,7 +4,7 @@ export type Player = {
     lastName: string;
     email: string;
     phoneNumber: string;
-}
+};
 
 export type Coach = {
     id: number;
@@ -12,11 +12,11 @@ export type Coach = {
     lastName: string;
     email: string;
     phoneNumber: string;
-}
+};
 
 export type Team = {
     id?: number;
     teamName: string;
     players: Player[];
     coach: Coach;
-}
+};

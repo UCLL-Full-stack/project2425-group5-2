@@ -1,38 +1,30 @@
-import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
-import Header from "@/components/header";
-
-const inter = Inter({ subsets: ["latin"] });
+import Head from 'next/head';
+import Image from 'next/image';
+import Layout from '../components/layout/Layout';
 
 const Home: React.FC = () => {
-  return (
-    <>
-      <Head>
-        <title>Home - TeamTrack</title>
-        <meta name="description" content="TeamTrack app" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Header />
-      <main className={styles.main}>
-        <span>
-          <Image 
-            src="/images/TeamTrackLogo.png"
-            alt="TeamTrack Logo"
-            width={200}
-            height={200}
-          />
-        </span>
-        <div>
-          <p className={styles.description}>
-            Welcome to TeamTrack! This is a simple app to track your team's performance, games, and players.
-          </p>
-        </div>
-      </main>
-    </>
-  );
+    return (
+        <Layout>
+            <Head>
+                <title>Home - TeamTrack</title>
+                <meta
+                    name="description"
+                    content="TeamTrack app for tracking your team's performance, games, and players"
+                />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
+            <div className="flex flex-col items-center justify-center space-y-8">
+                <h1 className="text-8xl text-center font-bold text-text border-b border-primary pb-5">
+                    Welcome to TeamTrack
+                </h1>
+                <p className="text-l text-center text-secondary max-w-2xl">
+                    TeamTrack is a simple app to help you monitor your team's performance, manage
+                    games, and keep track of players. Start organizing your team data today!
+                </p>
+            </div>
+        </Layout>
+    );
 };
 
 export default Home;
