@@ -1,3 +1,4 @@
+import { Coach } from '../model/coach';
 import { Team } from '../model/team';
 import database from './database';
 
@@ -67,14 +68,18 @@ const updateTeam = async (updatedTeam: Team): Promise<Team> => {
             where: { id: updatedTeam.getId()! },
             data: {
                 teamName: updatedTeam.getTeamName(),
-                coachId: updatedTeam.getCoach().getId()!,
+                coachId: 7,
                 players: {
                     set: updatedTeam.getPlayers().map(player => ({ id: player.getId() }))
                 }
             },
             include: { coach: true, players: true }
         });
-        return Team.from(teamPrisma);
+        return Team.from({
+            ...teamPrisma,
+            players: teamPrisma.players,
+            coach: teamPrisma.coach
+        });
     } catch (error) {
         console.error(error);
         throw new Error('Database error, see server log for details.');

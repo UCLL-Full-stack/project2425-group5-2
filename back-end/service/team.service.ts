@@ -60,7 +60,7 @@ const updateTeam = async ({ id, teamName, coach, players }: TeamInput): Promise<
 
     const updatedTeam = new Team({ id, teamName, coach, players });
 
-    return await teamDb.createTeam(updatedTeam);
+    return await teamDb.updateTeam(updatedTeam);
 };
 
 export default { getAllTeams, getTeamsByCoach, getTeamById, createTeam, updateTeam };
