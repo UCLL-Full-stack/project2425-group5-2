@@ -8,23 +8,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Player {
-  id          Int    @id @default(autoincrement())
+model User {
+  id          Int   @id @default(autoincrement())
   firstName   String
   lastName    String
   email       String @unique
   phoneNumber String @unique
+  password    String
+  role        String
+  player      Player?
+  coach       Coach?
+}
+
+model Player {
+  id          Int    @id @default(autoincrement())
   team        Team?  @relation(fields: [teamId], references: [id])
   teamId      Int?
+  user        User    @relation(fields: [userId], references: [id])
+  userId      Int     @unique
 }
 
 model Coach {
   id          Int    @id @default(autoincrement())
-  firstName   String
-  lastName    String
-  email       String @unique
-  phoneNumber String @unique
   team        Team[]
+  user        User   @relation(fields: [userId], references: [id])
+  userId      Int     @unique
 }
 
 model Team {

@@ -1,6 +1,6 @@
-import { Coach, Player } from "@prisma/client";
+import { Coach, Player } from '@prisma/client';
 
-type Role = 'coach' | 'player';
+type Role = 'admin' | 'player' | 'coach';
 
 type PlayerInput = {
     id?: number;
