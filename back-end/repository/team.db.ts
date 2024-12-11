@@ -1,5 +1,6 @@
 import { Coach } from '../model/coach';
 import { Team } from '../model/team';
+import { TeamInput } from '../types';
 import database from './database';
 
 const getAllTeams = async (): Promise<Team[]> => {
@@ -43,15 +44,14 @@ const getTeamById = async (id: number): Promise<Team> => {
     }
 };
 
-const createTeam = async (newTeam: Team): Promise<Team> => {
-    console.log("creating team", newTeam);
+const createTeam = async (team: Team): Promise<Team> => {
     try {
         const teamPrisma = await database.team.create({
             data: {
-                teamName: newTeam.getTeamName(),
-                coach: { connect: { id: newTeam.getCoach().getId() } },
+                teamName: team.getTeamName(),
+                coach: { connect: { id: team.getCoach().getId() } },
                 players: {
-                    connect: newTeam.getPlayers().map(player => ({ id: player.getId() }))
+                    connect: team.getPlayers().map(player => ({ id: player.getId() }))
                 }
             },
             include: { coach: true, players: true }
@@ -63,15 +63,15 @@ const createTeam = async (newTeam: Team): Promise<Team> => {
     }
 };
 
-const updateTeam = async (updatedTeam: Team): Promise<Team> => {
+const updateTeam = async (team: Team): Promise<Team> => {
     try {
         const teamPrisma = await database.team.update({
-            where: { id: updatedTeam.getId()! },
+            where: { id: team.getId() },
             data: {
-                teamName: updatedTeam.getTeamName(),
-                coachId: updatedTeam.getCoach().getId()!,
+                teamName: team.getTeamName(),
+                coach: { connect: { id: team.getCoach().getId() } },
                 players: {
-                    set: updatedTeam.getPlayers().map(player => ({ id: player.getId() }))
+                    set: team.getPlayers().map(player => ({ id: player.getId() }))
                 }
             },
             include: { coach: true, players: true }

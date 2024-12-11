@@ -1,6 +1,4 @@
-import { Coach } from "../model/coach";
-import { Player } from "../model/player";
-import { Team } from "../model/team";
+import { Coach, Player } from "@prisma/client";
 
 type Role = 'coach' | 'player';
 
@@ -23,15 +21,15 @@ type CoachInput = {
 type TeamInput = {
     id?: number;
     teamName: string;
-    players: Player[];
-    coach: Coach;   
+    players: PlayerInput[];
+    coach: CoachInput;
 };
 
 type GameInput = {
     id?: number;
     date: Date;
     result?: string;
-    teams: Team[];
+    teams: TeamInput[];
 };
 
 export { Role, PlayerInput, CoachInput, TeamInput, GameInput };

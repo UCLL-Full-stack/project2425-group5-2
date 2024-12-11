@@ -3,25 +3,30 @@ import { Team } from '../model/team';
 import coachDb from '../repository/coach.db';
 import teamDb from '../repository/team.db';
 import { TeamInput } from '../types/index';
+import { Coach } from '../model/coach';
+import { Player } from '../model/player';
 
 const getAllTeams = async (): Promise<Team[]> => {
     return (await teamDb.getAllTeams()) || [];
 };
 
-const createTeam = async ({ teamName, players, coach }: TeamInput): Promise<Team> => {
-    const allTeams = (await teamDb.getAllTeams()) || [];
-    for (var team of allTeams) {
-        if (teamName == team.getTeamName()) {
-            throw new Error('Team with that name already exists.');
-        }
-    }
-    if (players.length === 0) {
-        throw new Error('Team must have at least one player.');
-    }
+const createTeam = async (team: TeamInput): Promise<Team> => {
 
-    const createdTeam = new Team({ teamName, players, coach });
+    const players = team.players.map(playerInput => new Player(playerInput));
 
-    return await teamDb.createTeam(createdTeam);
+    const coach = new Coach(team.coach);
+
+    const newTeam = new Team({
+        teamName: team.teamName,
+        coach,
+        players,
+    })
+
+    const createdTeam = await teamDb.createTeam(newTeam);
+    if (!createdTeam) {
+        throw new Error('Team could not be created.');
+    }
+    return createdTeam;
 };
 
 const getTeamById = async (id: number): Promise<Team> => {
@@ -47,7 +52,7 @@ const getTeamsByCoach = async (coachId: number): Promise<Team[]> => {
     return teams;
 };
 
-const updateTeam = async ({ id, teamName, coach, players }: TeamInput): Promise<Team> => {
+const updateTeam = async (id: number, updatedTeam: TeamInput): Promise<Team> => {
     if (id == undefined) {
         throw new Error('An id is required.');
     }
@@ -58,9 +63,24 @@ const updateTeam = async ({ id, teamName, coach, players }: TeamInput): Promise<
         throw new Error('No team with that id exists.');
     }
 
-    const updatedTeam = new Team({ id, teamName, coach, players });
+    const players = updatedTeam.players.map(playerInput => new Player(playerInput));
 
-    return await teamDb.updateTeam(updatedTeam);
+    const coach = new Coach(updatedTeam.coach);
+
+    const updatedTeamInstance = new Team({
+        id,
+        teamName: updatedTeam.teamName,
+        coach,
+        players,
+    })
+
+    const updatedTeamInDb = await teamDb.updateTeam(updatedTeamInstance);
+
+    if (!updatedTeam) {
+        throw new Error('Team could not be updated.');
+    }
+
+    return updatedTeamInDb;
 };
 
 export default { getAllTeams, getTeamsByCoach, getTeamById, createTeam, updateTeam };
