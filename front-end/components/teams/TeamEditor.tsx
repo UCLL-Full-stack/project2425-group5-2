@@ -14,14 +14,29 @@ const TeamEditor: React.FC<Props> = ({ team, TeamUpdated }) => {
     const [teamName, setTeamName] = useState<string>(team.teamName);
     const [selectedPlayers, setSelectedPlayers] = useState<Array<Player>>(team.players);
     const [players, setPlayers] = useState<Array<Player>>([]);
+    const [assignedPlayers, setAssignedPlayers] = useState<Set<number>>(new Set());
     const [errors, setErrors] = useState<string[]>([]);
 
     const router = useRouter();
 
     useEffect(() => {
         const fetchData = async () => {
-            const playersData = await PlayerService.getAllPlayers();
-            setPlayers(await playersData.json());
+            const [playersData, teamData] = await Promise.all([
+                PlayerService.getAllPlayers(),
+                TeamService.getAllTeams(),
+            ]);
+
+            const allTeams = await teamData.json();
+            const allPlayers = await playersData.json();
+
+            setPlayers(allPlayers);
+
+            const assignedPlayers = new Set<number>();
+            allTeams.forEach((team: Team) => {
+                team.players.forEach((player: Player) => assignedPlayers.add(player.id));
+            });
+
+            setAssignedPlayers(assignedPlayers);
         };
         fetchData();
     }, []);
@@ -61,6 +76,18 @@ const TeamEditor: React.FC<Props> = ({ team, TeamUpdated }) => {
                 ? prevSelected.filter((p) => p.id !== player.id)
                 : [...prevSelected, player],
         );
+
+        if (assignedPlayers.has(player.id)) {
+            setAssignedPlayers((prev) => {
+                const newSet = new Set(prev);
+                if (selectedPlayers.find((p) => p.id === player.id)) {
+                    newSet.delete(player.id);
+                } else {
+                    newSet.add(player.id);
+                }
+                return newSet;
+            });
+        }
     };
 
     const goBack = () => {
@@ -122,10 +149,17 @@ const TeamEditor: React.FC<Props> = ({ team, TeamUpdated }) => {
                                         togglePlayerSelection(player);
                                         if (errors.length) setErrors([]);
                                     }}
+                                    disabled={
+                                        assignedPlayers.has(player.id) &&
+                                        !selectedPlayers.find((p) => p.id === player.id)
+                                    }
                                     className={`w-full py-2 px-3 rounded-md transition-all duration-300 flex items-center justify-between text-sm ${
-                                        selectedPlayers.find((p) => p.id === player.id)
-                                            ? 'bg-secondary text-white shadow-md'
-                                            : 'bg-white text-background hover:bg-accent hover:text-white'
+                                        assignedPlayers.has(player.id) &&
+                                        !selectedPlayers.find((p) => p.id === player.id)
+                                            ? 'bg-grey-300 text-white shadow-md cursor-not-allowed'
+                                            : selectedPlayers.find((p) => p.id === player.id)
+                                              ? 'bg-secondary text-white shadow-md'
+                                              : 'bg-white text-background hover:bg-accent hover:text-white'
                                     }`}
                                 >
                                     <span className="font-medium truncate">
@@ -138,7 +172,12 @@ const TeamEditor: React.FC<Props> = ({ team, TeamUpdated }) => {
                                         />
                                     ) : (
                                         <Square
-                                            className="text-secondary flex-shrink-0"
+                                            className={`${
+                                                assignedPlayers.has(player.id) &&
+                                                !selectedPlayers.find((p) => p.id === player.id)
+                                                    ? 'text-grey-300'
+                                                    : 'text-secondary'
+                                            } flex-shrink-0`}
                                             size={16}
                                         />
                                     )}

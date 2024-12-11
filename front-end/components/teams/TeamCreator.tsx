@@ -16,18 +16,32 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
     const [selectedPlayers, setSelectedPlayers] = useState<Array<Player>>([]);
     const [coaches, setCoaches] = useState<Array<Coach>>([]);
     const [players, setPlayers] = useState<Array<Player>>([]);
+    const [assignedPlayers, setAssignedPlayers] = useState<Set<number>>(new Set());
     const [errors, setErrors] = useState<string[]>([]);
 
     const router = useRouter();
 
     useEffect(() => {
         const fetchData = async () => {
-            const [coachesData, playersData] = await Promise.all([
+            const [coachesData, playersData, teamsData] = await Promise.all([
                 CoachService.getAllCoaches(),
                 PlayerService.getAllPlayers(),
+                TeamService.getAllTeams(),
             ]);
-            setCoaches(await coachesData.json());
-            setPlayers(await playersData.json());
+
+            const allCoaches = await coachesData.json();
+            const allPlayers = await playersData.json();
+            const allTeams = await teamsData.json();
+
+            setCoaches(allCoaches);
+            setPlayers(allPlayers);
+
+            const assignedPlayers = new Set<number>();
+            allTeams.forEach((team: Team) => {
+                team.players.forEach((player: Player) => assignedPlayers.add(player.id));
+            });
+
+            setAssignedPlayers(assignedPlayers);
         };
         fetchData();
     }, []);
@@ -63,6 +77,9 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
     };
 
     const togglePlayerSelection = (player: Player) => {
+        if (assignedPlayers.has(player.id)) {
+            return;
+        }
         setSelectedPlayers((prevSelected) =>
             prevSelected.find((p) => p.id === player.id)
                 ? prevSelected.filter((p) => p.id !== player.id)
@@ -171,10 +188,13 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
                                         togglePlayerSelection(player);
                                         if (errors.length) setErrors([]);
                                     }}
+                                    disabled={assignedPlayers.has(player.id)}
                                     className={`w-full py-2 px-3 rounded-md transition-all duration-300 flex items-center justify-between text-sm ${
-                                        selectedPlayers.find((p) => p.id === player.id)
-                                            ? 'bg-secondary text-white shadow-md'
-                                            : 'bg-white text-background hover:bg-accent hover:text-white'
+                                        assignedPlayers.has(player.id)
+                                            ? 'bg-grey-300 text-white shadow-md cursor-not-allowed'
+                                            : selectedPlayers.find((p) => p.id === player.id)
+                                              ? 'bg-secondary text-white shadow-md'
+                                              : 'bg-white text-background hover:bg-accent hover:text-white'
                                     }`}
                                 >
                                     <span className="font-medium truncate">
@@ -187,7 +207,11 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
                                         />
                                     ) : (
                                         <Square
-                                            className="text-secondary flex-shrink-0"
+                                            className={`${
+                                                assignedPlayers.has(player.id)
+                                                    ? 'text-grey-300'
+                                                    : 'text-secondary'
+                                            } flex-shrink-0`}
                                             size={16}
                                         />
                                     )}
