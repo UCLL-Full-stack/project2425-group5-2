@@ -1,17 +1,22 @@
+import React, { useEffect, useState } from 'react';
 import PlayerService from '@services/PlayerService';
 import TeamService from '@services/TeamService';
 import { Player, Team } from '../../types';
-import { useEffect, useState } from 'react';
+import { ArrowLeft, Square, CheckSquare } from 'lucide-react';
+import { useRouter } from 'next/router';
 
 type Props = {
     team: Team;
     TeamUpdated: () => void;
 };
 
-const TeamEditor: React.FC<Props> = ({ team, TeamUpdated }: Props) => {
+const TeamEditor: React.FC<Props> = ({ team, TeamUpdated }) => {
     const [teamName, setTeamName] = useState<string>(team.teamName);
     const [selectedPlayers, setSelectedPlayers] = useState<Array<Player>>(team.players);
     const [players, setPlayers] = useState<Array<Player>>([]);
+    const [errors, setErrors] = useState<string[]>([]);
+
+    const router = useRouter();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -22,7 +27,22 @@ const TeamEditor: React.FC<Props> = ({ team, TeamUpdated }: Props) => {
     }, []);
 
     const handleUpdateTeam = async () => {
-        if (!teamName || !team.id) return;
+        const validationErrors: string[] = [];
+
+        if (!teamName) {
+            validationErrors.push('Team Name is required');
+        }
+
+        if (selectedPlayers.length < 1) {
+            validationErrors.push('At least one player is required');
+        }
+
+        if (validationErrors.length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
+
+        if (!team.id) return;
 
         const updatedTeam: Team = {
             id: team.id,
@@ -43,32 +63,101 @@ const TeamEditor: React.FC<Props> = ({ team, TeamUpdated }: Props) => {
         );
     };
 
-    const oldTeamName = team.teamName;
+    const goBack = () => {
+        router.push('/teams');
+    };
 
     return (
-        <div>
-            <h2>Edit Team - {oldTeamName}</h2>
-            <input
-                type="text"
-                placeholder="New Team Name"
-                value={teamName}
-                onChange={(e) => setTeamName(e.target.value)}
-                required
-            />
-
-            <h3>Select Players</h3>
-            {players.map((player) => (
-                <div key={player.id}>
-                    <input
-                        type="checkbox"
-                        checked={!!selectedPlayers.find((p) => p.id === player.id)}
-                        onChange={() => togglePlayerSelection(player)}
-                    />
-                    {player.firstName} {player.lastName}
+        <div className="bg-gradient-to-br from-primary to-accent text-text p-6 rounded-lg shadow-xl max-w-4xl mx-auto">
+            <div className="flex items-center mb-8">
+                <button
+                    onClick={goBack}
+                    className="p-2 bg-secondary hover:bg-red-500 text-white rounded-full transition-all duration-300 transform hover:scale-110"
+                >
+                    <ArrowLeft size={24} />
+                </button>
+                <div className="flex-grow text-center">
+                    <h1 className="text-4xl font-extrabold mb-2 text-white tracking-tight">
+                        Edit Team
+                    </h1>
+                    <h2 className="text-2xl font-semibold text-secondary">{team.teamName}</h2>
                 </div>
-            ))}
+            </div>
+            <form className="space-y-6">
+                <div className="w-full">
+                    <label htmlFor="teamName" className="block text-xl font-bold mb-2 text-white">
+                        New Team Name
+                    </label>
+                    <input
+                        id="teamName"
+                        type="text"
+                        placeholder="Enter new team name"
+                        value={teamName}
+                        onChange={(e) => {
+                            setTeamName(e.target.value);
+                            if (errors.length) setErrors([]);
+                        }}
+                        className="w-full px-4 py-3 bg-white text-background text-lg rounded-md focus:outline-none focus:ring-2 focus:ring-secondary transition-all duration-300 shadow-md"
+                    />
+                </div>
 
-            <button onClick={handleUpdateTeam}>Update Team</button>
+                {errors.length > 0 && (
+                    <div className="bg-red-500 text-white p-4 rounded-md text-center w-full animate-pulse">
+                        {errors.map((error, index) => (
+                            <p key={index} className="font-semibold">
+                                {error}
+                            </p>
+                        ))}
+                    </div>
+                )}
+
+                <div className="w-full">
+                    <h3 className="text-2xl font-bold mb-4 text-white">Select Players</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-2">
+                        {players.map((player) => (
+                            <div key={player.id}>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        togglePlayerSelection(player);
+                                        if (errors.length) setErrors([]);
+                                    }}
+                                    className={`w-full py-2 px-3 rounded-md transition-all duration-300 flex items-center justify-between text-sm ${
+                                        selectedPlayers.find((p) => p.id === player.id)
+                                            ? 'bg-secondary text-white shadow-md'
+                                            : 'bg-white text-background hover:bg-accent hover:text-white'
+                                    }`}
+                                >
+                                    <span className="font-medium truncate">
+                                        {player.firstName} {player.lastName}
+                                    </span>
+                                    {selectedPlayers.find((p) => p.id === player.id) ? (
+                                        <CheckSquare
+                                            className="text-white flex-shrink-0"
+                                            size={16}
+                                        />
+                                    ) : (
+                                        <Square
+                                            className="text-secondary flex-shrink-0"
+                                            size={16}
+                                        />
+                                    )}
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="flex justify-center pt-6">
+                    <button
+                        type="button"
+                        onClick={handleUpdateTeam}
+                        className="px-8 py-3 bg-secondary text-white text-lg font-semibold rounded-md transition-all duration-300 hover:bg-accent hover:shadow-lg transform hover:scale-105"
+                    >
+                        Update Team
+                    </button>
+                </div>
+            </form>
         </div>
     );
 };

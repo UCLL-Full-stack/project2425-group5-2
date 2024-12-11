@@ -9,18 +9,19 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                text: '#000000',
-                background: '#dbdbff',
-                primary: '#9e7cdf',
-                secondary: '#190fa9',
-                accent: '#514dd1',
-            },
+                'text': '#e1ebee',
+                'background': '#001e27',
+                'primary': '#9bcede',
+                'secondary': '#1e677e',
+                'accent': '#34b5de',
+               },
+               
             fontFamily: {
                 sans: ['Inter', 'sans-serif'],
             },
             boxShadow: {
-                'heavy': '0px 10px 20px rgba(0, 0, 0, 0.3)',
-              },
+                heavy: '0px 10px 20px rgba(0, 0, 0, 0.3)',
+            },
         },
     },
     variants: {

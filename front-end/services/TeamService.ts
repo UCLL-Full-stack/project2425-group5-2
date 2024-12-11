@@ -1,4 +1,4 @@
-import { Team } from '@/types';
+import { Team } from '../types';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 

@@ -14,7 +14,7 @@ const Home: React.FC = () => {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div className="flex flex-col items-center justify-center space-y-8">
+            <div className="flex flex-col items-center justify-center space-y-8 py-12">
                 <h1 className="text-8xl text-center font-bold text-text border-b border-primary pb-5">
                     Welcome to TeamTrack
                 </h1>

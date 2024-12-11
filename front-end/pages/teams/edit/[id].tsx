@@ -5,6 +5,7 @@ import { Team } from '../../../types';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import Layout from '@components/layout/Layout';
 
 const editTeamPage: React.FC = () => {
     const [team, setTeam] = useState<Team | null>(null);
@@ -27,16 +28,14 @@ const editTeamPage: React.FC = () => {
     };
 
     return (
-        <>
+        <Layout>
             <Head>
                 <title>Edit Team - TeamTrack</title>
             </Head>
-            <Nav />
             <main>
-                <h1>Edit Team</h1>
                 {team && <TeamEditor team={team} TeamUpdated={handleTeamUpdated} />}
             </main>
-        </>
+        </Layout>
     );
 };
 
