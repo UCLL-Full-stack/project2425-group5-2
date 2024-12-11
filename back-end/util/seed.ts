@@ -14,12 +14,11 @@ const main = async () => {
 
     const admin = await prisma.user.create({
         data: {
-            id: 1,
             firstName: 'Admin',
             lastName: 'Admin',
             password: await bcrypt.hash('Admin123!', 12),
             email: 'admin@teamtrack.be',
-            phoneNumber: '0497000000',
+            phoneNumber: '0497000030',
             role: 'admin',
         },
     });
@@ -28,12 +27,12 @@ const main = async () => {
         data: {
             user: {
                 create: {
-                    id: 2,
                     firstName: 'Mark',
                     lastName: 'Zuckerberg',
                     password: await bcrypt.hash('Mark123!', 12),
-                    email: 'testcoach@ucll.be',
+                    email: 'markzuckerberg@teamtrack.be',
                     phoneNumber: '0497000000',
+                    role: 'coach',
                 },
             },
         },
@@ -43,12 +42,12 @@ const main = async () => {
         data: {
             user: {
                 create: {
-                    id: 3,
                     firstName: 'John',
                     lastName: 'Doe',
                     password: await bcrypt.hash('John123!', 12),
-                    email: 'johndoe@ucll.be',
+                    email: 'johndoe@teamtrack.be',
                     phoneNumber: '0497000007',
+                    role: 'coach',
                 },
             },
         },
@@ -58,12 +57,12 @@ const main = async () => {
         data: {
             user: {
                 create: {
-                    id: 4,
                     firstName: 'Wayne',
                     lastName: 'Rooney',
                     password: await bcrypt.hash('Wayne123!', 12),
-                    email: 'testplayer@ucll.be',
+                    email: 'waynerooney@teamtrack.be',
                     phoneNumber: '0497000001',
+                    role: 'player',
                 },
             },
         },
@@ -73,12 +72,12 @@ const main = async () => {
         data: {
             user: {
                 create: {
-                    id: 5,
                     firstName: 'Cristiano',
                     lastName: 'Ronaldo',
                     password: await bcrypt.hash('Cristiano123!', 12),
-                    email: 'cristianoronaldo@ucll.be',
+                    email: 'cristianoronaldo@teamtrack.be',
                     phoneNumber: '0497000002',
+                    role: 'player',
                 },
             },
         },
@@ -88,12 +87,12 @@ const main = async () => {
         data: {
             user: {
                 create: {
-                    id: 6,
                     firstName: 'Lionel',
                     lastName: 'Messi',
                     password: await bcrypt.hash('Lionel132!', 12),
-                    email: 'lionelmessi@ucll.be',
+                    email: 'lionelmessi@teamtrack.be',
                     phoneNumber: '0497000003',
+                    role: 'player',
                 },
             },
         },
@@ -103,12 +102,12 @@ const main = async () => {
         data: {
             user: {
                 create: {
-                    id: 7,
                     firstName: 'Rajo',
                     lastName: 'Timmermans',
                     password: await bcrypt.hash('Rajo123!', 12),
-                    email: 'rajotimmermans@ucll.be',
+                    email: 'rajotimmermans@teamtrack.be',
                     phoneNumber: '0497000004',
+                    role: 'player',
                 },
             },
         },
@@ -118,12 +117,12 @@ const main = async () => {
         data: {
             user: {
                 create: {
-                    id: 8,
                     firstName: 'Sander',
                     lastName: 'Coemans',
                     password: await bcrypt.hash('Sander123!', 12),
-                    email: 'sandercoemans@ucll.be',
+                    email: 'sandercoemans@teamtrack.be',
                     phoneNumber: '0497000005',
+                    role: 'player',
                 },
             },
         },
@@ -133,12 +132,12 @@ const main = async () => {
         data: {
             user: {
                 create: {
-                    id: 9,
                     firstName: 'Eden',
                     lastName: 'Hazard',
                     password: await bcrypt.hash('Eden123!', 12),
-                    email: 'edenhazard@ucll.be',
+                    email: 'edenhazard@teamtrack.be',
                     phoneNumber: '0497000006',
+                    role: 'player',
                 },
             },
         },
