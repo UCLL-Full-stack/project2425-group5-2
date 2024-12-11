@@ -1,8 +1,9 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/twPj_hbU)
-# Project template
+# TeamTrack
 
-To get started, open the Readme.md files in the analysis, back-end and front-end folders.
+With TeamTrack we want to be able to manage soccer teams. You will be able
+to register as a player or coach. Coaches can make teams and add players to it. With this
+app, individual games can be scheduled and players can view their statistics for the games
+they played.
 
-Change this readme file to describe your project, change the title and fill in your name below.
-
-### \<Student 1 name\> / \<Student 2 name\>
+### Sander Coemans / Rajo Timmermans
