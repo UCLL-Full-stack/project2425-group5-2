@@ -20,3 +20,5 @@ export type Team = {
     players: Player[];
     coach: Coach;
 };
+
+export type Role = 'admin' | 'player' | 'coach';

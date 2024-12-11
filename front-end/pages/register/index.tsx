@@ -1,16 +1,16 @@
 import Head from 'next/head';
-import Login from '../../components/auth/Login';
+import Register from '../../components/auth/Register';
 import Layout from '../../components/layout/Layout';
 
-const LoginPage = () => {
+const RegisterPage = () => {
     return (
       <Layout>
         <Head>
           <title>Login</title>
         </Head>
-        <Login/>
+        <Register/>
       </Layout>
     );
   };
   
-  export default LoginPage;
+  export default RegisterPage;
