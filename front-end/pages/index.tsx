@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import Image from 'next/image';
 import Layout from '../components/layout/Layout';
 
 const Home: React.FC = () => {
