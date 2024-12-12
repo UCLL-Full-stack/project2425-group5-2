@@ -6,7 +6,7 @@ import database from './database';
 const getAllTeams = async (): Promise<Team[]> => {
     try {
         const teamPrisma = await database.team.findMany({
-            include: { coach: true, players: true }
+            include: { coach: {include: {user: true}}, players: {include: {user: true}} }
         });
         return teamPrisma.map((team: any) => Team.from(team));
     } catch (error) {
@@ -19,7 +19,7 @@ const getTeamsByCoach = async (coachId: number): Promise<Team[]> => {
     try {
         const teamsPrisma = await database.team.findMany({
             where: { coachId },
-            include: { coach: true, players: true }
+            include: { coach: {include: {user: true}}, players: {include: {user: true}} }
         });
         return teamsPrisma.map((team: any) => Team.from(team));
     } catch (error) {
@@ -32,12 +32,12 @@ const getTeamById = async (id: number): Promise<Team> => {
     try {
         const teamPrisma = await database.team.findUnique({
             where: { id },
-            include: { coach: true, players: true }
+            include: { coach: { include: { user: true } }, players: { include: {user: true} } },
         });
         if (!teamPrisma) {
             throw new Error('Team not found');
         }
-        return Team.from(teamPrisma);
+        return Team.from({...teamPrisma, coach: teamPrisma.coach, players: teamPrisma.players});
     } catch (error) {
         console.error(error);
         throw new Error('Database error, see server log for details.');
@@ -54,9 +54,13 @@ const createTeam = async (team: Team): Promise<Team> => {
                     connect: team.getPlayers().map(player => ({ id: player.getId() }))
                 }
             },
-            include: { coach: true, players: true }
+            include: { coach: { include: { user: true } }, players: {include: {user: true}} }
         });
-        return Team.from(teamPrisma);
+        return Team.from({
+            ...teamPrisma,
+            players: teamPrisma.players,
+            coach: teamPrisma.coach
+        });
     } catch (error) {
         console.error(error);
         throw new Error('Database error, see server log for details.');
@@ -74,7 +78,7 @@ const updateTeam = async (team: Team): Promise<Team> => {
                     set: team.getPlayers().map(player => ({ id: player.getId() }))
                 }
             },
-            include: { coach: true, players: true }
+            include: { coach: { include: { user: true } }, players: { include: {user: true}} }
         });
         return Team.from({
             ...teamPrisma,

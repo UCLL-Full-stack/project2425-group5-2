@@ -4,18 +4,12 @@ type Role = 'admin' | 'player' | 'coach';
 
 type PlayerInput = {
     id?: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneNumber: string;
+    user: UserInput;
 };
 
 type CoachInput = {
     id?: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneNumber: string;
+    user: UserInput;
 };
 
 type TeamInput = {
@@ -32,4 +26,21 @@ type GameInput = {
     teams: TeamInput[];
 };
 
-export { Role, PlayerInput, CoachInput, TeamInput, GameInput };
+type UserInput = {
+    id?: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    password: string;
+    role: Role;
+};
+
+type AuthenticationResponse = {
+    token: string;
+    email: string;
+    fullname: string;
+    role: Role;
+};
+
+export { Role, PlayerInput, CoachInput, TeamInput, GameInput, UserInput, AuthenticationResponse };

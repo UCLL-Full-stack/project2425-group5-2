@@ -49,7 +49,9 @@ CREATE TABLE "Game" (
 -- CreateTable
 CREATE TABLE "_GameToTeam" (
     "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL
+    "B" INTEGER NOT NULL,
+
+    CONSTRAINT "_GameToTeam_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateIndex
@@ -63,9 +65,6 @@ CREATE UNIQUE INDEX "Player_userId_key" ON "Player"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Coach_userId_key" ON "Coach"("userId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_GameToTeam_AB_unique" ON "_GameToTeam"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_GameToTeam_B_index" ON "_GameToTeam"("B");

@@ -81,32 +81,4 @@ coachRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) 
     }
 });
 
-/**
- * @swagger
- * /coaches:
- *   post:
- *     summary: Create a new coach.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Coach'
- *     responses:
- *       201:
- *         description: A JSON object of the new coach.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Coach'
- */
-coachRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const coach = await coachService.createCoach(req.body);
-        res.status(201).json(coach);
-    } catch (error: any) {
-        res.status(400).json({ status: 'error', errorMessage: error.message });
-    }
-});
-
 export { coachRouter };

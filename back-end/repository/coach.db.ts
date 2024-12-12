@@ -4,7 +4,7 @@ import database from './database';
 const getAllCoaches = async (): Promise<Coach[]> => {
     try {
         const coachPrisma = await database.coach.findMany({
-            include: { team: true }
+            include: { team: true, user: true }
         });
         return coachPrisma.map((coach) => Coach.from(coach));
     } catch (error) {
@@ -17,7 +17,7 @@ const getCoachById = async (id: number): Promise<Coach> => {
     try {
         const coachPrisma = await database.coach.findUnique({
             where: { id },
-            include: { team: true }
+            include: { team: true, user: true }
         });
         if (!coachPrisma) {
             throw new Error('Coach not found');
@@ -29,17 +29,26 @@ const getCoachById = async (id: number): Promise<Coach> => {
     }
 };
 
-const createCoach = async (coach: Coach): Promise<Coach> => {
+const createCoach = async (newCoach: Coach): Promise<Coach> => {
+    const user = newCoach.getUser();
+    const id = newCoach.getId();
     try {
-        const coachPrisma = await database.coach.create({
+        const playerPrisma = await database.player.create({
             data: {
-                firstName: coach.getFirstName(),
-                lastName: coach.getLastName(),
-                email: coach.getEmail(),
-                phoneNumber: coach.getPhoneNumber()
-            }
+                user: {
+                    create: {
+                        firstName: user.getFirstName(),
+                        lastName: user.getLastName(),
+                        email: user.getEmail(),
+                        phoneNumber: user.getPhoneNumber(),
+                        password: user.getPassword(),
+                        role: user.getRole(),
+                    },
+                },
+            },
+            include: { user: true }
         });
-        return Coach.from(coachPrisma);
+        return Coach.from(playerPrisma);
     } catch (error) {
         console.error(error);
         throw new Error('Database error, see server log for details.');

@@ -4,6 +4,7 @@ import {
     Coach as CoachPrisma,
     Player as PlayerPrisma,
     Team as TeamPrisma,
+    User as UserPrisma,
 } from '@prisma/client';
 
 export class Team {
@@ -76,12 +77,12 @@ export class Team {
         }
     }
 
-    static from({ id, teamName, players, coach }: TeamPrisma & { players: PlayerPrisma[]; coach: CoachPrisma }) {
+    static from({ id, teamName, players, coach }: TeamPrisma & { players: PlayerPrisma[] } & { coach: CoachPrisma & { user: UserPrisma } }) {
         return new Team({
             id,
             teamName,
             players: players.map((player: any) => new Player(player)),
-            coach: new Coach(coach),
+            coach: Coach.from(coach),
         });
     }
 }

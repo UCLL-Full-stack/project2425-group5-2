@@ -163,7 +163,7 @@ const TeamEditor: React.FC<Props> = ({ team, TeamUpdated }) => {
                                     }`}
                                 >
                                     <span className="font-medium truncate">
-                                        {player.firstName} {player.lastName}
+                                        {player.user.firstName} {player.user.lastName}
                                     </span>
                                     {selectedPlayers.find((p) => p.id === player.id) ? (
                                         <CheckSquare

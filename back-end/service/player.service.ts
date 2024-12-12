@@ -1,4 +1,5 @@
 import { Player } from '../model/player';
+import { User } from '../model/user';
 import playerDb from '../repository/player.db';
 import { PlayerInput } from '../types';
 
@@ -25,7 +26,7 @@ const createPlayer = async (playerInput: PlayerInput): Promise<Player> => {
         throw new Error(`Player with id ${playerInput.id} already exists.`);
     }
 
-    const newPlayer = new Player(playerInput);
+    const newPlayer = new Player({id: playerInput.id, user: new User(playerInput.user)});
     return await playerDb.createPlayer(newPlayer);
 };
 

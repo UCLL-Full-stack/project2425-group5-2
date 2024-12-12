@@ -1,17 +1,11 @@
 export type Player = {
     id: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneNumber: string;
+    user: User;
 };
 
 export type Coach = {
     id: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneNumber: string;
+    user: User;
 };
 
 export type Team = {
@@ -20,5 +14,13 @@ export type Team = {
     players: Player[];
     coach: Coach;
 };
+
+export type User = {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+}
 
 export type Role = 'admin' | 'player' | 'coach';

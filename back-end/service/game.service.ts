@@ -4,6 +4,7 @@ import { GameInput } from '../types';
 import { Player } from '../model/player';
 import { Coach } from '../model/coach';
 import { Team } from '../model/team';
+import { User } from '../model/user';
 
 const getAllGames = async (): Promise<Game[]> => {
     return await gameDb.getAllGames();
@@ -29,8 +30,8 @@ const createGame = async (gameInput: GameInput): Promise<Game> => {
     }
 
     const teams = gameInput.teams.map(teamInput => {
-        const players = teamInput.players.map(playerInput => new Player(playerInput));
-        const coach = new Coach(teamInput.coach);
+        const players = teamInput.players.map(playerInput => new Player({id: playerInput.id, user: new User(playerInput.user)}));
+        const coach = new Coach({id: teamInput.coach.id, user: new User(teamInput.coach.user)});
         
         return new Team({
             id: teamInput.id,

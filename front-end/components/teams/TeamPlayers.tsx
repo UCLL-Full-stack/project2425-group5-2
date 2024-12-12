@@ -30,10 +30,10 @@ const TeamPlayers: React.FC<Props> = ({ players }) => {
                             >
                                 <td className="px-6 py-4 text-sm text-gray-900 flex items-center">
                                     <UserCircle size={20} className="mr-2 text-secondary" />
-                                    {player.firstName}
+                                    {player.user.firstName}
                                 </td>
                                 <td className="px-6 py-4 text-sm text-gray-900">
-                                    {player.lastName}
+                                    {player.user.lastName}
                                 </td>
                             </tr>
                         ))}

@@ -5,6 +5,7 @@ import teamDb from '../repository/team.db';
 import { TeamInput } from '../types/index';
 import { Coach } from '../model/coach';
 import { Player } from '../model/player';
+import { User } from '../model/user';
 
 const getAllTeams = async (): Promise<Team[]> => {
     return (await teamDb.getAllTeams()) || [];
@@ -12,9 +13,9 @@ const getAllTeams = async (): Promise<Team[]> => {
 
 const createTeam = async (team: TeamInput): Promise<Team> => {
 
-    const players = team.players.map(playerInput => new Player(playerInput));
+    const players = team.players.map(playerInput => new Player({id: playerInput.id, user: new User(playerInput.user)}));
 
-    const coach = new Coach(team.coach);
+    const coach = new Coach({ ...team.coach, user: new User(team.coach.user) });
 
     const newTeam = new Team({
         teamName: team.teamName,
@@ -63,9 +64,9 @@ const updateTeam = async (id: number, updatedTeam: TeamInput): Promise<Team> => 
         throw new Error('No team with that id exists.');
     }
 
-    const players = updatedTeam.players.map(playerInput => new Player(playerInput));
+    const players = updatedTeam.players.map(playerInput => new Player({id: playerInput.id, user: new User(playerInput.user)}));
 
-    const coach = new Coach(updatedTeam.coach);
+    const coach = new Coach({ ...updatedTeam.coach, user: new User(updatedTeam.coach.user) });
 
     const updatedTeamInstance = new Team({
         id,

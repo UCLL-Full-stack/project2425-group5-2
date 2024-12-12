@@ -37,9 +37,11 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
             setPlayers(allPlayers);
 
             const assignedPlayers = new Set<number>();
-            allTeams.forEach((team: Team) => {
-                team.players.forEach((player: Player) => assignedPlayers.add(player.id));
-            });
+            if (allTeams.length > 0) {
+                allTeams.forEach((team: Team) => {
+                    team.players.forEach((player: Player) => assignedPlayers.add(player.id));
+                });
+            }
 
             setAssignedPlayers(assignedPlayers);
         };
@@ -158,7 +160,7 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
                                     }`}
                                 >
                                     <span className="font-medium truncate">
-                                        {coach.firstName} {coach.lastName}
+                                        {coach.user.firstName} {coach.user.lastName}
                                     </span>
                                     {selectedCoach?.id === coach.id ? (
                                         <CheckSquare
@@ -198,7 +200,7 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
                                     }`}
                                 >
                                     <span className="font-medium truncate">
-                                        {player.firstName} {player.lastName}
+                                        {player.user.firstName} {player.user.lastName}
                                     </span>
                                     {selectedPlayers.find((p) => p.id === player.id) ? (
                                         <CheckSquare

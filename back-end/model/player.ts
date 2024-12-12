@@ -1,45 +1,22 @@
-import { Player as PlayerPrisma } from '@prisma/client';
+import { Player as PlayerPrisma, User as UserPrisma } from '@prisma/client';
+import { User } from './user';
 
 export class Player {
     private id?: number;
-    private firstName: string;
-    private lastName: string;
-    private email: string;
-    private phoneNumber: string;
+    private user: User;
 
-    constructor(player: {
-        id?: number;
-        firstName: string;
-        lastName: string;
-        email: string;
-        phoneNumber: string;
-    }) {
+    constructor(player: { id?: number; user: User; }) {
         this.validate(player);
         this.id = player.id;
-        this.firstName = player.firstName;
-        this.lastName = player.lastName;
-        this.email = player.email;
-        this.phoneNumber = player.phoneNumber;
+        this.user = player.user;
     }
 
     validate(player: {
         id?: number;
-        firstName: string;
-        lastName: string;
-        email: string;
-        phoneNumber: string;
+        user: User;
     }) {
-        if (!player.firstName) {
-            throw new Error('First name is required.');
-        }
-        if (!player.lastName) {
-            throw new Error('Last name is required.');
-        }
-        if (!player.email) {
-            throw new Error('Email is required.');
-        }
-        if (!player.phoneNumber) {
-            throw new Error('Phone number is required.');
+        if (!player.user) {
+            throw new Error('Player must be a user');
         }
     }
 
@@ -47,39 +24,21 @@ export class Player {
         return this.id;
     }
 
-    getFirstName(): string {
-        return this.firstName;
-    }
-
-    getLastName(): string {
-        return this.lastName;
-    }
-
-    getEmail(): string {
-        return this.email;
-    }
-
-    getPhoneNumber(): string {
-        return this.phoneNumber;
+    getUser(): User {
+        return this.user;
     }
 
     equals(player: Player): boolean {
         return (
-            this.id === player.getId() &&
-            this.firstName === player.getFirstName() &&
-            this.lastName === player.getLastName() &&
-            this.email === player.getEmail() &&
-            this.phoneNumber === player.getPhoneNumber()
+            this.id === player.id &&
+            this.user === player.user
         );
     }
 
-    static from({id, firstName, lastName, email, phoneNumber, teamId}: PlayerPrisma) {
+    static from({ id, user }: PlayerPrisma & { user: UserPrisma}) {
         return new Player({
             id,
-            firstName,
-            lastName,
-            email,
-            phoneNumber
+            user: User.from(user),
         });
     }
 }

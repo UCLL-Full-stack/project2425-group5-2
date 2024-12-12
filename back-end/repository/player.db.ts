@@ -4,7 +4,7 @@ import database from './database';
 const getAllPlayers = async (): Promise<Player[]> => {
     try {
         const playerPrisma = await database.player.findMany({
-            include: { team: true }
+            include: { team: true, user: true }
         });
         return playerPrisma.map((player) => Player.from(player));
     } catch (error) {
@@ -17,7 +17,7 @@ const getPlayerById = async (id: number): Promise<Player> => {
     try {
         const playerPrisma = await database.player.findUnique({
             where: { id },
-            include: { team: true }
+            include: { team: true, user: true }
         });
         if (!playerPrisma) {
             throw new Error('Player not found');
@@ -29,15 +29,24 @@ const getPlayerById = async (id: number): Promise<Player> => {
     }
 };
 
-const createPlayer = async (player: Player): Promise<Player> => {
+const createPlayer = async (newPlayer: Player): Promise<Player> => {
+    const user = newPlayer.getUser();
+    const id = newPlayer.getId();
     try {
         const playerPrisma = await database.player.create({
             data: {
-                firstName: player.getFirstName(),
-                lastName: player.getLastName(),
-                email: player.getEmail(),
-                phoneNumber: player.getPhoneNumber()
-            }
+                user: {
+                    create: {
+                        firstName: user.getFirstName(),
+                        lastName: user.getLastName(),
+                        email: user.getEmail(),
+                        phoneNumber: user.getPhoneNumber(),
+                        password: user.getPassword(),
+                        role: user.getRole(),
+                    },
+                },
+            },
+            include: { user: true }
         });
         return Player.from(playerPrisma);
     } catch (error) {
