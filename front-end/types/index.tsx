@@ -1,3 +1,5 @@
+export type Role = 'admin' | 'player' | 'coach';
+
 export type Player = {
     id: number;
     user: User;
@@ -16,11 +18,17 @@ export type Team = {
 };
 
 export type User = {
-    id: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneNumber: string;
-}
+    id?: number;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phoneNumber?: string;
+    role?: Role;
+};
 
-export type Role = 'admin' | 'player' | 'coach';
+export type StatusMessage = {
+    message: string;
+    type: 'error' | 'success';
+};
+
+

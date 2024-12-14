@@ -2,8 +2,8 @@ import { Team } from '../types';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-const getAllTeams = async () => {
-    return await fetch(apiUrl + '/teams', {
+const getAllTeams = () => {
+    return fetch(apiUrl + '/teams', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -11,8 +11,8 @@ const getAllTeams = async () => {
     });
 };
 
-const getTeamById = async (id: number) => {
-    return await fetch(apiUrl + `/teams/${id}`, {
+const getTeamById = (id: number) => {
+    return fetch(apiUrl + `/teams/${id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -20,8 +20,8 @@ const getTeamById = async (id: number) => {
     });
 };
 
-const updateTeam = async (team: Team) => {
-    return await fetch(apiUrl + `/teams/edit/${team.id}`, {
+const updateTeam = (team: Team) => {
+    return fetch(apiUrl + `/teams/edit/${team.id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -30,8 +30,8 @@ const updateTeam = async (team: Team) => {
     });
 };
 
-const createTeam = async (team: Team) => {
-    return await fetch(apiUrl + '/teams', {
+const createTeam = (team: Team) => {
+    return fetch(apiUrl + '/teams', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -40,11 +40,31 @@ const createTeam = async (team: Team) => {
     });
 };
 
+const getTeamsByUserId = (userId: number) => {
+    return fetch(apiUrl + `/teams/user/${userId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+};
+
+const deleteTeam = (id: number) => {
+    return fetch(apiUrl + `/teams/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+};
+
 const TeamService = {
     getAllTeams,
     createTeam,
     getTeamById,
     updateTeam,
+    getTeamsByUserId,
+    deleteTeam,
 };
 
 export default TeamService;

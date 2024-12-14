@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Layout from '../components/layout/Layout';
+import HomeOverview from '@components/Home/HomeOverview';
 
 const Home: React.FC = () => {
     return (
@@ -21,6 +22,7 @@ const Home: React.FC = () => {
                     TeamTrack is a simple app to help you monitor your team's performance, manage
                     games, and keep track of players. Start organizing your team data today!
                 </p>
+                <HomeOverview />
             </div>
         </Layout>
     );

@@ -2,67 +2,86 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
+import { StatusMessage } from 'types';
+import UserService from '@services/UserService';
+import { lastDayOfDecade } from 'date-fns';
 
 const Login = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [userEmail, setUserEmail] = useState('');
     const [userPassword, setUserPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [emailError, setEmailError] = useState<string | null>(null);
+    const [passwordError, setPasswordError] = useState<string | null>(null);
+    const [statusMessages, setStatusMessages] = useState<StatusMessage[]>([]);
+
     const router = useRouter();
 
-    const ERROR_MESSAGES = {
-        unexpected: 'Invalid credentials.',
+    const clearErrors = () => {
+        setEmailError(null);
+        setPasswordError(null);
+        setStatusMessages([]);
     };
 
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
 
+    const validate = (): boolean => {
+        let result = true;
+
+        if (!userEmail && userEmail.trim() === '') {
+            setEmailError('Email is required');
+            result = false;
+        }
+
+        if (!userPassword && userPassword.trim() === '') {
+            setPasswordError('Password is required');
+            result = false;
+        }
+
+        return result;
+    };
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setLoading(true);
+        clearErrors();
 
-        const LoginUser = {
+        if (!validate()) {
+            return;
+        }
+
+        const user = {
             email: userEmail,
             password: userPassword,
         };
 
-        try {
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(LoginUser),
-            });
+        const response = await UserService.logInUser(user);
 
-            const data = await response.json();
+        if (response.status === 200) {
+            setStatusMessages([{ type: 'success', message: 'Login successful' }]);
 
-            if (response.status === 200) {
-                try {
-                    sessionStorage.setItem(
-                        'loggedInUser',
-                        JSON.stringify({
-                            ...data,
-                            token: data.token,
-                        }),
-                    );
-                } catch (storageError) {
-                    console.error('Session storage error:', storageError);
-                    setErrorMessage(ERROR_MESSAGES.unexpected);
-                    return;
-                }
-
-                setTimeout(() => {
-                    router.push('/');
-                }, 200);
-            } else {
-                setErrorMessage(data.message || ERROR_MESSAGES.unexpected);
-            }
-        } catch (error) {
-            console.error('Login error:', error);
-            setErrorMessage(ERROR_MESSAGES.unexpected);
-        } finally {
-            setLoading(false);
+            const loggedInUser = await response.json();
+            sessionStorage.setItem(
+                'loggedInUser',
+                JSON.stringify({
+                    token: loggedInUser.token,
+                    email: loggedInUser.email,
+                    role: loggedInUser.role,
+                    id: loggedInUser.id,
+                    firstName: loggedInUser.firstName,
+                    lastName: loggedInUser.lastName,
+                    phoneNumber: loggedInUser.phoneNumber,
+                }),
+            );
+            setTimeout(() => {
+                router.push('/');
+            }, 2000);
+        } else if (response.status === 400) {
+            const { errorMessage } = await response.json();
+            setStatusMessages([{ type: 'error', message: errorMessage }]);
+        } else {
+            setStatusMessages([{ type: 'error', message: 'An error occured' }]);
         }
     };
 
@@ -95,6 +114,7 @@ const Login = () => {
                                     value={userEmail}
                                     onChange={(e) => setUserEmail(e.target.value)}
                                 />
+                                {emailError && <div className="text-red-800 ">{emailError}</div>}
                             </div>
                         </div>
                         <div className="rounded-md shadow-sm -space-y-px">
@@ -145,12 +165,19 @@ const Login = () => {
                         </div>
                     </div>
 
-                    {errorMessage && (
+                    {statusMessages.length != 0 && (
                         <div className="rounded-md bg-red-50 p-4">
                             <div className="flex">
                                 <div className="ml-3">
                                     <h3 className="text-sm font-medium text-red-800">
-                                        {errorMessage}
+                                        {statusMessages.map((msg, index) => (
+                                            <div
+                                                key={index}
+                                                className={`text-${msg.type === 'error' ? 'red' : 'green'}-800`}
+                                            >
+                                                {msg.message}
+                                            </div>
+                                        ))}
                                     </h3>
                                 </div>
                             </div>
