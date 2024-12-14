@@ -45,10 +45,13 @@ const createUser = async (userInput: UserInput) => {
     };
 
     if (userInput.role == 'coach') {
+        console.log('Creating coach');
         return await coachService.createCoach({ user: userWithHashedPassword });
     } else if (userInput.role == 'player') {
-        return await playerService.createPlayer({user: userWithHashedPassword});
+        console.log('Creating player');
+        return await playerService.createPlayer({ user: userWithHashedPassword });
     } else {
+        console.log('Creating admin');
         const newUser = new User({
             email: userInput.email,
             password: hashedPassword,
@@ -59,7 +62,6 @@ const createUser = async (userInput: UserInput) => {
         });
         return await userDb.createUser(newUser);
     }
-
 };
 
 const authenticate = async ({ email, password }: UserInput): Promise<AuthenticationResponse> => {
@@ -75,11 +77,15 @@ const authenticate = async ({ email, password }: UserInput): Promise<Authenticat
     }
 
     return {
-        token: generateJWTToken(existingUser.getEmail(), existingUser.getRole(), existingUser.getId()!),
+        token: generateJWTToken(
+            existingUser.getEmail(),
+            existingUser.getRole(),
+            existingUser.getId()!
+        ),
         email: existingUser.getEmail(),
         fullname: `${existingUser.getFirstName()} ${existingUser.getLastName()}`,
         role: existingUser.getRole(),
-        id: existingUser.getId()!
+        id: existingUser.getId()!,
     };
 };
 

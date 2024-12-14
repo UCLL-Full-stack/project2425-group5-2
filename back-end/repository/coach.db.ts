@@ -4,7 +4,7 @@ import database from './database';
 const getAllCoaches = async (): Promise<Coach[]> => {
     try {
         const coachPrisma = await database.coach.findMany({
-            include: { team: true, user: true }
+            include: { team: true, user: true },
         });
         return coachPrisma.map((coach) => Coach.from(coach));
     } catch (error) {
@@ -17,7 +17,7 @@ const getCoachById = async (id: number): Promise<Coach> => {
     try {
         const coachPrisma = await database.coach.findUnique({
             where: { id },
-            include: { team: true, user: true }
+            include: { team: true, user: true },
         });
         if (!coachPrisma) {
             throw new Error('Coach not found');
@@ -33,7 +33,7 @@ const createCoach = async (newCoach: Coach): Promise<Coach> => {
     const user = newCoach.getUser();
     const id = newCoach.getId();
     try {
-        const playerPrisma = await database.player.create({
+        const coachPrisma = await database.coach.create({
             data: {
                 user: {
                     create: {
@@ -46,9 +46,9 @@ const createCoach = async (newCoach: Coach): Promise<Coach> => {
                     },
                 },
             },
-            include: { user: true }
+            include: { user: true },
         });
-        return Coach.from(playerPrisma);
+        return Coach.from(coachPrisma);
     } catch (error) {
         console.error(error);
         throw new Error('Database error, see server log for details.');

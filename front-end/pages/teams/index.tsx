@@ -26,6 +26,10 @@ const Teams: React.FC = () => {
         }
     }, [loggedInUser]);
 
+    if (!loggedInUser) {
+        return <p>Loading</p>;
+    }
+
     const getTeams = async () => {
         try {
             let response;
@@ -45,47 +49,41 @@ const Teams: React.FC = () => {
         router.push('/teams/create');
     };
 
-    if (!loggedInUser) {
-        return <p>Loading</p>;
-    } else {
-        return (
-            <Layout>
-                <Head>
-                    <title>Teams - TeamTrack</title>
-                </Head>
-                <div className="container mx-auto px-4 py-8">
-                    <div className="bg-gradient-to-br from-primary to-accent p-8 rounded-lg shadow-xl max-w-5xl mx-auto">
-                        <div className="flex justify-between items-center mb-8">
-                            <h1 className="text-4xl font-extrabold text-white tracking-tight">
-                                Team Overview
-                            </h1>
-                            {(loggedInUser.role == 'admin' || loggedInUser.role == 'coach') && (
-                                <button
-                                    onClick={createTeamRoute}
-                                    className="px-6 py-3 bg-secondary text-white text-lg font-semibold rounded-md transition-all duration-300 hover:bg-accent hover:shadow-lg transform hover:scale-105 flex items-center"
-                                >
-                                    <Plus size={24} className="mr-2" />
-                                    Create Team
-                                </button>
-                            )}
-                        </div>
-                        {teams.length > 0 ? (
-                            <TeamOverviewTable teams={teams} getTeams={getTeams} />
-                        ) : (
-                            <div className="text-center py-12">
-                                <p className="text-2xl font-semibold text-white mb-4">
-                                    No teams found
-                                </p>
-                                <p className="text-lg text-white">
-                                    Click the 'Create Team' button to get started!
-                                </p>
-                            </div>
+    return (
+        <Layout>
+            <Head>
+                <title>Teams - TeamTrack</title>
+            </Head>
+            <div className="container mx-auto px-4 py-8">
+                <div className="bg-gradient-to-br from-primary to-accent p-8 rounded-lg shadow-xl max-w-5xl mx-auto">
+                    <div className="flex justify-between items-center mb-8">
+                        <h1 className="text-4xl font-extrabold text-white tracking-tight">
+                            Team Overview
+                        </h1>
+                        {(loggedInUser.role == 'admin' || loggedInUser.role == 'coach') && (
+                            <button
+                                onClick={createTeamRoute}
+                                className="px-6 py-3 bg-secondary text-white text-lg font-semibold rounded-md transition-all duration-300 hover:bg-accent hover:shadow-lg transform hover:scale-105 flex items-center"
+                            >
+                                <Plus size={24} className="mr-2" />
+                                Create Team
+                            </button>
                         )}
                     </div>
+                    {teams.length > 0 ? (
+                        <TeamOverviewTable teams={teams} getTeams={getTeams} />
+                    ) : (
+                        <div className="text-center py-12">
+                            <p className="text-2xl font-semibold text-white mb-4">No teams found</p>
+                            <p className="text-lg text-white">
+                                Click the 'Create Team' button to get started!
+                            </p>
+                        </div>
+                    )}
                 </div>
-            </Layout>
-        );
-    }
+            </div>
+        </Layout>
+    );
 };
 
 export default Teams;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TeamService from '@services/TeamService';
-import { Team, Coach, Player } from '../../types';
+import { Team, Coach, Player, User } from '../../types';
 import CoachService from '@services/CoachService';
 import PlayerService from '@services/PlayerService';
 import { ArrowLeft, Square, CheckSquare } from 'lucide-react';
@@ -18,8 +18,21 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
     const [players, setPlayers] = useState<Array<Player>>([]);
     const [assignedPlayers, setAssignedPlayers] = useState<Set<number>>(new Set());
     const [errors, setErrors] = useState<string[]>([]);
+    const [loggedInUser, setLoggedInUser] = useState<User>(null);
+
+    useEffect(() => {
+        const user = sessionStorage.getItem('loggedInUser');
+        if (user) {
+            const parsedUser = JSON.parse(user);
+            setLoggedInUser(parsedUser);
+        }
+    }, []);
 
     const router = useRouter();
+
+    if (!loggedInUser) {
+        return <p>Loading...</p>
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -32,8 +45,13 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
             const allCoaches = await coachesData.json();
             const allPlayers = await playersData.json();
             const allTeams = await teamsData.json();
+            const filteredCoaches = allCoaches.filter((coach) => coach.user.id === loggedInUser.id);
 
-            setCoaches(allCoaches);
+            if (loggedInUser.role == 'coach') {
+                setCoaches(filteredCoaches);
+            } else {
+                setCoaches(allCoaches);
+            }
             setPlayers(allPlayers);
 
             const assignedPlayers = new Set<number>();

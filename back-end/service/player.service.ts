@@ -19,11 +19,23 @@ const getPlayerById = async (id: number): Promise<Player> => {
 const createPlayer = async (playerInput: PlayerInput): Promise<Player> => {
     const existingPlayers = (await playerDb.getAllPlayers()) || [];
 
-    if (existingPlayers.find((player) => player.getId() === playerInput.id)) {
-        throw new Error(`Player with id ${playerInput.id} already exists.`);
+    if (existingPlayers.find((player) => player.getUser().getId() === playerInput.user.id)) {
+        throw new Error(`User with id ${playerInput.user.id} already exists.`);
+    }
+    if (!playerInput.user.firstName) {
+        throw new Error('First name is required.');
+    }
+    if (!playerInput.user.lastName) {
+        throw new Error('Last name is required.');
+    }
+    if (!playerInput.user.email) {
+        throw new Error('Email is required.');
+    }
+    if (!playerInput.user.phoneNumber) {
+        throw new Error('Phone number is required.');
     }
 
-    const newPlayer = new Player({id: playerInput.id, user: new User(playerInput.user)});
+    const newPlayer = new Player({ id: playerInput.id, user: new User(playerInput.user) });
     return await playerDb.createPlayer(newPlayer);
 };
 

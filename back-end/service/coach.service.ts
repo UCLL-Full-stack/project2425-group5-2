@@ -18,8 +18,8 @@ const getCoachById = async (id: number): Promise<Coach> => {
 const createCoach = async (coachInput: CoachInput): Promise<Coach> => {
     const existingCoaches = (await coachDb.getAllCoaches()) || [];
 
-    if (existingCoaches.find((coach) => coach.getId() === coachInput.id)) {
-        throw new Error(`Coach with id ${coachInput.id} already exists.`);
+    if (existingCoaches.find((coach) => coach.getUser().getId() === coachInput.user.id)) {
+        throw new Error(`User with id ${coachInput.id} already exists.`);
     }
     if (!coachInput.user.firstName) {
         throw new Error('First name is required.');
@@ -34,7 +34,7 @@ const createCoach = async (coachInput: CoachInput): Promise<Coach> => {
         throw new Error('Phone number is required.');
     }
 
-    const newCoach = new Coach({id: coachInput.id, user: new User(coachInput.user)});
+    const newCoach = new Coach({ id: coachInput.id, user: new User(coachInput.user) });
     return await coachDb.createCoach(newCoach);
 };
 
