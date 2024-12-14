@@ -41,6 +41,7 @@ type AuthenticationResponse = {
     email: string;
     fullname: string;
     role: Role;
+    id: number;
 };
 
 export { Role, PlayerInput, CoachInput, TeamInput, GameInput, UserInput, AuthenticationResponse };

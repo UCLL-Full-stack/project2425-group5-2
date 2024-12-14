@@ -18,9 +18,6 @@ const getCoachById = async (id: number): Promise<Coach> => {
 const createCoach = async (coachInput: CoachInput): Promise<Coach> => {
     const existingCoaches = (await coachDb.getAllCoaches()) || [];
 
-    if (coachInput.id === undefined || coachInput.id < 0) {
-        throw new Error('Invalid id.');
-    }
     if (existingCoaches.find((coach) => coach.getId() === coachInput.id)) {
         throw new Error(`Coach with id ${coachInput.id} already exists.`);
     }

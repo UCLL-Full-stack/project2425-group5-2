@@ -69,6 +69,15 @@ teamRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
     }
 });
 
+teamRouter.get('/user/:id', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const team = await teamService.getTeamsByUserId(parseInt(req.params.id));
+        res.status(200).json(team);
+    } catch (error: any) {
+        res.status(400).json({ status: 'error', errorMessage: error.message });
+    }
+});
+
 /**
  * @swagger
  * /teams/{id}:
@@ -93,37 +102,6 @@ teamRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) =
     try {
         const team = await teamService.getTeamById(parseInt(req.params.id));
         res.status(200).json(team);
-    } catch (error: any) {
-        res.status(400).json({ status: 'error', errorMessage: error.message });
-    }
-});
-
-/**
- * @swagger
- * /teams/coach/{id}:
- *   get:
- *      summary: Get a list of all teams coached by a coach.
- *      parameters:
- *        - in: path
- *          name: id
- *          required: true
- *          description: The ID of the coach.
- *          schema:
- *            type: number
- *      responses:
- *        200:
- *          description: A JSON array of all teams coached by the coach.
- *          content:
- *            application/json:
- *              schema:
- *                type: array
- *                items:
- *                  $ref: '#/components/schemas/Team'
- */
-teamRouter.get('/coach/:id', async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const teams = await teamService.getTeamsByCoach(parseInt(req.params.id));
-        res.status(200).json(teams);
     } catch (error: any) {
         res.status(400).json({ status: 'error', errorMessage: error.message });
     }
@@ -166,6 +144,15 @@ teamRouter.put('/edit/:id', async (req: Request, res: Response, next: NextFuncti
 
         const updatedTeam: Team = await teamService.updateTeam(parseInt(id), teamData);
         res.status(200).json(updatedTeam);
+    } catch (error: any) {
+        res.status(400).json({ status: 'error', errorMessage: error.message });
+    }
+});
+
+teamRouter.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const team = await teamService.deleteTeam(parseInt(req.params.id));
+        res.status(200).json(team);
     } catch (error: any) {
         res.status(400).json({ status: 'error', errorMessage: error.message });
     }

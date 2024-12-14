@@ -12,8 +12,9 @@ const getAllTeams = async (): Promise<Team[]> => {
 };
 
 const createTeam = async (team: TeamInput): Promise<Team> => {
-
-    const players = team.players.map(playerInput => new Player({id: playerInput.id, user: new User(playerInput.user)}));
+    const players = team.players.map(
+        (playerInput) => new Player({ id: playerInput.id, user: new User(playerInput.user) })
+    );
 
     const coach = new Coach({ ...team.coach, user: new User(team.coach.user) });
 
@@ -21,7 +22,7 @@ const createTeam = async (team: TeamInput): Promise<Team> => {
         teamName: team.teamName,
         coach,
         players,
-    })
+    });
 
     const createdTeam = await teamDb.createTeam(newTeam);
     if (!createdTeam) {
@@ -39,14 +40,14 @@ const getTeamById = async (id: number): Promise<Team> => {
     return team;
 };
 
-const getTeamsByCoach = async (coachId: number): Promise<Team[]> => {
-    const teams = (await teamDb.getTeamsByCoach(coachId)) || [];
+const getTeamsByUserId = async (userId: number): Promise<Team[]> => {
+    const teams = (await teamDb.getTeamsByUserId(userId)) || [];
 
     if (teams.length === 0) {
         throw new Error('No teams found for that coach.');
     }
 
-    if (coachId == undefined) {
+    if (userId == undefined) {
         throw new Error('An id is required.');
     }
 
@@ -64,7 +65,9 @@ const updateTeam = async (id: number, updatedTeam: TeamInput): Promise<Team> => 
         throw new Error('No team with that id exists.');
     }
 
-    const players = updatedTeam.players.map(playerInput => new Player({id: playerInput.id, user: new User(playerInput.user)}));
+    const players = updatedTeam.players.map(
+        (playerInput) => new Player({ id: playerInput.id, user: new User(playerInput.user) })
+    );
 
     const coach = new Coach({ ...updatedTeam.coach, user: new User(updatedTeam.coach.user) });
 
@@ -73,7 +76,7 @@ const updateTeam = async (id: number, updatedTeam: TeamInput): Promise<Team> => 
         teamName: updatedTeam.teamName,
         coach,
         players,
-    })
+    });
 
     const updatedTeamInDb = await teamDb.updateTeam(updatedTeamInstance);
 
@@ -84,4 +87,24 @@ const updateTeam = async (id: number, updatedTeam: TeamInput): Promise<Team> => 
     return updatedTeamInDb;
 };
 
-export default { getAllTeams, getTeamsByCoach, getTeamById, createTeam, updateTeam };
+const deleteTeam = async (id: number): Promise<Team> => {
+    if (id == undefined) {
+        throw new Error('An id is required.');
+    }
+
+    const team = await teamDb.getTeamById(id);
+
+    if (team == undefined) {
+        throw new Error('No team with that id exists.');
+    }
+
+    const deletedTeam = await teamDb.deleteTeam(id);
+
+    if (!deletedTeam) {
+        throw new Error('Team could not be deleted.');
+    }
+
+    return deletedTeam;
+};
+
+export default { getAllTeams, getTeamsByUserId, getTeamById, createTeam, updateTeam, deleteTeam };

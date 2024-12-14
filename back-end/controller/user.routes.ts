@@ -89,6 +89,7 @@ userRouter.post('/register', async (req: Request, res: Response, next: NextFunct
     try {
         const userInput = <UserInput>req.body;
         const user = await userService.createUser(userInput);
+    
         res.status(201).json(user);
     } catch (error) {
         next(error);
@@ -130,3 +131,5 @@ userRouter.post('/login', async (req: Request, res: Response, next: NextFunction
         next(error);
     }
 });
+
+export { userRouter };
