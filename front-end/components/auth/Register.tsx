@@ -78,8 +78,6 @@ const Register = () => {
             setStatusMessages([{ type: 'success', message: 'Registration successful' }]);
             setLoading(false);
 
-            const user = await response.json();
-
             setTimeout(() => {
                 router.push('/login');
             }, 1000);

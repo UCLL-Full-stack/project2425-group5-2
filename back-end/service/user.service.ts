@@ -34,13 +34,20 @@ const getUserByEmail = async (email: string) => {
 const createUser = async (userInput: UserInput) => {
     const existingUsers = (await userDb.getAllUsers()) || [];
 
+    if (existingUsers.some((user) => user.getEmail() === userInput.email)) {
+        throw new Error('User with this email already exists.');
+    }
+
     const hashedPassword = await bcrypt.hash(userInput.password, 12);
-    
+    const userWithHashedPassword = {
+        ...userInput,
+        password: hashedPassword,
+    };
 
     if (userInput.role == 'coach') {
-        coachService.createCoach({ user: userInput });
+        return await coachService.createCoach({ user: userWithHashedPassword });
     } else if (userInput.role == 'player') {
-        playerService.createPlayer({user: userInput});
+        return await playerService.createPlayer({user: userWithHashedPassword});
     } else {
         const newUser = new User({
             email: userInput.email,
@@ -50,7 +57,7 @@ const createUser = async (userInput: UserInput) => {
             phoneNumber: userInput.phoneNumber,
             role: userInput.role,
         });
-        const createdUser = await userDb.createUser(newUser);
+        return await userDb.createUser(newUser);
     }
 
 };
