@@ -9,8 +9,10 @@ import { teamRouter } from './controller/team.routes';
 import { gameRouter } from './controller/game.routes';
 import { coachRouter } from './controller/coach.routes';
 import { userRouter } from './controller/user.routes';
+import helmet from 'helmet';
 
 const app = express();
+app.use(helmet());
 dotenv.config();
 const port = process.env.APP_PORT || 3000;
 

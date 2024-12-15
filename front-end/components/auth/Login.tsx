@@ -76,7 +76,7 @@ const Login = () => {
             );
             setTimeout(() => {
                 router.push('/');
-            }, 2000);
+            }, 1000);
         } else if (response.status === 400) {
             const { errorMessage } = await response.json();
             setStatusMessages([{ type: 'error', message: errorMessage }]);
@@ -166,10 +166,10 @@ const Login = () => {
                     </div>
 
                     {statusMessages.length != 0 && (
-                        <div className="rounded-md bg-red-50 p-4">
+                        <div className="rounded-md bg-white p-4">
                             <div className="flex">
                                 <div className="ml-3">
-                                    <h3 className="text-sm font-medium text-red-800">
+                                    <h3 className="text-sm font-medium">
                                         {statusMessages.map((msg, index) => (
                                             <div
                                                 key={index}

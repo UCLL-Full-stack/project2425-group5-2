@@ -56,4 +56,24 @@ const createUser = async (newUser: User): Promise<User> => {
     }
 };
 
-export default { getAllUsers, getUserById, getUserByEmail, createUser };
+const updateUser = async (updatedUser: User): Promise<User> => {
+    try {
+        const userPrisma = await database.user.update({
+            where: { id: updatedUser.getId()! },
+            data: {
+                firstName: updatedUser.getFirstName(),
+                lastName: updatedUser.getLastName(),
+                email: updatedUser.getEmail(),
+                phoneNumber: updatedUser.getPhoneNumber(),
+                password: updatedUser.getPassword(),
+                role: updatedUser.getRole()
+            }
+        });
+        return User.from(userPrisma);
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error, see server log for details.');
+    }
+};
+
+export default { getAllUsers, getUserById, getUserByEmail, createUser, updateUser };

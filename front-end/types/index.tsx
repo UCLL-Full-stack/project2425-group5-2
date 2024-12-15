@@ -26,6 +26,13 @@ export type User = {
     role?: Role;
 };
 
+export type Game = {
+    id?: number;
+    date?: string;
+    teams?: Team[];
+    result?: string;
+};
+
 export type StatusMessage = {
     message: string;
     type: 'error' | 'success';

@@ -39,9 +39,11 @@ type UserInput = {
 type AuthenticationResponse = {
     token: string;
     email: string;
-    fullname: string;
     role: Role;
     id: number;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
 };
 
 export { Role, PlayerInput, CoachInput, TeamInput, GameInput, UserInput, AuthenticationResponse };

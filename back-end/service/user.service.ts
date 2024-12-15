@@ -77,13 +77,44 @@ const authenticate = async ({ email, password }: UserInput): Promise<Authenticat
         token: generateJWTToken(
             existingUser.getEmail(),
             existingUser.getRole(),
-            existingUser.getId()!
+            existingUser.getId()!,
+            existingUser.getFirstName(),
+            existingUser.getLastName(),
+            existingUser.getPhoneNumber()
         ),
         email: existingUser.getEmail(),
-        fullname: `${existingUser.getFirstName()} ${existingUser.getLastName()}`,
         role: existingUser.getRole(),
         id: existingUser.getId()!,
+        firstName: existingUser.getFirstName(),
+        lastName: existingUser.getLastName(),
+        phoneNumber: existingUser.getPhoneNumber()
     };
 };
 
-export default { getAllUsers, getUserById, createUser, authenticate, getUserByEmail };
+const updateUser = async (id: number, userInput: UserInput): Promise<User> => {
+    if (id == undefined) {
+        throw new Error('An id is required.');
+    }
+
+    const user = await userDb.getUserById(id);
+
+    if (user == undefined) {
+        throw new Error('No team with that id exists.');
+    }
+
+    const hashedPassword = await bcrypt.hash(userInput.password, 12);
+
+    const createdUser = new User({
+        id,
+        email: userInput.email,
+        firstName: userInput.firstName,
+        lastName: userInput.lastName,
+        password: hashedPassword,
+        phoneNumber: userInput.phoneNumber,
+        role: userInput.role,
+    });
+
+    return await userDb.updateUser(createdUser);
+};
+
+export default { getAllUsers, getUserById, createUser, authenticate, getUserByEmail, updateUser };

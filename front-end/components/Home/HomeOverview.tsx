@@ -3,29 +3,32 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { LogIn, UserPlus } from 'lucide-react';
+import { User } from 'types';
 
 export default function HomeOverview() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [loggedInUser, setLoggedInUser] = useState<User>(null);
     const router = useRouter();
 
     useEffect(() => {
-        // Check session storage for user login status
-        const sessionUser = sessionStorage.getItem('loggedInUser');
-        setIsLoggedIn(!!sessionUser); // If user exists, set as logged in
-    }, []);
+            const user = sessionStorage.getItem('loggedInUser');
+            if (user) {
+                const parsedUser = JSON.parse(user);
+                setLoggedInUser(parsedUser);
+            }
+        }, []);
 
     const handleLogin = () => {
-        router.push('/login'); // Redirect to login page
+        router.push('/login');
     };
 
     const handleRegister = () => {
-        router.push('/register'); // Redirect to register page
+        router.push('/register');
     };
 
     return (
         <div className="w-full max-w-2xl mx-auto bg-secondary rounded-lg shadow-md overflow-hidden">
             <div className="px-8 py-10">
-                {!isLoggedIn ? (
+                {!loggedInUser ? (
                     <div className="space-y-6">
                         <h2 className="text-3xl font-bold text-black">
                             Get Started with TeamTrack

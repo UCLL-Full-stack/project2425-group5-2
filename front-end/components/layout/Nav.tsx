@@ -16,6 +16,7 @@ const Nav: React.FC = () => {
         router.push('/');
         sessionStorage.removeItem('loggedInUser');
         setLoggedInUser(null);
+        router.reload();
     };
 
     return (
@@ -48,7 +49,7 @@ const Nav: React.FC = () => {
                                 <li>
                                     <Link
                                         href="/teams"
-                                        className="text-sm font-semibold hover:text-white transition-colors  hover:shadow-md hover:shadow-neutral-400 transition-shadow duration-200 rounded px-3 py-2 hover:bg-accent"
+                                        className="text-sm font-semibold hover:text-white transition-colors  hover:shadow-md hover:shadow-neutral-400 duration-200 rounded px-3 py-2 hover:bg-accent"
                                     >
                                         {loggedInUser.role == 'coach' ? 'Teams' : 'Team'}
                                     </Link>
@@ -56,7 +57,7 @@ const Nav: React.FC = () => {
                                 <li>
                                     <Link
                                         href={'/profile/' + loggedInUser.id}
-                                        className="text-sm font-semibold hover:text-white transition-colors  hover:shadow-md hover:shadow-neutral-400 transition-shadow duration-200 rounded px-3 py-2 hover:bg-accent"
+                                        className="text-sm font-semibold hover:text-white transition-colors  hover:shadow-md hover:shadow-neutral-400 duration-200 rounded px-3 py-2 hover:bg-accent"
                                     >
                                         Profile
                                     </Link>

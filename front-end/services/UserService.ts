@@ -22,6 +22,16 @@ const registerUser = (user: User) => {
     });
 };
 
-const UserService = { logInUser, registerUser };
+const updateUser = (user: User) => {
+    return fetch(apiUrl + `/users/edit/${user.id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+    });
+}
+
+const UserService = { logInUser, registerUser, updateUser};
 
 export default UserService;

@@ -33,6 +33,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import userService from '../service/user.service';
 import { UserInput } from '../types';
+import { User } from '../model/user';
 
 const userRouter = express.Router();
 
@@ -129,6 +130,50 @@ userRouter.post('/login', async (req: Request, res: Response, next: NextFunction
         res.status(200).json({ message: 'Authentication successful', ...response });
     } catch (error) {
         next(error);
+    }
+});
+
+/**
+ * @swagger
+ * /users/edit/{id}:
+ *   put:
+ *     summary: Update a user by ID.
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/User'
+ *      parameters:
+ *       - in: path
+ *        name: id
+ *       required: true
+ *       schema:
+ *        type: number
+ *     responses:
+ *      200:
+ *       description: User updated successfully.
+ *       content:
+ *         application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/User'
+ *     400:
+ *       description: Bad request.
+ *     404:
+ *       description: User does not exist.
+ *     500:
+ *       description: Internal server error.
+ */
+userRouter.put('/edit/:id', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userData: UserInput = req.body;
+
+        const id = req.params.id;
+
+        const updatedUser: User = await userService.updateUser(parseInt(id), userData);
+        res.status(200).json(updatedUser);
+    } catch (error: any) {
+        res.status(400).json({ status: 'error', errorMessage: error.message });
     }
 });
 
