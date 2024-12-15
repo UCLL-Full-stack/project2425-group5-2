@@ -44,14 +44,24 @@ const Nav: React.FC = () => {
                             </Link>
                         </li>
                         {loggedInUser && (
-                            <li>
-                                <Link
-                                    href="/teams"
-                                    className="text-sm font-semibold hover:text-white transition-colors  hover:shadow-md hover:shadow-neutral-400 transition-shadow duration-200 rounded px-3 py-2 hover:bg-accent"
-                                >
-                                    {loggedInUser.role == 'coach' ? 'Teams' : 'Team'}
-                                </Link>
-                            </li>
+                            <ul className="text-text flex items-center space-x-1">
+                                <li>
+                                    <Link
+                                        href="/teams"
+                                        className="text-sm font-semibold hover:text-white transition-colors  hover:shadow-md hover:shadow-neutral-400 transition-shadow duration-200 rounded px-3 py-2 hover:bg-accent"
+                                    >
+                                        {loggedInUser.role == 'coach' ? 'Teams' : 'Team'}
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        href={'/profile/' + loggedInUser.id}
+                                        className="text-sm font-semibold hover:text-white transition-colors  hover:shadow-md hover:shadow-neutral-400 transition-shadow duration-200 rounded px-3 py-2 hover:bg-accent"
+                                    >
+                                        Profile
+                                    </Link>
+                                </li>
+                            </ul>
                         )}
 
                         <li>
