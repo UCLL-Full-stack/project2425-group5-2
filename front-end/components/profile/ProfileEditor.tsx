@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import PlayerService from '@services/PlayerService';
-import TeamService from '@services/TeamService';
+import React, { useState } from 'react';
 import { User } from '../../types';
-import { ArrowLeft, Square, CheckSquare } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/router';
 import UserService from '@services/UserService';
 
