@@ -62,6 +62,14 @@ const Nav: React.FC = () => {
                                         Profile
                                     </Link>
                                 </li>
+                                <li>
+                                    <Link
+                                        href="/games"
+                                        className="text-sm font-semibold hover:text-white transition-colors  hover:shadow-md hover:shadow-neutral-400 duration-200 rounded px-3 py-2 hover:bg-accent"
+                                    >
+                                        Games
+                                    </Link>
+                                </li>
                             </ul>
                         )}
 

@@ -133,37 +133,7 @@ userRouter.post('/login', async (req: Request, res: Response, next: NextFunction
     }
 });
 
-/**
- * @swagger
- * /users/edit/{id}:
- *   put:
- *     summary: Update a user by ID.
- *     requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/User'
- *      parameters:
- *       - in: path
- *        name: id
- *       required: true
- *       schema:
- *        type: number
- *     responses:
- *      200:
- *       description: User updated successfully.
- *       content:
- *         application/json:
- *            schema:
- *              $ref: '#/components/schemas/User'
- *     400:
- *       description: Bad request.
- *     404:
- *       description: User does not exist.
- *     500:
- *       description: Internal server error.
- */
+
 userRouter.put('/edit/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userData: UserInput = req.body;

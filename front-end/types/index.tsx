@@ -15,6 +15,7 @@ export type Team = {
     teamName: string;
     players: Player[];
     coach: Coach;
+    games?: Game[];
 };
 
 export type User = {

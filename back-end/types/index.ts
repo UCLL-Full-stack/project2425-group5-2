@@ -17,6 +17,7 @@ type TeamInput = {
     teamName: string;
     players: PlayerInput[];
     coach: CoachInput;
+    games?: GameInput[];
 };
 
 type GameInput = {
