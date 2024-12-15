@@ -45,13 +45,10 @@ const createUser = async (userInput: UserInput) => {
     };
 
     if (userInput.role == 'coach') {
-        console.log('Creating coach');
         return await coachService.createCoach({ user: userWithHashedPassword });
     } else if (userInput.role == 'player') {
-        console.log('Creating player');
         return await playerService.createPlayer({ user: userWithHashedPassword });
     } else {
-        console.log('Creating admin');
         const newUser = new User({
             email: userInput.email,
             password: hashedPassword,

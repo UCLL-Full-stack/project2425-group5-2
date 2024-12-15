@@ -20,6 +20,8 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
     const [errors, setErrors] = useState<string[]>([]);
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
 
+    const router = useRouter();
+
     useEffect(() => {
         const user = sessionStorage.getItem('loggedInUser');
         if (user) {
@@ -28,43 +30,45 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
         }
     }, []);
 
-    const router = useRouter();
+    useEffect(() => {
+        if (loggedInUser) {
+            const fetchData = async () => {
+                const [coachesData, playersData, teamsData] = await Promise.all([
+                    CoachService.getAllCoaches(),
+                    PlayerService.getAllPlayers(),
+                    TeamService.getAllTeams(),
+                ]);
+
+                const allCoaches = await coachesData.json();
+                const allPlayers = await playersData.json();
+                const allTeams = await teamsData.json();
+                const filteredCoaches = allCoaches.filter(
+                    (coach) => coach.user.id === loggedInUser.id,
+                );
+
+                if (loggedInUser.role == 'coach') {
+                    setCoaches(filteredCoaches);
+                } else {
+                    setCoaches(allCoaches);
+                }
+                setPlayers(allPlayers);
+
+                const assignedPlayers = new Set<number>();
+                if (allTeams.length > 0) {
+                    allTeams.forEach((team: Team) => {
+                        team.players.forEach((player: Player) => assignedPlayers.add(player.id));
+                    });
+                }
+
+                setAssignedPlayers(assignedPlayers);
+            };
+            fetchData();
+        }
+    }, [loggedInUser]);
 
     if (!loggedInUser) {
-        return <p>Loading...</p>
+        return <p>Loading...</p>;
     }
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const [coachesData, playersData, teamsData] = await Promise.all([
-                CoachService.getAllCoaches(),
-                PlayerService.getAllPlayers(),
-                TeamService.getAllTeams(),
-            ]);
-
-            const allCoaches = await coachesData.json();
-            const allPlayers = await playersData.json();
-            const allTeams = await teamsData.json();
-            const filteredCoaches = allCoaches.filter((coach) => coach.user.id === loggedInUser.id);
-
-            if (loggedInUser.role == 'coach') {
-                setCoaches(filteredCoaches);
-            } else {
-                setCoaches(allCoaches);
-            }
-            setPlayers(allPlayers);
-
-            const assignedPlayers = new Set<number>();
-            if (allTeams.length > 0) {
-                allTeams.forEach((team: Team) => {
-                    team.players.forEach((player: Player) => assignedPlayers.add(player.id));
-                });
-            }
-
-            setAssignedPlayers(assignedPlayers);
-        };
-        fetchData();
-    }, []);
 
     const handleCreateTeam = async () => {
         const validationErrors: string[] = [];
