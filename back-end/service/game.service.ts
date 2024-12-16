@@ -5,7 +5,6 @@ import { Player } from '../model/player';
 import { Coach } from '../model/coach';
 import { Team } from '../model/team';
 import { User } from '../model/user';
-import { pl } from 'date-fns/locale';
 
 const getAllGames = async (): Promise<Game[]> => {
     return await gameDb.getAllGames();
@@ -20,13 +19,27 @@ const getGameById = async (id: number): Promise<Game> => {
 };
 
 const getGamesByTeamId = async (teamId: number): Promise<Game[]> => {
-    const games = (await gameDb.getAllGames()) || [];
+    const games = (await gameDb.getGamesByTeamId(teamId)) || [];
 
     if (games.length === 0) {
         throw new Error('No games found for that team.');
     }
 
     if (teamId == undefined) {
+        throw new Error('An id is required.');
+    }
+
+    return games;
+};
+
+const getGamesByUserId = async (userId: number): Promise<Game[]> => {
+    const games = (await gameDb.getGamesByUserId(userId)) || [];
+
+    if (games.length === 0) {
+        throw new Error('No games found for that team.');
+    }
+
+    if (userId == undefined) {
         throw new Error('An id is required.');
     }
 

@@ -130,6 +130,15 @@ gameRouter.get('/team/:id', async (req: Request, res: Response, next: NextFuncti
     }
 });
 
+gameRouter.get('/user/:id', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const game = await gameService.getGamesByUserId(parseInt(req.params.id));
+        res.status(200).json(game);
+    } catch (error: any) {
+        res.status(400).json({ status: 'error', errorMessage: error.message });
+    }
+});
+
 /**
  * @swagger
  * /games:

@@ -160,8 +160,7 @@ const main = async () => {
             players: {
                 connect: [{ id: player4.id }, { id: player5.id }, { id: player6.id }],
             },
-        },
-    });
+    }});
 
     const game1 = await prisma.game.create({
         data: {

@@ -13,7 +13,7 @@ const GamesPage: React.FC = () => {
     const router = useRouter();
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
     const [games, setGames] = useState<Array<Game>>([]);
-
+    
     useEffect(() => {
         const user = sessionStorage.getItem('loggedInUser');
         if (user) {
@@ -24,11 +24,15 @@ const GamesPage: React.FC = () => {
 
     useEffect(() => {
         if (loggedInUser) {
-            getTeamsAndGames();
+            getTeams();
         }
     }, [loggedInUser]);
 
-    const getTeamsAndGames = async () => {
+    if (!loggedInUser) {
+        return <p>Loading</p>;
+    }
+
+    const getTeams = async () => {
         try {
             let teamsResponse;
             if (loggedInUser.role === 'admin') {
@@ -38,15 +42,6 @@ const GamesPage: React.FC = () => {
             }
             const fetchedTeams = await teamsResponse.json();
             setTeams(fetchedTeams);
-
-            let gamesResponse;
-            if (loggedInUser.role === 'admin') {
-                gamesResponse = await GameService.getAllGames();
-            } else {
-                gamesResponse = await GameService.getGamesByTeamId(loggedInUser.team.id);
-            }
-            const fetchedGames = await gamesResponse.json();
-            setGames(fetchedGames);
         } catch (error) {
             console.error('Error fetching teams:', error);
         }
@@ -82,7 +77,7 @@ const GamesPage: React.FC = () => {
                         )}
                     </div>
                     {teams.length > 0 ? (
-                        <GamesOverview teams={teams} games={games} />
+                        <GamesOverview teams={teams} />
                     ) : (
                         <div className="text-center py-12">
                             <p className="text-2xl font-semibold text-white mb-4">No Games found</p>

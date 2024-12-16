@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Game, Player } from '../../types';
+import { Game, User } from '../../types';
 import { useRouter } from 'next/router';
 import { Edit, Trash } from 'lucide-react';
 import GameService from '@services/GameService';
 
 type Props = {
     games: Array<Game>;
-    getGames: () => void;
 };
 
-const GameDetailsTable: React.FC<Props> = ({ games, getGames }) => {
-    const [loggedInUser, setLoggedInUser] = useState<Player | null>(null);
+const GameDetailsTable: React.FC<Props> = ({ games }) => {
+    const [loggedInUser, setLoggedInUser] = useState<User>(null);
     const router = useRouter();
 
     useEffect(() => {
@@ -28,7 +27,7 @@ const GameDetailsTable: React.FC<Props> = ({ games, getGames }) => {
     const deleteGame = async (gameId: number) => {
         try {
             await GameService.deleteGame(gameId);
-            getGames();
+            router.reload();
         } catch (error) {
             console.error('Error deleting game:', error);
         }

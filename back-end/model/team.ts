@@ -1,10 +1,12 @@
 import { Coach } from './coach';
+import { Game } from './game';
 import { Player } from './player';
 import {
     Coach as CoachPrisma,
     Player as PlayerPrisma,
     Team as TeamPrisma,
     User as UserPrisma,
+    Game as GamePrisma,
 } from '@prisma/client';
 
 export class Team {
@@ -13,7 +15,7 @@ export class Team {
     private players: Player[];
     private coach: Coach;
 
-    constructor(team: { id?: number; teamName: string; players: Player[]; coach: Coach }) {
+    constructor(team: { id?: number; teamName: string; players: Player[]; coach: Coach; }) {
         this.validate(team);
         this.id = team.id;
         this.teamName = team.teamName;
@@ -21,7 +23,7 @@ export class Team {
         this.coach = team.coach;
     }
 
-    validate(team: { id?: number; teamName: string; players: Player[]; coach: Coach }) {
+    validate(team: { id?: number; teamName: string; players: Player[]; coach: Coach, games?: Game[] }) {
         if (!team.teamName) {
             throw new Error('Team name is required.');
         }
@@ -82,7 +84,7 @@ export class Team {
             id,
             teamName,
             players: players.map((player: any) => new Player(player)),
-            coach: Coach.from(coach),
+            coach: Coach.from(coach)
         });
     }
 }

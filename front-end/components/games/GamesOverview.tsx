@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Team, User } from '../../types';
+import { Game, Team, User } from '../../types';
 import { useRouter } from 'next/router';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import GameDetails from './GameDetails';
 
 type GamesOverviewProps = {
     teams: Team[];
-    games: Game[];
 };
 
-const GamesOverview: React.FC<GamesOverviewProps> = ({ teams, games }) => {
+const GamesOverview: React.FC<GamesOverviewProps> = ({ teams }) => {
     const [expandedTeamId, setExpandedTeamId] = useState<number | null>(null);
     const router = useRouter();
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
@@ -21,16 +20,16 @@ const GamesOverview: React.FC<GamesOverviewProps> = ({ teams, games }) => {
             const parsedUser = JSON.parse(user);
             setLoggedInUser(parsedUser);
         }
-    }, []);
-
-    useEffect(() => {
-        if (loggedInUser) {
-            const updatedTeams = teams.map((team) => {
-                const gamesPlayed = team.games.filter((game) => game.isFinal).length;
-                return { ...team, gamesPlayed };
-            });
+        let teamsToDisplay: Team[] = [];
+        for (const team of teams) {
+            console.log(team);
+            if (team.games?.length > 0) {
+                teamsToDisplay.push(team);
+            }
         }
-    }, [teams, games]);
+        setTeamsWithGamesPlayed(teamsToDisplay);
+        }, []);
+        
 
     if (!loggedInUser) {
         return <p>Loading...</p>;
@@ -66,13 +65,13 @@ const GamesOverview: React.FC<GamesOverviewProps> = ({ teams, games }) => {
                                     </button>
                                 </td>
                                 <td className="px-6 py-4 text-gray-900">
-                                    {team.gamesPlayed}
+                                    {team.games?.length}
                                 </td>
                             </tr>
                             {expandedTeamId === team.id && (
                                 <tr>
                                     <td colSpan={3} className="px-6 py-4 bg-gray-50">
-                                        <GameDetails games={team.games} />
+                                        <GameDetails games={team.games}/>
                                     </td>
                                 </tr>
                             )}

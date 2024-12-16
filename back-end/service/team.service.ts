@@ -8,7 +8,7 @@ import { Player } from '../model/player';
 import { User } from '../model/user';
 
 const getAllTeams = async (): Promise<Team[]> => {
-    return (await teamDb.getAllTeams()) || [];
+    return await teamDb.getAllTeams();
 };
 
 const createTeam = async (team: TeamInput): Promise<Team> => {
