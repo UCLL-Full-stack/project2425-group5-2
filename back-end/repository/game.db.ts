@@ -4,7 +4,14 @@ import database from './database';
 const getAllGames = async (): Promise<Game[]> => {
     try {
         const gamePrisma = await database.game.findMany({
-            include: { teams: { include: { coach: { include: { user: true } }, players: { include: { user: true } } }} },
+            include: {
+                teams: {
+                    include: {
+                        coach: { include: { user: true } },
+                        players: { include: { user: true } },
+                    },
+                },
+            },
         });
         return gamePrisma.map((game) => Game.from(game));
     } catch (error) {
@@ -17,7 +24,14 @@ const getGameById = async (id: number): Promise<Game> => {
     try {
         const gamePrisma = await database.game.findUnique({
             where: { id },
-            include: { teams: { include: { coach: { include: { user: true } }, players: { include: { user: true } } }} },
+            include: {
+                teams: {
+                    include: {
+                        coach: { include: { user: true } },
+                        players: { include: { user: true } },
+                    },
+                },
+            },
         });
         if (!gamePrisma) {
             throw new Error('Game not found');
@@ -39,7 +53,14 @@ const getGamesByTeamId = async (teamId: number): Promise<Game[]> => {
                     },
                 },
             },
-            include: { teams: { include: { coach: { include: { user: true } }, players: { include: { user: true } } }} },
+            include: {
+                teams: {
+                    include: {
+                        coach: { include: { user: true } },
+                        players: { include: { user: true } },
+                    },
+                },
+            },
         });
         return gamePrisma.map((game) => Game.from(game));
     } catch (error) {
@@ -58,13 +79,20 @@ const getGamesByUserId = async (userId: number): Promise<Game[]> => {
                             some: {
                                 user: {
                                     id: userId,
-                                }
+                                },
                             },
                         },
                     },
                 },
             },
-            include: { teams: { include: { coach: { include: { user: true } }, players: { include: { user: true } } }} },
+            include: {
+                teams: {
+                    include: {
+                        coach: { include: { user: true } },
+                        players: { include: { user: true } },
+                    },
+                },
+            },
         });
         return gamePrisma.map((game) => Game.from(game));
     } catch (error) {
@@ -72,7 +100,6 @@ const getGamesByUserId = async (userId: number): Promise<Game[]> => {
         throw new Error('Database error, see server log for details.');
     }
 };
-
 
 const updateGame = async (game: Game): Promise<Game> => {
     try {
@@ -162,4 +189,12 @@ const deleteGame = async (id: number): Promise<Game> => {
     }
 };
 
-export default { getAllGames, getGameById, createGame, updateGame, getGamesByTeamId, getGamesByUserId, deleteGame };
+export default {
+    getAllGames,
+    getGameById,
+    createGame,
+    updateGame,
+    getGamesByTeamId,
+    getGamesByUserId,
+    deleteGame,
+};

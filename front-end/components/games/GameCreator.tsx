@@ -12,8 +12,8 @@ type Props = {
 const TeamCreator: React.FC<Props> = ({ onGameCreated }) => {
     const [date, setDate] = useState<string>('');
     const [teams, setTeams] = useState<Team[]>([]);
+    const [assignedTeams, setAssignedTeams] = useState<Team[]>([]);
     const [selectedTeams, setSelectedTeams] = useState<Team[]>([]);
-    const [result, setResult] = useState<string>('');
     const [errors, setErrors] = useState<string[]>([]);
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
 
@@ -31,9 +31,9 @@ const TeamCreator: React.FC<Props> = ({ onGameCreated }) => {
         if (loggedInUser) {
             const fetchData = async () => {
                 const teamsData = await TeamService.getAllTeams();
-                
+
                 const allTeams = await teamsData.json();
-            
+
                 setTeams(allTeams);
             };
             fetchData();
@@ -49,7 +49,7 @@ const TeamCreator: React.FC<Props> = ({ onGameCreated }) => {
 
         if (selectedTeams.length != 2) {
             validationErrors.push('Two teams are required');
-        };
+        }
 
         if (!date) {
             validationErrors.push('Date is required');
@@ -60,10 +60,13 @@ const TeamCreator: React.FC<Props> = ({ onGameCreated }) => {
             return;
         }
 
+        const formattedDate = new Date(date).toISOString();
+        console.log('Formatted Date:', formattedDate);
+
         const newGame: Game = {
-            date,
+            date: formattedDate,
             teams: selectedTeams,
-            result,
+            result: null,
         };
 
         await GameService.createGame(newGame);
@@ -71,14 +74,15 @@ const TeamCreator: React.FC<Props> = ({ onGameCreated }) => {
     };
 
     const toggleTeamSelection = (team: Team) => {
-        if (selectedTeams.includes(team)) {
-            return;
-        }
-        setSelectedTeams((prevSelected) =>
-            prevSelected.find((t) => t.id === team.id)
-                ? prevSelected.filter((t) => t.id !== team.id)
-                : [...prevSelected, team],
-        );
+        setSelectedTeams((prevSelected) => {
+            if (prevSelected.find((t) => t.id === team.id)) {
+                return prevSelected.filter((t) => t.id !== team.id);
+            } else if (prevSelected.length < 2) {
+                return [...prevSelected, team];
+            } else {
+                return prevSelected;
+            }
+        });
     };
 
     const goBack = () => {
@@ -114,9 +118,8 @@ const TeamCreator: React.FC<Props> = ({ onGameCreated }) => {
                             setDate(e.target.value);
                             if (errors.length) setErrors([]);
                         }}
-                        className="w-full px-4 py-3 bg-white text-background text-lg rounded-md focus:outline-none focus:ring-2 focus:ring-secondary transition-all duration-300 shadow-md"
+                        className="bg-white text-background hover:bg-accent hover:text-white w-full px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary transition-all duration-300 shadow-md"
                     />
-                    
                 </div>
 
                 {errors.length > 0 && (
@@ -135,33 +138,39 @@ const TeamCreator: React.FC<Props> = ({ onGameCreated }) => {
                         {teams.map((team) => (
                             <div key={team.id}>
                                 <button
-                                type="button"
-                                onClick={() => {
-                                    toggleTeamSelection(team);
-                                    if (errors.length) setErrors([]);
+                                    type="button"
+                                    onClick={() => {
+                                        toggleTeamSelection(team);
+                                        if (errors.length) setErrors([]);
                                     }}
-                                disabled={selectedTeams.length != 2}
-                                className={`w-full py-2 px-3 rounded-md transition-all duration-300 flex items-center justify-between text-sm`}
-                                                >
-                                                    <span className="font-medium truncate">
-                                                        {team.teamName}
-                                                    </span>
-                                                    {selectedTeams.find((t) => t.id === team.id) ? (
-                                                        <CheckSquare
-                                                            className="text-white flex-shrink-0"
-                                                            size={16}
-                                                        />
-                                                    ) : (
-                                                        <Square
-                                                            className='text-secondary'
-                                                            size={16}
-                                                        />
-                                                    )}
-                                                </button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
+                                    disabled={
+                                        selectedTeams.length === 2 &&
+                                        !selectedTeams.find((t) => t.id === team.id)
+                                    }
+                                    className={`w-full py-2 px-3 rounded-md transition-all duration-300 flex items-center justify-between text-sm ${
+                                        selectedTeams.find((t) => t.id === team.id)
+                                            ? 'bg-secondary text-white shadow-md'
+                                            : 'bg-white text-background hover:bg-accent hover:text-white'
+                                    } ${
+                                        selectedTeams.length === 2 &&
+                                        !selectedTeams.find((t) => t.id === team.id) &&
+                                        'opacity-50 cursor-not-allowed'
+                                    }`}
+                                >
+                                    <span className="font-medium truncate">{team.teamName}</span>
+                                    {selectedTeams.find((t) => t.id === team.id) ? (
+                                        <CheckSquare
+                                            className="text-white flex-shrink-0"
+                                            size={16}
+                                        />
+                                    ) : (
+                                        <Square className="text-secondary" size={16} />
+                                    )}
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
 
                 <div className="flex justify-center pt-6">
                     <button

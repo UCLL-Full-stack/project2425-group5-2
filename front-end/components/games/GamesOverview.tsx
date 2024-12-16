@@ -20,8 +20,7 @@ const GamesOverview: React.FC<GamesOverviewProps> = ({ teams, games }) => {
             const parsedUser = JSON.parse(user);
             setLoggedInUser(parsedUser);
         }
-        }, []);
-        
+    }, []);
 
     if (!loggedInUser) {
         return <p>Loading...</p>;
@@ -56,14 +55,12 @@ const GamesOverview: React.FC<GamesOverviewProps> = ({ teams, games }) => {
                                         )}
                                     </button>
                                 </td>
-                                <td className="px-6 py-4 text-gray-900">
-                                    {team.games?.length}
-                                </td>
+                                <td className="px-6 py-4 text-gray-900">{team.games?.length}</td>
                             </tr>
                             {expandedTeamId === team.id && (
                                 <tr>
                                     <td colSpan={3} className="px-6 py-4 bg-gray-50">
-                                        <GameDetails games={games} team={team}/>
+                                        <GameDetails games={games} team={team} />
                                     </td>
                                 </tr>
                             )}
