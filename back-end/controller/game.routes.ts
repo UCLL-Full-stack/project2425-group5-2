@@ -63,7 +63,7 @@ const gameRouter = express.Router();
  */
 gameRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const games = gameService.getAllGames();
+        const games = await gameService.getAllGames();
         res.status(200).json(games);
     } catch (error: any) {
         res.status(400).json({ status: 'error', errorMessage: error.message });
@@ -92,7 +92,7 @@ gameRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
  */
 gameRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const game = gameService.getGameById(Number(req.params.id));
+        const game = await gameService.getGameById(Number(req.params.id));
         res.status(200).json(game);
     } catch (error: any) {
         res.status(400).json({ status: 'error', errorMessage: error.message });
@@ -160,7 +160,7 @@ gameRouter.get('/user/:id', async (req: Request, res: Response, next: NextFuncti
  */
 gameRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const game = gameService.createGame(req.body);
+        const game = await gameService.createGame(req.body);
         res.status(200).json(game);
     } catch (error: any) {
         res.status(400).json({ status: 'error', errorMessage: error.message });

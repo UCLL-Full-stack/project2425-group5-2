@@ -6,13 +6,13 @@ import GameDetails from './GameDetails';
 
 type GamesOverviewProps = {
     teams: Team[];
+    games: Game[];
 };
 
-const GamesOverview: React.FC<GamesOverviewProps> = ({ teams }) => {
+const GamesOverview: React.FC<GamesOverviewProps> = ({ teams, games }) => {
     const [expandedTeamId, setExpandedTeamId] = useState<number | null>(null);
     const router = useRouter();
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
-    const [teamsWithGamesPlayed, setTeamsWithGamesPlayed] = useState<Team[]>([]);
 
     useEffect(() => {
         const user = sessionStorage.getItem('loggedInUser');
@@ -20,14 +20,6 @@ const GamesOverview: React.FC<GamesOverviewProps> = ({ teams }) => {
             const parsedUser = JSON.parse(user);
             setLoggedInUser(parsedUser);
         }
-        let teamsToDisplay: Team[] = [];
-        for (const team of teams) {
-            console.log(team);
-            if (team.games?.length > 0) {
-                teamsToDisplay.push(team);
-            }
-        }
-        setTeamsWithGamesPlayed(teamsToDisplay);
         }, []);
         
 
@@ -48,7 +40,7 @@ const GamesOverview: React.FC<GamesOverviewProps> = ({ teams }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {teamsWithGamesPlayed.map((team) => (
+                    {teams.map((team) => (
                         <React.Fragment key={team.id}>
                             <tr className="border-b border-gray-200 hover:bg-gray-50 transition-colors duration-200">
                                 <td className="px-6 py-4">
@@ -71,7 +63,7 @@ const GamesOverview: React.FC<GamesOverviewProps> = ({ teams }) => {
                             {expandedTeamId === team.id && (
                                 <tr>
                                     <td colSpan={3} className="px-6 py-4 bg-gray-50">
-                                        <GameDetails games={team.games}/>
+                                        <GameDetails games={games} team={team}/>
                                     </td>
                                 </tr>
                             )}

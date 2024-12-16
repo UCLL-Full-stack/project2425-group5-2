@@ -26,7 +26,6 @@ const ProfileOverview: React.FC<Props> = ({ user, teams }) => {
   const editProfile = () => {
     router.push(`/profile/${user.id}/edit`)
   }
-  console.log(user);
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">

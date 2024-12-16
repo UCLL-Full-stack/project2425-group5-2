@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Game, User } from '../../types';
+import { Game, Team, User } from '../../types';
 import { useRouter } from 'next/router';
 import { Edit, Trash } from 'lucide-react';
 import GameService from '@services/GameService';
 
 type Props = {
     games: Array<Game>;
+    team: Team;
 };
 
-const GameDetailsTable: React.FC<Props> = ({ games }) => {
+const GameDetailsTable: React.FC<Props> = ({ games, team }) => {
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
+    const [filteredGames, setFilteredGames] = useState<Game[]>([]);
     const router = useRouter();
 
     useEffect(() => {
@@ -18,7 +20,9 @@ const GameDetailsTable: React.FC<Props> = ({ games }) => {
             const parsedUser = JSON.parse(user);
             setLoggedInUser(parsedUser);
         }
-    }, []);
+        const filteredGames = games.filter((game) => game.teams.some((t) => t.id === team.id));
+        setFilteredGames(filteredGames);
+    }, [games, team]);
 
     if (!loggedInUser) {
         return <p className="text-center py-4">Loading...</p>;
@@ -31,6 +35,16 @@ const GameDetailsTable: React.FC<Props> = ({ games }) => {
         } catch (error) {
             console.error('Error deleting game:', error);
         }
+    };
+
+    const formatDate = (toFormat: string) => {
+        const date = new Date(toFormat);
+        const formattedDate = date.toLocaleDateString('en-GB'); // dd-mm-yyyy
+        const formattedTime = date.toLocaleTimeString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+        return `${formattedDate} ${formattedTime}`;
     };
 
     return (
@@ -56,21 +70,16 @@ const GameDetailsTable: React.FC<Props> = ({ games }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {games.map((game, index) => (
+                        {filteredGames.map((game, index) => (
                             <tr
                                 key={game.id}
                                 className={`${
                                     index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
                                 } hover:bg-gray-100 transition-colors duration-200`}
                             >
-                                <td className="px-6 py-4 text-sm text-gray-900">{game.date}</td>
+                                <td className="px-6 py-4 text-sm text-gray-900">{formatDate(game.date)}</td>
                                 <td className="px-6 py-4 text-sm text-gray-900">
-                                    {game.teams.map((team, index) => (
-                                        <span key={index} className="mr-2">
-                                            {team.teamName}
-                                            {index < game.teams.length - 1 && ' vs '}
-                                        </span>
-                                    ))}
+                                    <span>{game.teams[0].teamName} - {game.teams[1].teamName}</span>
                                 </td>
                                 <td className="px-6 py-4 text-sm text-gray-900">{game.result}</td>
                                 {(loggedInUser.role === 'coach' ||

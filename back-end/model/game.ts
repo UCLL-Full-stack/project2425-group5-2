@@ -4,6 +4,7 @@ import {
     Game as GamePrisma,
     Coach as CoachPrisma,
     Player as PlayerPrisma,
+    User as UserPrisma,
  } from '@prisma/client';
 
 export class Game {
@@ -52,12 +53,19 @@ export class Game {
         this.result = result;
     }
 
-    static from({id, result, date, teams}: GamePrisma & {teams: TeamPrisma[]}) {
+    static from({id, result, date, teams}: GamePrisma 
+        & {teams: ({id: number, teamName: string, coach: CoachPrisma, players: PlayerPrisma[]}
+        & TeamPrisma
+        & {coach: CoachPrisma & {user: UserPrisma}}
+        & {players: ({id: number, user: UserPrisma} 
+            & PlayerPrisma
+            & {user: UserPrisma})[]}
+    )[]}) {
         return new Game({
             id,
             result: result ?? undefined,
             date,
-            teams: teams.map((team) => new Team(team)),
+            teams: teams.map((team) => Team.from(team)),
         });
     }
 }

@@ -79,7 +79,10 @@ export class Team {
         }
     }
 
-    static from({ id, teamName, players, coach }: TeamPrisma & { players: PlayerPrisma[] } & { coach: CoachPrisma & { user: UserPrisma } }) {
+    static from({ id, teamName, players, coach }: TeamPrisma & {players: ({id: number, user: UserPrisma} 
+        & PlayerPrisma
+        & {user: UserPrisma})[]}
+        & { coach: CoachPrisma & { user: UserPrisma } }) {
         return new Team({
             id,
             teamName,
@@ -87,4 +90,4 @@ export class Team {
             coach: Coach.from(coach)
         });
     }
-}
+};

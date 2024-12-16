@@ -9,10 +9,10 @@ import GameService from '@services/GameService';
 import GamesOverview from '@components/games/GamesOverview';
 
 const GamesPage: React.FC = () => {
-    const [teams, setTeams] = useState<Array<Team>>([]);
+    const [teams, setTeams] = useState<Team[]>([]);
     const router = useRouter();
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
-    const [games, setGames] = useState<Array<Game>>([]);
+    const [games, setGames] = useState<Game[]>([]);
     
     useEffect(() => {
         const user = sessionStorage.getItem('loggedInUser');
@@ -25,6 +25,7 @@ const GamesPage: React.FC = () => {
     useEffect(() => {
         if (loggedInUser) {
             getTeams();
+            getGames();
         }
     }, [loggedInUser]);
 
@@ -45,14 +46,25 @@ const GamesPage: React.FC = () => {
         } catch (error) {
             console.error('Error fetching teams:', error);
         }
+    };
 
-        if (!loggedInUser) {
-            return <p>Loading...</p>;
+    const getGames = async () => {
+        try {
+            let gamesResponse;
+            if (loggedInUser.role === 'admin') {
+                gamesResponse = await GameService.getAllGames();
+            } else {
+                gamesResponse = await GameService.getGamesByUserId(loggedInUser.id);
+            }
+            const fetchedGames = await gamesResponse.json();
+            setGames(fetchedGames);
+        } catch (error) {
+            console.error('Error fetching teams:', error);
         }
     };
 
     const createGameRoute = () => {
-        router.push('/game/create');
+        router.push('/games/create');
     };
 
     return (
@@ -77,13 +89,13 @@ const GamesPage: React.FC = () => {
                         )}
                     </div>
                     {teams.length > 0 ? (
-                        <GamesOverview teams={teams} />
+                        <GamesOverview teams={teams} games={games} />
                     ) : (
                         <div className="text-center py-12">
                             <p className="text-2xl font-semibold text-white mb-4">No Games found</p>
                             <p className="text-lg text-white">
                                 Click the 'Create Game' button to create a game!
-                            </p>
+                            </p> 
                         </div>
                     )}
                 </div>

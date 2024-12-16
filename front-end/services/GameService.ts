@@ -1,6 +1,6 @@
 import { Game } from 'types';
 
-const apiURL = process.env.REACT_APP_API_URL;
+const apiURL = process.env.NEXT_PUBLIC_API_URL;
 
 const getAllGames = () => {
     return fetch(apiURL + '/games', {
@@ -49,6 +49,15 @@ const getGamesByTeamId = (teamId: number) => {
     });
 };
 
+const getGamesByUserId = (userId: number) => {
+    return fetch(apiURL + `/games/user/${userId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+};
+
 const deleteGame = (id: number) => {
     return fetch(apiURL + `/games/${id}`, {
         method: 'DELETE',
@@ -65,4 +74,5 @@ export default {
     createGame,
     getGamesByTeamId,
     deleteGame,
+    getGamesByUserId,
 };

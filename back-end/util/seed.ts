@@ -14,8 +14,8 @@ const main = async () => {
 
     const admin = await prisma.user.create({
         data: {
-            firstName: 'Admin',
-            lastName: 'Admin',
+            firstName: 'Adje',
+            lastName: 'Min',
             password: await bcrypt.hash('Admin123!', 12),
             email: 'admin@teamtrack.be',
             phoneNumber: '0497000030',
@@ -27,10 +27,10 @@ const main = async () => {
         data: {
             user: {
                 create: {
-                    firstName: 'Mark',
-                    lastName: 'Zuckerberg',
-                    password: await bcrypt.hash('Mark123!', 12),
-                    email: 'markzuckerberg@teamtrack.be',
+                    firstName: 'Bob',
+                    lastName: 'Peeters',
+                    password: await bcrypt.hash('Bob123!', 12),
+                    email: 'bobpeeters@teamtrack.be',
                     phoneNumber: '0497000000',
                     role: 'coach',
                 },
@@ -42,10 +42,10 @@ const main = async () => {
         data: {
             user: {
                 create: {
-                    firstName: 'John',
-                    lastName: 'Doe',
-                    password: await bcrypt.hash('John123!', 12),
-                    email: 'johndoe@teamtrack.be',
+                    firstName: 'Aad',
+                    lastName: 'De Mos',
+                    password: await bcrypt.hash('Aad123!', 12),
+                    email: 'aaddemos@teamtrack.be',
                     phoneNumber: '0497000007',
                     role: 'coach',
                 },
@@ -145,7 +145,7 @@ const main = async () => {
 
     const team1 = await prisma.team.create({
         data: {
-            teamName: 'Test Team',
+            teamName: 'Maaskantje United',
             coachId: coach1.id,
             players: {
                 connect: [{ id: player1.id }, { id: player2.id }, { id: player3.id }],
@@ -155,7 +155,7 @@ const main = async () => {
 
     const team2 = await prisma.team.create({
         data: {
-            teamName: 'Other Team',
+            teamName: 'Real Woensel',
             coachId: coach2.id,
             players: {
                 connect: [{ id: player4.id }, { id: player5.id }, { id: player6.id }],
