@@ -21,7 +21,7 @@ const getGameById = (id: number) => {
 };
 
 const updateGame = (game: Game) => {
-    return fetch(apiURL + `/games/edit/${game.id}`, {
+    return fetch(`${apiURL}/games/edit/${game.id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

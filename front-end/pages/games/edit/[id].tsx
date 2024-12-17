@@ -1,6 +1,3 @@
-import Nav from '@components/layout/Nav';
-import TeamEditor from '@components/teams/TeamEditor';
-import TeamService from '@services/TeamService';
 import { Game, Team } from '../../../types';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -10,16 +7,24 @@ import GameService from '@services/GameService';
 import GameEditor from '@components/games/GameEditor';
 
 const editGamePage: React.FC = () => {
-    const [game, setGame] = useState<Game>(null);
+    const [game, setGame] = useState<Game | null>(null);
     const router = useRouter();
     const { id } = router.query;
 
     useEffect(() => {
         if (id) {
             const fetchGame = async () => {
-                const response = await GameService.getGameById(Number(id));
-                const gameData = await response.json();
-                setGame(gameData);
+                try {
+                    const response = await GameService.getGameById(Number(id));
+                    if (response.ok) {
+                        const gameData = await response.json();
+                        setGame(gameData);
+                    } else {
+                        console.error('Failed to fetch game:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error fetching game:', error);
+                }
             };
             fetchGame();
         }

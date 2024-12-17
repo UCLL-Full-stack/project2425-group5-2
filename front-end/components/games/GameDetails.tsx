@@ -88,7 +88,7 @@ const GameDetailsTable: React.FC<Props> = ({ games, team }) => {
                                         <td className="px-6 py-4 text-center">
                                             <button
                                                 onClick={() =>
-                                                    router.push(`/games/${game.id}/edit`)
+                                                    router.push(`/games/edit/${game.id}`)
                                                 }
                                                 className="inline-flex items-center px-4 py-2 bg-secondary text-white rounded-md hover:bg-accent transition-all duration-300 transform hover:scale-105"
                                             >

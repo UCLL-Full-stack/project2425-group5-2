@@ -1,4 +1,3 @@
-import Nav from '@components/layout/Nav';
 import TeamEditor from '@components/teams/TeamEditor';
 import TeamService from '@services/TeamService';
 import { Team } from '../../../types';
@@ -32,9 +31,7 @@ const editTeamPage: React.FC = () => {
             <Head>
                 <title>Edit Team - TeamTrack</title>
             </Head>
-            <main>
-                {team && <TeamEditor team={team} TeamUpdated={handleTeamUpdated} />}
-            </main>
+            <main>{team && <TeamEditor team={team} TeamUpdated={handleTeamUpdated} />}</main>
         </Layout>
     );
 };
