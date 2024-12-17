@@ -198,7 +198,6 @@ gameRouter.put('/edit/:id', async (req: Request, res: Response, next: NextFuncti
         const gameData: GameInput = req.body;
         const id = req.params.id;
         const updatedGame: Game = await gameService.updateGame(parseInt(id), gameData);
-        console.log('updatedgame:', updatedGame);
         res.status(200).json(updatedGame);
     } catch (error: any) {
         res.status(400).json({ status: 'error', errorMessage: error.message });

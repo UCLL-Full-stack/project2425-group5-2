@@ -13,10 +13,10 @@ const Nav: React.FC = () => {
     }, []);
 
     const handleClick = () => {
-        router.push('/');
         sessionStorage.removeItem('loggedInUser');
         setLoggedInUser(null);
         router.reload();
+        router.push('/');
     };
 
     return (

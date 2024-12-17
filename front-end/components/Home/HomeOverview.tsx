@@ -37,32 +37,56 @@ export default function HomeOverview() {
                             Join our community of teams and start tracking your performance today!
                         </p>
                         <div className="flex space-x-4">
-                            <button
-                                onClick={handleLogin}
-                                className="hover:shadow-md hover:shadow-neutral-400 flex items-center px-6 py-3 bg-primary text-black font-medium rounded-md hover:bg-primary-dark transition-all duration-300 transform hover:scale-105"
-                            >
-                                <LogIn className="mr-2" size={20} />
-                                Log In
-                            </button>
-                            <button
-                                onClick={handleRegister}
-                                className="hover:shadow-md hover:shadow-neutral-400 flex items-center px-6 py-3 bg-accent text-black font-medium rounded-md hover:bg-secondary-dark transition-all duration-300 transform hover:scale-105"
-                            >
-                                <UserPlus className="mr-2" size={20} />
-                                Register
-                            </button>
+                        <table className="w-full">
+                    <thead className="bg-secondary text-white">
+                        <tr>
+                            <th className="px-6 py-3 text-left text-sm font-semibold">Email</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold">Password</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold">Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td className="">
+                                admin@teamtrack.be
+                            </td>
+                            <td>
+                                Admin123!
+                            </td>
+                            <td>
+                                admin
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="">
+                                bobpeeters@teamtrack.be
+                            </td>
+                            <td>
+                                Bob123!
+                            </td>
+                            <td>
+                                coach
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="">
+                                waynerooney@teamtrack.be
+                            </td>
+                            <td>
+                                Wayne123!
+                            </td>
+                            <td>
+                                player
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
                         </div>
                     </div>
                 ) : (
                     <div className="space-y-6">
                         <h2 className="text-3xl font-bold text-gray-900">Welcome back!</h2>
                         <p className="text-xl text-gray-600">Ready to manage your team?</p>
-                        <button
-                            onClick={() => router.push('/dashboard')}
-                            className="flex items-center px-6 py-3 bg-primary text-black font-medium rounded-md hover:bg-primary-dark transition-all duration-300 transform hover:scale-105"
-                        >
-                            Go to Dashboard
-                        </button>
                     </div>
                 )}
             </div>

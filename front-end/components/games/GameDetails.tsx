@@ -39,7 +39,7 @@ const GameDetailsTable: React.FC<Props> = ({ games, team }) => {
 
     const formatDate = (toFormat: string) => {
         const date = new Date(toFormat);
-        const formattedDate = date.toLocaleDateString('en-GB'); // dd-mm-yyyy
+        const formattedDate = date.toLocaleDateString('en-GB');
         const formattedTime = date.toLocaleTimeString('en-GB', {
             hour: '2-digit',
             minute: '2-digit',
