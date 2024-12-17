@@ -99,17 +99,17 @@ const updateUser = async (id: number, userInput: UserInput): Promise<User> => {
     const user = await userDb.getUserById(id);
 
     if (user == undefined) {
-        throw new Error('No team with that id exists.');
+        throw new Error('No user with that id exists.');
     }
 
-    const hashedPassword = await bcrypt.hash(userInput.password, 12);
+    userInput.password = user.getPassword();
 
     const createdUser = new User({
         id,
         email: userInput.email,
         firstName: userInput.firstName,
         lastName: userInput.lastName,
-        password: hashedPassword,
+        password: userInput.password,
         phoneNumber: userInput.phoneNumber,
         role: userInput.role,
     });

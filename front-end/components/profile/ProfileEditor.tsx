@@ -48,9 +48,11 @@ const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
             lastName,
             email,
             phoneNumber,
+            role: loggedInUser.role,
         };
 
         await UserService.updateUser(updatedUser);
+
         handleLogout();
     };
 
@@ -155,6 +157,7 @@ const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
                         Save
                     </button>
                 </div>
+                <div className="flex justify-center pt-6"><p className='text-white text-lg'>You will need to log back in after saving!</p></div>
             </form>
         </div>
     );
