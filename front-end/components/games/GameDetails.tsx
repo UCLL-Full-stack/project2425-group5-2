@@ -24,9 +24,7 @@ const GameDetailsTable: React.FC<Props> = ({ games, team }) => {
 
     useEffect(() => {
         if (Array.isArray(games)) {
-            console.log('Games:', games);
             const filteredGames = games.filter((game) => game.teams.some((t) => t.id === team.id));
-            console.log('Filtered Games:', filteredGames);
             setFilteredGames(filteredGames);
         }
     }, [games, team]);

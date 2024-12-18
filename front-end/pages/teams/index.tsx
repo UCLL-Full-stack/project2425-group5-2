@@ -6,11 +6,27 @@ import TeamOverviewTable from '@components/teams/TeamOverviewTable';
 import TeamService from '@services/TeamService';
 import { Team, User } from '../../types';
 import { Plus } from 'lucide-react';
+import useSWR from 'swr';
 
 const Teams: React.FC = () => {
-    const [teams, setTeams] = useState<Array<Team>>([]);
     const router = useRouter();
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
+
+    const fetcher = async () => {
+        let teamsResponse;
+        if (loggedInUser?.role === 'admin') {
+          teamsResponse = await TeamService.getAllTeams();
+        } else {
+          teamsResponse = await TeamService.getTeamsByUserId(loggedInUser.id);
+        }
+    
+        if (teamsResponse.ok) {
+            const teams = await teamsResponse.json();
+            return teams;
+        } else {
+            throw new Error('Failed to fetch data');
+        }
+      };
 
     useEffect(() => {
         const user = sessionStorage.getItem('loggedInUser');
@@ -20,29 +36,10 @@ const Teams: React.FC = () => {
         }
     }, []);
 
-    useEffect(() => {
-        if (loggedInUser) {
-            getTeams();
-        }
-    }, [loggedInUser]);
+    const { data, isLoading, error } = useSWR(loggedInUser ? "Teams" : null, fetcher);
 
     if (!loggedInUser) {
         return <p>Loading</p>;
-    }
-
-    const getTeams = async () => {
-        try {
-            let response;
-            if (loggedInUser.role === 'admin') {
-                response = await TeamService.getAllTeams();
-            } else {
-                response = await TeamService.getTeamsByUserId(loggedInUser.id);
-            }
-            const fetchedTeams = await response.json();
-            setTeams(fetchedTeams);
-        } catch (error) {
-            console.error('Error fetching teams:', error);
-        }
     };
 
     const createTeamRoute = () => {
@@ -70,8 +67,8 @@ const Teams: React.FC = () => {
                             </button>
                         )}
                     </div>
-                    {teams.length > 0 ? (
-                        <TeamOverviewTable teams={teams} getTeams={getTeams} />
+                    {data && data.length > 0 ? (
+                        <TeamOverviewTable teams={data} />
                     ) : (
                         <div className="text-center py-12">
                             <p className="text-2xl font-semibold text-white mb-4">No teams found</p>

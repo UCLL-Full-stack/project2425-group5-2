@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { StatusMessage } from 'types';
 import UserService from '@services/UserService';
-import { lastDayOfDecade } from 'date-fns';
 
 const Login = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);

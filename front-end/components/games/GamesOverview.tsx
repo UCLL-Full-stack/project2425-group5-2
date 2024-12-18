@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Game, Team, User } from '../../types';
-import { useRouter } from 'next/router';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import GameDetails from './GameDetails';
 
@@ -11,7 +10,6 @@ type GamesOverviewProps = {
 
 const GamesOverview: React.FC<GamesOverviewProps> = ({ teams, games }) => {
     const [expandedTeamId, setExpandedTeamId] = useState<number | null>(null);
-    const router = useRouter();
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
 
     useEffect(() => {

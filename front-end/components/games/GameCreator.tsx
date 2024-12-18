@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import TeamService from '@services/TeamService';
-import { Team, Coach, Player, User, Game } from '../../types';
+import { Team, User, Game } from '../../types';
 import { ArrowLeft, Square, CheckSquare } from 'lucide-react';
 import { useRouter } from 'next/router';
 import GameService from '@services/GameService';
 
 type Props = {
     onGameCreated: () => void;
+    teams: Team[];
 };
 
-const TeamCreator: React.FC<Props> = ({ onGameCreated }) => {
+const GameCreator: React.FC<Props> = ({ onGameCreated, teams }) => {
     const [date, setDate] = useState<string>('');
-    const [teams, setTeams] = useState<Team[]>([]);
-    const [assignedTeams, setAssignedTeams] = useState<Team[]>([]);
     const [selectedTeams, setSelectedTeams] = useState<Team[]>([]);
     const [errors, setErrors] = useState<string[]>([]);
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
@@ -26,19 +24,6 @@ const TeamCreator: React.FC<Props> = ({ onGameCreated }) => {
             setLoggedInUser(parsedUser);
         }
     }, []);
-
-    useEffect(() => {
-        if (loggedInUser) {
-            const fetchData = async () => {
-                const teamsData = await TeamService.getAllTeams();
-
-                const allTeams = await teamsData.json();
-
-                setTeams(allTeams);
-            };
-            fetchData();
-        }
-    }, [loggedInUser]);
 
     if (!loggedInUser) {
         return <p>Loading...</p>;
@@ -61,7 +46,6 @@ const TeamCreator: React.FC<Props> = ({ onGameCreated }) => {
         }
 
         const formattedDate = new Date(date).toISOString();
-        console.log('Formatted Date:', formattedDate);
 
         const newGame: Game = {
             date: formattedDate,
@@ -186,4 +170,4 @@ const TeamCreator: React.FC<Props> = ({ onGameCreated }) => {
     );
 };
 
-export default TeamCreator;
+export default GameCreator;

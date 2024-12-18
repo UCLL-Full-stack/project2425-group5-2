@@ -8,43 +8,38 @@ import ProfileOverview from '@components/profile/ProfileOverview'
 import { User, Team } from '../../types'
 import TeamService from '@services/TeamService'
 import { Edit } from 'lucide-react'
+import useSWR from 'swr'
 
 const ProfilePage: React.FC = () => {
-  const [teams, setTeams] = useState<Team[]>([])
-  const [loggedInUser, setLoggedInUser] = useState<User | null>(null)
+  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
 
-  const router = useRouter()
+  const router = useRouter();
+
+  const fetcher = async () => {
+    let teamsResponse;
+    if (loggedInUser?.role === 'admin') {
+      teamsResponse = await TeamService.getAllTeams();
+    } else {
+      teamsResponse = await TeamService.getTeamsByUserId(loggedInUser.id);
+    }
+
+    if (teamsResponse.ok) {
+        const teams = await teamsResponse.json();
+        return teams;
+    } else {
+        throw new Error('Failed to fetch data');
+    }
+  };
 
   useEffect(() => {
     const user = sessionStorage.getItem('loggedInUser')
     if (user) {
-      const parsedUser = JSON.parse(user)
-      setLoggedInUser(parsedUser)
+      const parsedUser = JSON.parse(user);
+      setLoggedInUser(parsedUser);
     }
-  }, [])
+  }, []);
 
-  useEffect(() => {
-    if (loggedInUser) {
-      getTeams()
-    }
-  }, [loggedInUser])
-
-  const getTeams = async () => {
-    try {
-      let response
-      if (loggedInUser?.role === 'admin') {
-        response = await TeamService.getAllTeams()
-      } else if (loggedInUser) {
-        response = await TeamService.getTeamsByUserId(loggedInUser.id)
-      }
-      if (response) {
-        const fetchedTeams = await response.json()
-        setTeams(fetchedTeams)
-      }
-    } catch (error) {
-      console.error('Error fetching teams:', error)
-    }
-  }
+  const { data, isLoading, error } = useSWR(loggedInUser ? "Teams" : null, fetcher);
 
   const editProfileRoute = () => {
     router.push(`/profile/edit/${loggedInUser?.id}`)
@@ -58,7 +53,7 @@ const ProfilePage: React.FC = () => {
         </div>
       </Layout>
     )
-  }
+  };
 
   return (
     <Layout>
@@ -80,7 +75,7 @@ const ProfilePage: React.FC = () => {
             </button>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <ProfileOverview user={loggedInUser} teams={teams} />
+            {data && <ProfileOverview user={loggedInUser} teams={data} />}
           </div>
         </div>
       </div>

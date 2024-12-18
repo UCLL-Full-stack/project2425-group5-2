@@ -5,12 +5,22 @@ import { useEffect, useState } from 'react';
 import Layout from '@components/layout/Layout';
 import GameService from '@services/GameService';
 import GameEditor from '@components/games/GameEditor';
+import useSWR from 'swr';
 
 const editGamePage: React.FC = () => {
-    const [game, setGame] = useState<Game | null>(null);
     const router = useRouter();
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
     const { id } = router.query;
+
+    const fetcher = async () => {
+        const gameResponse = await GameService.getGameById(Number(id));
+            if (gameResponse.ok) {
+                const game = await gameResponse.json();
+                return game;
+            } else {
+                throw new Error('Failed to fetch data');
+            }
+    };
 
     useEffect(() => {
         const user = sessionStorage.getItem('loggedInUser');
@@ -20,24 +30,7 @@ const editGamePage: React.FC = () => {
         }
     }, []);
 
-    useEffect(() => {
-        if (id) {
-            const fetchGame = async () => {
-                try {
-                    const response = await GameService.getGameById(Number(id));
-                    if (response.ok) {
-                        const gameData = await response.json();
-                        setGame(gameData);
-                    } else {
-                        console.error('Failed to fetch game:', response.statusText);
-                    }
-                } catch (error) {
-                    console.error('Error fetching game:', error);
-                }
-            };
-            fetchGame();
-        }
-    }, [id]);
+    const { data, isLoading, error } = useSWR(loggedInUser && id ? "Game" : null, fetcher);
 
     if (!loggedInUser) {
         return <p>Loading...</p>
@@ -52,7 +45,7 @@ const editGamePage: React.FC = () => {
             <Head>
                 <title>Edit Game - TeamTrack</title>
             </Head>
-            <main>{game && <GameEditor game={game} gameUpdated={handleGameUpdated} />}</main>
+            <main>{data && <GameEditor game={data} gameUpdated={handleGameUpdated} />}</main>
         </Layout>
     );
 };

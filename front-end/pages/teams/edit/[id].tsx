@@ -1,26 +1,36 @@
 import TeamEditor from '@components/teams/TeamEditor';
 import TeamService from '@services/TeamService';
-import { Team } from '../../../types';
+import { Team, User } from '../../../types';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Layout from '@components/layout/Layout';
+import useSWR from 'swr';
 
 const editTeamPage: React.FC = () => {
-    const [team, setTeam] = useState<Team | null>(null);
+    const [loggedInUser, setLoggedInUser] = useState<User>(null);
     const router = useRouter();
     const { id } = router.query;
 
+    const fetcher = async () => {
+        const teamResponse = await TeamService.getTeamById(Number(id));
+            if (teamResponse.ok) {
+                const team = await teamResponse.json();
+                return team;
+            } else {
+                throw new Error('Failed to fetch data');
+            }
+    };
+
     useEffect(() => {
-        if (id) {
-            const fetchTeam = async () => {
-                const response = await TeamService.getTeamById(Number(id));
-                const teamData = await response.json();
-                setTeam(teamData);
-            };
-            fetchTeam();
+        const user = sessionStorage.getItem('loggedInUser');
+        if (user) {
+            const parsedUser = JSON.parse(user);
+            setLoggedInUser(parsedUser);
         }
-    }, [id]);
+    }, []);
+
+    const { data, isLoading, error } = useSWR(loggedInUser && id ? "Team" : null, fetcher);
 
     const handleTeamUpdated = () => {
         router.push('/teams');
@@ -31,7 +41,7 @@ const editTeamPage: React.FC = () => {
             <Head>
                 <title>Edit Team - TeamTrack</title>
             </Head>
-            <main>{team && <TeamEditor team={team} TeamUpdated={handleTeamUpdated} />}</main>
+            <main>{data && <TeamEditor team={data} TeamUpdated={handleTeamUpdated} />}</main>
         </Layout>
     );
 };

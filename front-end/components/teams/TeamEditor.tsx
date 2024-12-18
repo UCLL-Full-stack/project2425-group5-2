@@ -4,6 +4,7 @@ import TeamService from '@services/TeamService';
 import { Player, Team } from '../../types';
 import { ArrowLeft, Square, CheckSquare } from 'lucide-react';
 import { useRouter } from 'next/router';
+import useSWR from 'swr';
 
 type Props = {
     team: Team;
@@ -13,33 +14,33 @@ type Props = {
 const TeamEditor: React.FC<Props> = ({ team, TeamUpdated }) => {
     const [teamName, setTeamName] = useState<string>(team.teamName);
     const [selectedPlayers, setSelectedPlayers] = useState<Array<Player>>(team.players);
-    const [players, setPlayers] = useState<Array<Player>>([]);
     const [assignedPlayers, setAssignedPlayers] = useState<Set<number>>(new Set());
     const [errors, setErrors] = useState<string[]>([]);
 
     const router = useRouter();
 
+    const fetcher = async () => {
+        const [playersResponse, teamsResponse] = await Promise.all([PlayerService.getAllPlayers(), TeamService.getAllTeams()]);
+        if (playersResponse.ok && teamsResponse.ok) {
+            const [players, teams] = await Promise.all([playersResponse.json(), teamsResponse.json()]);
+            return { players, teams };
+        } else {
+            throw new Error('Failed to fetch data');
+        }
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            const [playersData, teamData] = await Promise.all([
-                PlayerService.getAllPlayers(),
-                TeamService.getAllTeams(),
-            ]);
-
-            const allTeams = await teamData.json();
-            const allPlayers = await playersData.json();
-
-            setPlayers(allPlayers);
-
+        if (data) {
             const assignedPlayers = new Set<number>();
-            allTeams.forEach((team: Team) => {
+            data.teams.forEach((team: Team) => {
                 team.players.forEach((player: Player) => assignedPlayers.add(player.id));
             });
 
             setAssignedPlayers(assignedPlayers);
         };
-        fetchData();
     }, []);
+
+    const { data, isLoading, error } = useSWR('Players', fetcher);
 
     const handleUpdateTeam = async () => {
         const validationErrors: string[] = [];
@@ -141,7 +142,7 @@ const TeamEditor: React.FC<Props> = ({ team, TeamUpdated }) => {
                 <div className="w-full">
                     <h3 className="text-2xl font-bold mb-4 text-white">Select Players</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-2">
-                        {players.map((player) => (
+                        {data.players.map((player) => (
                             <div key={player.id}>
                                 <button
                                     type="button"

@@ -1,13 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { LogIn, UserPlus } from 'lucide-react';
 import { User } from 'types';
 
 export default function HomeOverview() {
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
-    const router = useRouter();
 
     useEffect(() => {
             const user = sessionStorage.getItem('loggedInUser');
@@ -16,14 +13,6 @@ export default function HomeOverview() {
                 setLoggedInUser(parsedUser);
             }
         }, []);
-
-    const handleLogin = () => {
-        router.push('/login');
-    };
-
-    const handleRegister = () => {
-        router.push('/register');
-    };
 
     return (
         <div className="w-full max-w-2xl mx-auto bg-secondary rounded-lg shadow-md overflow-hidden">

@@ -7,13 +7,38 @@ import { Game, Team, User } from '../../types';
 import { Plus } from 'lucide-react';
 import GameService from '@services/GameService';
 import GamesOverview from '@components/games/GamesOverview';
+import useSWR from 'swr';
 
 const GamesPage: React.FC = () => {
-    const [teams, setTeams] = useState<Team[]>([]);
     const router = useRouter();
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
-    const [games, setGames] = useState<Game[]>([]);
-    
+
+    const fetcher = async () => {
+        let teamsResponse, gamesResponse;
+
+        if (loggedInUser.role === 'admin') {
+            [teamsResponse, gamesResponse] = await Promise.all([
+                TeamService.getAllTeams(),
+                GameService.getAllGames(),
+            ]);
+        } else {
+            [teamsResponse, gamesResponse] = await Promise.all([
+                TeamService.getTeamsByUserId(loggedInUser.id),
+                GameService.getGamesByUserId(loggedInUser.id),
+            ]);
+        }
+
+        if (teamsResponse.ok && gamesResponse.ok) {
+            const [teams, games] = await Promise.all([
+                teamsResponse.json(),
+                gamesResponse.json(),
+            ]);
+            return { teams, games };
+        } else {
+            throw new Error('Failed to fetch data');
+        }
+    };
+
     useEffect(() => {
         const user = sessionStorage.getItem('loggedInUser');
         if (user) {
@@ -22,46 +47,11 @@ const GamesPage: React.FC = () => {
         }
     }, []);
 
-    useEffect(() => {
-        if (loggedInUser) {
-            getTeams();
-            getGames();
-        }
-    }, [loggedInUser]);
+    const { data, isLoading, error } = useSWR(loggedInUser ? "TeamsGames" : null, fetcher);
 
     if (!loggedInUser) {
         return <p>Loading</p>;
     }
-
-    const getTeams = async () => {
-        try {
-            let teamsResponse;
-            if (loggedInUser.role === 'admin') {
-                teamsResponse = await TeamService.getAllTeams();
-            } else {
-                teamsResponse = await TeamService.getTeamsByUserId(loggedInUser.id);
-            }
-            const fetchedTeams = await teamsResponse.json();
-            setTeams(fetchedTeams);
-        } catch (error) {
-            console.error('Error fetching teams:', error);
-        }
-    };
-
-    const getGames = async () => {
-        try {
-            let gamesResponse;
-            if (loggedInUser.role === 'admin') {
-                gamesResponse = await GameService.getAllGames();
-            } else {
-                gamesResponse = await GameService.getGamesByUserId(loggedInUser.id);
-            }
-            const fetchedGames = await gamesResponse.json();
-            setGames(fetchedGames);
-        } catch (error) {
-            console.error('Error fetching teams:', error);
-        }
-    };
 
     const createGameRoute = () => {
         router.push('/games/create');
@@ -88,8 +78,8 @@ const GamesPage: React.FC = () => {
                             </button>
                         )}
                     </div>
-                    {teams.length > 0 ? (
-                        <GamesOverview teams={teams} games={games} />
+                    {(data && data.teams.length > 0) ? (
+                        <GamesOverview teams={data.teams} games={data.games} />
                     ) : (
                         <div className="text-center py-12">
                             <p className="text-2xl font-semibold text-white mb-4">No Games found</p>

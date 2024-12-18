@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { User, Team } from '../../types'
 import { useRouter } from 'next/navigation'
 import { ChevronDown, ChevronUp, Edit } from 'lucide-react'
@@ -23,14 +23,16 @@ const ProfileOverview: React.FC<Props> = ({ user, teams }) => {
     setExpandedTeamId((prev) => (prev === teamId ? null : teamId))
   }
 
-  const editProfile = () => {
-    router.push(`/profile/${user.id}/edit`)
-  }
-
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       <div className="p-6 space-y-6">
         <table className="w-full">
+          <thead className="bg-secondary text-white">
+            <tr>
+              <th className="px-6 py-3 text-left text-sm font-semibold">User Information</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold"></th>
+            </tr>
+          </thead>
           <tbody>
             <tr className="border-b border-gray-200">
               <td className="px-6 py-4 font-medium text-gray-900">Role</td>

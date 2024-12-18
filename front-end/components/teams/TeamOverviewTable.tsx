@@ -7,10 +7,9 @@ import TeamService from '@services/TeamService';
 
 type Props = {
     teams: Array<Team>;
-    getTeams: () => void;
 };
 
-const TeamOverviewTable: React.FC<Props> = ({ teams, getTeams }) => {
+const TeamOverviewTable: React.FC<Props> = ({ teams }) => {
     const [expandedTeamId, setExpandedTeamId] = useState<number | null>(null);
     const router = useRouter();
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
@@ -33,7 +32,7 @@ const TeamOverviewTable: React.FC<Props> = ({ teams, getTeams }) => {
     const deleteTeam = async (teamId: number) => {
         try {
             await TeamService.deleteTeam(teamId);
-            getTeams();
+            router.reload();
         } catch (error) {
             console.error(error);
         }

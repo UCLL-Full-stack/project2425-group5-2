@@ -1,7 +1,7 @@
 import { Game } from 'types';
 
 const apiURL = process.env.NEXT_PUBLIC_API_URL;
-const token = JSON.parse(sessionStorage.getItem('loggedInUser'))?.token;
+const token = typeof window !== 'undefined' ? JSON.parse(sessionStorage.getItem("loggedInUser"))?.token : null;
 
 const getAllGames = () => {
     return fetch(apiURL + '/games', {
@@ -75,7 +75,7 @@ const deleteGame = (id: number) => {
     });
 };
 
-export default {
+const GameService = {
     getAllGames,
     getGameById,
     updateGame,
@@ -84,3 +84,4 @@ export default {
     deleteGame,
     getGamesByUserId,
 };
+export default GameService;

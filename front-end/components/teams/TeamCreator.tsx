@@ -5,6 +5,7 @@ import CoachService from '@services/CoachService';
 import PlayerService from '@services/PlayerService';
 import { ArrowLeft, Square, CheckSquare } from 'lucide-react';
 import { useRouter } from 'next/router';
+import useSWR from 'swr';
 
 type Props = {
     onTeamCreated: () => void;
@@ -14,13 +15,31 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
     const [teamName, setTeamName] = useState<string>('');
     const [selectedCoach, setSelectedCoach] = useState<Coach | null>(null);
     const [selectedPlayers, setSelectedPlayers] = useState<Array<Player>>([]);
-    const [coaches, setCoaches] = useState<Array<Coach>>([]);
-    const [players, setPlayers] = useState<Array<Player>>([]);
     const [assignedPlayers, setAssignedPlayers] = useState<Set<number>>(new Set());
     const [errors, setErrors] = useState<string[]>([]);
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
 
     const router = useRouter();
+
+    const fetcher = async () => {
+        const [coachesResponse, playersResponse, teamsResponse] = await Promise.all([
+            CoachService.getAllCoaches(),
+            PlayerService.getAllPlayers(),
+            TeamService.getAllTeams(),
+        ]);
+
+        if (coachesResponse.ok && playersResponse.ok && teamsResponse.ok) {
+            const [coaches, players, teams] = await Promise.all([
+                coachesResponse.json(),
+                playersResponse.json(),
+                teamsResponse.json(),
+            ]);
+
+            return { coaches, players, teams };
+        } else {
+            throw new Error('Failed to fetch data');
+        }
+    };
 
     useEffect(() => {
         const user = sessionStorage.getItem('loggedInUser');
@@ -30,41 +49,20 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
         }
     }, []);
 
+    const { data, isLoading, error } = useSWR(loggedInUser ? 'TeamsCoachesPlayers' : null, fetcher);
+
     useEffect(() => {
-        if (loggedInUser) {
-            const fetchData = async () => {
-                const [coachesData, playersData, teamsData] = await Promise.all([
-                    CoachService.getAllCoaches(),
-                    PlayerService.getAllPlayers(),
-                    TeamService.getAllTeams(),
-                ]);
+        if (data && loggedInUser) {
+            const assignedPlayers = new Set<number>();
+            if (data.teams.length > 0) {
+                data.teams.forEach((team: Team) => {
+                    team.players.forEach((player: Player) => assignedPlayers.add(player.id));
+                });
+            }
 
-                const allCoaches = await coachesData.json();
-                const allPlayers = await playersData.json();
-                const allTeams = await teamsData.json();
-                const filteredCoaches = allCoaches.filter(
-                    (coach) => coach.user.id === loggedInUser.id,
-                );
-
-                if (loggedInUser.role == 'coach') {
-                    setCoaches(filteredCoaches);
-                } else {
-                    setCoaches(allCoaches);
-                }
-                setPlayers(allPlayers);
-
-                const assignedPlayers = new Set<number>();
-                if (allTeams.length > 0) {
-                    allTeams.forEach((team: Team) => {
-                        team.players.forEach((player: Player) => assignedPlayers.add(player.id));
-                    });
-                }
-
-                setAssignedPlayers(assignedPlayers);
-            };
-            fetchData();
-        }
-    }, [loggedInUser]);
+            setAssignedPlayers(assignedPlayers);
+        };
+    }, [data]);
 
     if (!loggedInUser) {
         return <p>Loading...</p>;
@@ -167,7 +165,7 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
                 <div className="w-full">
                     <h3 className="text-2xl font-bold mb-4 text-white">Select Coach</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                        {coaches.map((coach) => (
+                        {data && data.coaches.map((coach) => (
                             <div key={coach.id}>
                                 <button
                                     type="button"
@@ -204,7 +202,7 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
                 <div className="w-full">
                     <h3 className="text-2xl font-bold mb-4 text-white">Select Players</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-2">
-                        {players.map((player) => (
+                        {data && data.players.map((player) => (
                             <div key={player.id}>
                                 <button
                                     type="button"
