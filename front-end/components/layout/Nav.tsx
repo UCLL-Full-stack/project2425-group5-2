@@ -15,7 +15,6 @@ const Nav: React.FC = () => {
     const handleClick = () => {
         sessionStorage.removeItem('loggedInUser');
         setLoggedInUser(null);
-        router.reload();
         router.push('/');
     };
 
