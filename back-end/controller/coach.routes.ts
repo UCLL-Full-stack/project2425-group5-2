@@ -1,6 +1,11 @@
 /**
  * @swagger
  *   components:
+ *     securitySchemes:
+ *      bearerAuth:
+ *      type: http
+ *      scheme: bearer
+ *      bearerFormat: JWT
  *     schemas:
  *       Coach:
  *         type: object
@@ -26,11 +31,12 @@ import express, { Request, Response, NextFunction } from 'express';
 import coachService from '../service/coach.service';
 
 const coachRouter = express.Router();
-
 /**
  * @swagger
  * /coaches:
  *   get:
+ *     security:
+ *      - bearerAuth: []
  *     summary: Get a list of all coaches.
  *     responses:
  *       200:
@@ -41,6 +47,8 @@ const coachRouter = express.Router();
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Coach'
+ *       401:
+ *          description: Unauthorized.
  */
 
 coachRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
@@ -56,6 +64,8 @@ coachRouter.get('/', async (req: Request, res: Response, next: NextFunction) => 
  * @swagger
  * /coaches/{id}:
  *   get:
+ *     security:
+ *      - bearerAuth: []
  *      summary: Get a coach by ID.
  *      parameters:
  *        - in: path
@@ -71,6 +81,8 @@ coachRouter.get('/', async (req: Request, res: Response, next: NextFunction) => 
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/Coach'
+ *       401:
+ *          description: Unauthorized.
  */
 coachRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {

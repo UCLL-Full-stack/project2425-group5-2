@@ -41,6 +41,8 @@ const userRouter = express.Router();
  * @swagger
  * /users:
  *   get:
+ *      security:
+ *         - bearerAuth: []
  *     summary: Get a list of all users.
  *     responses:
  *       200:
@@ -133,7 +135,66 @@ userRouter.post('/login', async (req: Request, res: Response, next: NextFunction
     }
 });
 
-
+/**
+ * @swagger
+ * /edit/{id}:
+ *   put:
+ *     summary: Update a user
+ *     description: Update the details of an existing user.
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The user ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *                 description: The first name of the user.
+ *               lastName:
+ *                 type: string
+ *                 description: The last name of the user.
+ *               email:
+ *                 type: string
+ *                 description: The email of the user.
+ *               phoneNumber:
+ *                 type: string
+ *                 description: The phone number of the user.
+ *               password:
+ *                 type: string
+ *                 description: The password of the user.
+ *               role:
+ *                 type: string
+ *                 description: The role of the user (e.g., coach, player).
+ *     responses:
+ *       200:
+ *         description: The updated user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                 errorMessage:
+ *                   type: string
+ *        401:
+ *         description: Unauthorized.
+ */
 userRouter.put('/edit/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userData: UserInput = req.body;

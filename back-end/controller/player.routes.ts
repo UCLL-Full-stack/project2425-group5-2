@@ -35,6 +35,8 @@ const playerRouter = express.Router();
  * @swagger
  * /players:
  *   get:
+ *   security:
+ *   - bearerAuth: []
  *      summary: Get a list of all players.
  *      responses:
  *       200:
@@ -45,6 +47,8 @@ const playerRouter = express.Router();
  *                type: array
  *                items:
  *                  $ref: '#/components/schemas/Player'
+ *     401:
+ *      description: Unauthorized.
  */
 playerRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -59,6 +63,8 @@ playerRouter.get('/', async (req: Request, res: Response, next: NextFunction) =>
  * @swagger
  * /players/{id}:
  *   get:
+ *      security:
+ *      - bearerAuth: []
  *     summary: Get a player by ID.
  *     parameters:
  *       - in: path
@@ -75,6 +81,8 @@ playerRouter.get('/', async (req: Request, res: Response, next: NextFunction) =>
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Player'
+ *      401:
+ *       description: Unauthorized.
  */
 playerRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {

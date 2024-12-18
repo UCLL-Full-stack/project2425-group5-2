@@ -6,6 +6,11 @@ import { TeamInput } from '../types/index';
 /**
  * @swagger
  *   components:
+ *     securitySchemes:
+ *      bearerAuth:
+ *      type: http
+ *      scheme: bearer
+ *      bearerFormat: JWT
  *     schemas:
  *       Team:
  *         type: object
@@ -49,6 +54,8 @@ const teamRouter = express.Router();
  * @swagger
  * /teams:
  *   get:
+ *      security:
+ *        - bearerAuth: []
  *     summary: Get a list of all teams.
  *     responses:
  *       200:
@@ -59,6 +66,8 @@ const teamRouter = express.Router();
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Team'
+ *       401:
+ *        description: Unauthorized.
  */
 teamRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -69,6 +78,30 @@ teamRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
     }
 });
 
+/**
+ * @swagger
+ * /teams/user/{id}:
+ *   get:
+ *     security:
+ *      - bearerAuth: []
+ *      summary: Get a team by user ID.
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          description: The ID of the user.
+ *          schema:
+ *            type: number
+ *      responses:
+ *        200:
+ *          description: A JSON object of teams.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Team'
+ *        401:
+ *          description: Unauthorized.
+ */
 teamRouter.get('/user/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const team = await teamService.getTeamsByUserId(parseInt(req.params.id));
@@ -82,6 +115,8 @@ teamRouter.get('/user/:id', async (req: Request, res: Response, next: NextFuncti
  * @swagger
  * /teams/{id}:
  *   get:
+ *     security:
+ *      - bearerAuth: []
  *      summary: Get a team by ID.
  *      parameters:
  *        - in: path
@@ -97,6 +132,8 @@ teamRouter.get('/user/:id', async (req: Request, res: Response, next: NextFuncti
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/Team'
+ *        401:
+ *         description: Unauthorized.
  */
 teamRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -111,6 +148,8 @@ teamRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) =
  * @swagger
  * /teams:
  *   post:
+ *     security:
+ *     - bearerAuth: []
  *     summary: Create a new team
  *     requestBody:
  *       required: true
@@ -125,6 +164,8 @@ teamRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) =
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Team'
+ *       401:
+ *         description: Unauthorized.
  */
 teamRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -136,6 +177,29 @@ teamRouter.post('/', async (req: Request, res: Response, next: NextFunction) => 
     }
 });
 
+/**
+ * @swagger
+ * /teams/edit/{id}:
+ *   put:
+ *     security:
+ *     - bearerAuth: []
+ *     summary: Update a team
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/TeamInput'
+ *     responses:
+ *       200:
+ *         description: An updated team
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Team'
+ *       401:
+ *        description: Unauthorized.
+ */
 teamRouter.put('/edit/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const teamData: TeamInput = req.body;
@@ -149,6 +213,20 @@ teamRouter.put('/edit/:id', async (req: Request, res: Response, next: NextFuncti
     }
 });
 
+/**
+ * @swagger
+ * /teams/{id}:
+ *   delete:
+ *     security:
+ *     - bearerAuth: []
+ *     summary: Delete a team
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/TeamInput'
+ */
 teamRouter.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const team = await teamService.deleteTeam(parseInt(req.params.id));

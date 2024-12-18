@@ -1,6 +1,11 @@
 /**
  * @swagger
  *   components:
+ *     securitySchemes:
+ *      bearerAuth:
+ *      type: http
+ *      scheme: bearer
+ *      bearerFormat: JWT
  *     schemas:
  *       Game:
  *         type: object
@@ -50,6 +55,8 @@ const gameRouter = express.Router();
  * @swagger
  * /games:
  *   get:
+ *    security:
+ *    - bearerAuth: []
  *     summary: Get a list of all games.
  *     responses:
  *       200:
@@ -74,6 +81,8 @@ gameRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
  * @swagger
  * /games/{id}:
  *   get:
+ *    security:
+ *      - bearerAuth: []
  *      summary: Get a game by ID.
  *      parameters:
  *        - in: path
@@ -89,6 +98,8 @@ gameRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/Game'
+ *       401:
+ *         description: Unauthorized.
  */
 gameRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -103,6 +114,8 @@ gameRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) =
  * @swagger
  * /games/team/{id}:
  *   get:
+ *      security:
+ *      - bearerAuth: []
  *      summary: Get a list of games by team ID.
  *      parameters:
  *        - in: path
@@ -120,6 +133,8 @@ gameRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) =
  *                type: array
  *                items:
  *                  $ref: '#/components/schemas/Game'
+ *      401:
+ *       description: Unauthorized.
  */
 gameRouter.get('/team/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -130,6 +145,32 @@ gameRouter.get('/team/:id', async (req: Request, res: Response, next: NextFuncti
     }
 });
 
+/**
+ * @swagger
+ * /games/user/{id}:
+ *   get:
+ *      security:
+ *      - bearerAuth: []
+ *      summary: Get a list of games by user ID.
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          description: The ID of the user to return games for.
+ *          schema:
+ *            type: number
+ *      responses:
+ *        200:
+ *          description: A JSON array of games for the user.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: '#/components/schemas/Game'
+ *      401:
+ *       description: Unauthorized.
+ */
 gameRouter.get('/user/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const game = await gameService.getGamesByUserId(parseInt(req.params.id));
@@ -143,6 +184,8 @@ gameRouter.get('/user/:id', async (req: Request, res: Response, next: NextFuncti
  * @swagger
  * /games:
  *   post:
+ *    security:
+ *      - bearerAuth: []
  *     summary: Create a new game.
  *     requestBody:
  *       required: true
@@ -157,6 +200,8 @@ gameRouter.get('/user/:id', async (req: Request, res: Response, next: NextFuncti
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Game'
+ *      401:
+ *          description: Unauthorized.
  */
 gameRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -171,6 +216,8 @@ gameRouter.post('/', async (req: Request, res: Response, next: NextFunction) => 
  * @swagger
  * /games/edit/{id}:
  *   put:
+ *      security:
+ *      - bearerAuth: []
  *     summary: Update a game by ID.
  *     parameters:
  *       - in: path
@@ -192,6 +239,8 @@ gameRouter.post('/', async (req: Request, res: Response, next: NextFunction) => 
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Game'
+ *       401:
+ *         description: Unauthorized.
  */
 gameRouter.put('/edit/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -208,6 +257,8 @@ gameRouter.put('/edit/:id', async (req: Request, res: Response, next: NextFuncti
  * @swagger
  * /games/{id}:
  *   delete:
+*       security:
+*       - bearerAuth: []
  *     summary: Delete a game by ID.
  *     parameters:
  *       - in: path
@@ -223,6 +274,8 @@ gameRouter.put('/edit/:id', async (req: Request, res: Response, next: NextFuncti
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Game'
+ *      401:
+ *       description: Unauthorized.
  */
 gameRouter.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
