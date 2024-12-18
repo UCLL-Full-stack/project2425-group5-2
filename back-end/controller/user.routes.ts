@@ -41,9 +41,10 @@ const userRouter = express.Router();
  * @swagger
  * /users:
  *   get:
- *      security:
- *         - bearerAuth: []
+ *     security:
+ *       - bearerAuth: []
  *     summary: Get a list of all users.
+ *     tags: [User]
  *     responses:
  *       200:
  *         description: A JSON array of all users.
@@ -53,6 +54,8 @@ const userRouter = express.Router();
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized
  */
 userRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -64,15 +67,126 @@ userRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
 });
 
 /**
- * @Swagger
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Get a user by ID.
+ *     description: Retrieve a user by their ID.
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The user ID
+ *     responses:
+ *       200:
+ *         description: A user object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                 errorMessage:
+ *                   type: string
+ *       401:
+ *         description: Unauthorized
+ */
+userRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const user = await userService.getUserById(parseInt(req.params.id));
+        res.status(200).json(user);
+    } catch (error: any) {
+        res.status(400).json({ status: 'error', errorMessage: error.message });
+    }
+});
+
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Create a new user.
+ *     description: Create a new user.
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *                 description: The first name of the user.
+ *               lastName:
+ *                 type: string
+ *                 description: The last name of the user.
+ *               email:
+ *                 type: string
+ *                 description: The email of the user.
+ *               phoneNumber:
+ *                 type: string
+ *                 description: The phone number of the user.
+ *               password:
+ *                 type: string
+ *                 description: The password of the user.
+ *               role:
+ *                 type: string
+ *                 description: The role of the user.
+ *     responses:
+ *       201:
+ *         description: The created user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                 errorMessage:
+ *                   type: string
+ *       401:
+ *         description: Unauthorized
+ */
+userRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userData: UserInput = req.body;
+        const newUser = await userService.createUser(userData);
+        res.status(201).json(newUser);
+    } catch (error: any) {
+        res.status(400).json({ status: 'error', errorMessage: error.message });
+    }
+});
+
+/**
+ * @swagger
  * /users/register:
- *  post:
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/User'
+ *   post:
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
  *     responses:
  *       201:
  *         description: User created successfully.
@@ -84,10 +198,7 @@ userRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
  *         description: Bad request.
  *       409:
  *         description: User already exists.
- *       500:
- *          description: Internal server error.
  */
-
 userRouter.post('/register', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userInput = <UserInput>req.body;
@@ -108,7 +219,7 @@ userRouter.post('/register', async (req: Request, res: Response, next: NextFunct
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/AuthenticationRequest'
+ *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
  *         description: Authentication response.
@@ -137,9 +248,11 @@ userRouter.post('/login', async (req: Request, res: Response, next: NextFunction
 
 /**
  * @swagger
- * /edit/{id}:
+ * /users/edit/{id}:
  *   put:
- *     summary: Update a user
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Update a user.
  *     description: Update the details of an existing user.
  *     tags: [User]
  *     parameters:
@@ -168,12 +281,9 @@ userRouter.post('/login', async (req: Request, res: Response, next: NextFunction
  *               phoneNumber:
  *                 type: string
  *                 description: The phone number of the user.
- *               password:
- *                 type: string
- *                 description: The password of the user.
  *               role:
  *                 type: string
- *                 description: The role of the user (e.g., coach, player).
+ *                 description: The role of the user.
  *     responses:
  *       200:
  *         description: The updated user
@@ -192,8 +302,8 @@ userRouter.post('/login', async (req: Request, res: Response, next: NextFunction
  *                   type: string
  *                 errorMessage:
  *                   type: string
- *        401:
- *         description: Unauthorized.
+ *       401:
+ *         description: Unauthorized
  */
 userRouter.put('/edit/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {

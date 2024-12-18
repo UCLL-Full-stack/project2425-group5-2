@@ -1,31 +1,3 @@
-/**
- * @swagger
- *   components:
- *    securityschemes:
- *     bearerAuth:
- *      type: http
- *      scheme: bearer
- *      bearerFormat: JWT
- *    schemas:
- *      Player:
- *          type: object
- *          properties:
- *             id:
- *               type: number
- *               format: int64
- *             firstName:
- *               type: string
- *               description: The first name of the player.
- *             lastName:
- *               type: string
- *               description: The last name of the player.
- *             email:
- *               type: string
- *               description: The email of the player.
- *             phoneNumber:
- *               type: string
- *               description: The phone number of the player.
- */
 import express, { Request, Response, NextFunction } from 'express';
 import playerService from '../service/player.service';
 
@@ -33,22 +5,52 @@ const playerRouter = express.Router();
 
 /**
  * @swagger
+ *   components:
+ *     securitySchemes:
+ *       bearerAuth:
+ *         type: http
+ *         scheme: bearer
+ *         bearerFormat: JWT
+ *     schemas:
+ *       Player:
+ *         type: object
+ *         properties:
+ *           id:
+ *             type: number
+ *             format: int64
+ *           firstName:
+ *             type: string
+ *             description: The first name of the player.
+ *           lastName:
+ *             type: string
+ *             description: The last name of the player.
+ *           email:
+ *             type: string
+ *             description: The email of the player.
+ *           phoneNumber:
+ *             type: string
+ *             description: The phone number of the player.
+ */
+
+/**
+ * @swagger
  * /players:
  *   get:
- *   security:
- *   - bearerAuth: []
- *      summary: Get a list of all players.
- *      responses:
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Get a list of all players.
+ *     tags: [Player]
+ *     responses:
  *       200:
- *          description: A JSON array of all players.
- *          content:
- *            application/json:
- *              schema:
- *                type: array
- *                items:
- *                  $ref: '#/components/schemas/Player'
- *     401:
- *      description: Unauthorized.
+ *         description: A JSON array of all players.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Player'
+ *       401:
+ *         description: Unauthorized
  */
 playerRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -63,26 +65,38 @@ playerRouter.get('/', async (req: Request, res: Response, next: NextFunction) =>
  * @swagger
  * /players/{id}:
  *   get:
- *      security:
- *      - bearerAuth: []
+ *     security:
+ *       - bearerAuth: []
  *     summary: Get a player by ID.
+ *     description: Retrieve a player by their ID.
+ *     tags: [Player]
  *     parameters:
  *       - in: path
  *         name: id
- *         required: true
- *         description: ID of the player to return.
  *         schema:
- *           type: number
- *           format: int64
+ *           type: integer
+ *         required: true
+ *         description: The player ID
  *     responses:
  *       200:
- *         description: A JSON object of the player.
+ *         description: A player object
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Player'
- *      401:
- *       description: Unauthorized.
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                 errorMessage:
+ *                   type: string
+ *       401:
+ *         description: Unauthorized
  */
 playerRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
