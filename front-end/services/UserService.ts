@@ -1,6 +1,7 @@
 import { Team, User } from '../types';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+const token = JSON.parse(sessionStorage.getItem("loggedInUser"))?.token;
 
 const logInUser = (user: User) => {
     return fetch(apiUrl + '/users/login', {
@@ -27,6 +28,7 @@ const updateUser = (user: User) => {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(user),
     });

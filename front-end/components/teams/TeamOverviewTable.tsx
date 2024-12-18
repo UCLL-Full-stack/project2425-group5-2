@@ -45,13 +45,12 @@ const TeamOverviewTable: React.FC<Props> = ({ teams, getTeams }) => {
                     <tr>
                         <th className="px-6 py-4 text-left">Team Name</th>
                         <th className="px-6 py-4 text-left">Coach</th>
-                        {loggedInUser.role == 'coach' ||
-                            (loggedInUser.role == 'admin' && (
-                                <>
-                                    <th className="px-6 py-4 text-center">Actions</th>
-                                    <th className="px-6 py-4 text-center">Delete</th>
-                                </>
-                            ))}
+                        {(loggedInUser.role === 'coach' || loggedInUser.role === 'admin') && (
+                            <>
+                                <th className="px-6 py-4 text-center">Actions</th>
+                                <th className="px-6 py-4 text-center">Delete</th>
+                            </>
+                        )}
                     </tr>
                 </thead>
                 <tbody>
@@ -74,30 +73,27 @@ const TeamOverviewTable: React.FC<Props> = ({ teams, getTeams }) => {
                                 <td className="px-6 py-4 text-gray-900">
                                     {team.coach.user.firstName} {team.coach.user.lastName}
                                 </td>
-                                {loggedInUser.role == 'coach' ||
-                                    (loggedInUser.role == 'admin' && (
-                                        <>
-                                            <td className="pl-6 py-4 text-center">
-                                                <button
-                                                    onClick={() =>
-                                                        router.push(`teams/edit/${team.id}`)
-                                                    }
-                                                    className="inline-flex items-center px-4 py-2 bg-secondary text-white rounded-md hover:bg-accent transition-all duration-300 transform hover:scale-105"
-                                                >
-                                                    <Edit size={18} className="mr-2" />
-                                                    Edit
-                                                </button>
-                                            </td>
-                                            <td className="px-2 py-4 text-center">
-                                                <button
-                                                    onClick={() => deleteTeam(team.id)}
-                                                    className="ml-4 pl-6 inline-flex items-center px-4 py-2 bg-red-700 text-white rounded-md hover:bg-red-300 transition-all duration-300 transform hover:scale-105"
-                                                >
-                                                    <Trash size={18} className="mr-2" />
-                                                </button>
-                                            </td>
-                                        </>
-                                    ))}
+                                {(loggedInUser.role == 'coach' || loggedInUser.role == 'admin') && (
+                                    <>
+                                        <td className="pl-6 py-4 text-center">
+                                            <button
+                                                onClick={() => router.push(`teams/edit/${team.id}`)}
+                                                className="inline-flex items-center px-4 py-2 bg-secondary text-white rounded-md hover:bg-accent transition-all duration-300 transform hover:scale-105"
+                                            >
+                                                <Edit size={18} className="mr-2" />
+                                                Edit
+                                            </button>
+                                        </td>
+                                        <td className="px-2 py-4 text-center">
+                                            <button
+                                                onClick={() => deleteTeam(team.id)}
+                                                className="ml-4 pl-6 inline-flex items-center px-4 py-2 bg-red-700 text-white rounded-md hover:bg-red-300 transition-all duration-300 transform hover:scale-105"
+                                            >
+                                                <Trash size={18} className="mr-2" />
+                                            </button>
+                                        </td>
+                                    </>
+                                )}
                             </tr>
                             {expandedTeamId === team.id && (
                                 <tr>

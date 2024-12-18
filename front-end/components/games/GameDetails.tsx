@@ -5,7 +5,7 @@ import { Edit, Trash } from 'lucide-react';
 import GameService from '@services/GameService';
 
 type Props = {
-    games: Array<Game>;
+    games: Game[];
     team: Team;
 };
 
@@ -20,8 +20,15 @@ const GameDetailsTable: React.FC<Props> = ({ games, team }) => {
             const parsedUser = JSON.parse(user);
             setLoggedInUser(parsedUser);
         }
-        const filteredGames = games.filter((game) => game.teams.some((t) => t.id === team.id));
-        setFilteredGames(filteredGames);
+    }, []);
+
+    useEffect(() => {
+        if (Array.isArray(games)) {
+            console.log('Games:', games);
+            const filteredGames = games.filter((game) => game.teams.some((t) => t.id === team.id));
+            console.log('Filtered Games:', filteredGames);
+            setFilteredGames(filteredGames);
+        }
     }, [games, team]);
 
     if (!loggedInUser) {
@@ -77,9 +84,11 @@ const GameDetailsTable: React.FC<Props> = ({ games, team }) => {
                                     index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
                                 } hover:bg-gray-100 transition-colors duration-200`}
                             >
-                                <td className="px-6 py-4 text-sm text-gray-900">{formatDate(game.date)}</td>
                                 <td className="px-6 py-4 text-sm text-gray-900">
-                                    <span>{game.teams[0].teamName} - {game.teams[1].teamName}</span>
+                                    {formatDate(game.date)}
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-900">
+                                    {game.teams.map((team) => team.teamName).join(' vs ')}
                                 </td>
                                 <td className="px-6 py-4 text-sm text-gray-900">{game.result}</td>
                                 {(loggedInUser.role === 'coach' ||

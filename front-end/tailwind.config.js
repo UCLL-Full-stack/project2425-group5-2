@@ -9,13 +9,12 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                'text': '#e1ebee',
-                'background': '#001e27',
-                'primary': '#9bcede',
-                'secondary': '#1e677e',
-                'accent': '#34b5de',
-               },
-               
+                text: '#e2e8f0',
+                background: '#0f172a',
+                primary: '#8b5cf6',   
+                secondary: '#5b21b6', 
+                accent: '#a78bfa',    
+            },
             fontFamily: {
                 sans: ['Inter', 'sans-serif'],
             },
@@ -29,3 +28,4 @@ module.exports = {
     },
     plugins: [],
 };
+

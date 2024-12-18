@@ -1,12 +1,14 @@
 import { Team } from '../types';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+const token = JSON.parse(sessionStorage.getItem("loggedInUser"))?.token;
 
 const getAllTeams = () => {
     return fetch(apiUrl + '/teams', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
     });
 };
@@ -16,6 +18,7 @@ const getTeamById = (id: number) => {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
     });
 };
@@ -25,6 +28,7 @@ const updateTeam = (team: Team) => {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(team),
     });
@@ -35,6 +39,7 @@ const createTeam = (team: Team) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(team),
     });
@@ -45,6 +50,7 @@ const getTeamsByUserId = (userId: number) => {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
     });
 };
@@ -54,6 +60,7 @@ const deleteTeam = (id: number) => {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
     });
 };

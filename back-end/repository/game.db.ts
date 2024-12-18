@@ -73,17 +73,28 @@ const getGamesByUserId = async (userId: number): Promise<Game[]> => {
     try {
         const gamePrisma = await database.game.findMany({
             where: {
-                teams: {
-                    some: {
-                        players: {
+                OR: [
+                    {
+                        teams: {
                             some: {
-                                user: {
-                                    id: userId,
+                                coach: {
+                                    userId: userId,
                                 },
                             },
                         },
                     },
-                },
+                    {
+                        teams: {
+                            some: {
+                                players: {
+                                    some: {
+                                        userId: userId,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                ],
             },
             include: {
                 teams: {

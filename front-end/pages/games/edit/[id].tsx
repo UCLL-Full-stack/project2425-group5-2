@@ -1,4 +1,4 @@
-import { Game, Team } from '../../../types';
+import { Game, Team, User } from '../../../types';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -9,7 +9,16 @@ import GameEditor from '@components/games/GameEditor';
 const editGamePage: React.FC = () => {
     const [game, setGame] = useState<Game | null>(null);
     const router = useRouter();
+    const [loggedInUser, setLoggedInUser] = useState<User>(null);
     const { id } = router.query;
+
+    useEffect(() => {
+        const user = sessionStorage.getItem('loggedInUser');
+        if (user) {
+            const parsedUser = JSON.parse(user);
+            setLoggedInUser(parsedUser);
+        }
+    }, []);
 
     useEffect(() => {
         if (id) {
@@ -29,6 +38,10 @@ const editGamePage: React.FC = () => {
             fetchGame();
         }
     }, [id]);
+
+    if (!loggedInUser) {
+        return <p>Loading...</p>
+    }
 
     const handleGameUpdated = () => {
         router.push('/games');

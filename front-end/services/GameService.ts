@@ -1,12 +1,14 @@
 import { Game } from 'types';
 
 const apiURL = process.env.NEXT_PUBLIC_API_URL;
+const token = JSON.parse(sessionStorage.getItem('loggedInUser'))?.token;
 
 const getAllGames = () => {
     return fetch(apiURL + '/games', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
     });
 };
@@ -16,6 +18,7 @@ const getGameById = (id: number) => {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
     });
 };
@@ -25,6 +28,7 @@ const updateGame = (game: Game) => {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(game),
     });
@@ -35,6 +39,7 @@ const createGame = (game: Game) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(game),
     });
@@ -45,6 +50,7 @@ const getGamesByTeamId = (teamId: number) => {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
     });
 };
@@ -54,6 +60,7 @@ const getGamesByUserId = (userId: number) => {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
     });
 };
@@ -63,6 +70,7 @@ const deleteGame = (id: number) => {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
         },
     });
 };

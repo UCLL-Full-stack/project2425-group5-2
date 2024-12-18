@@ -33,14 +33,14 @@ const getGamesByTeamId = async (teamId: number): Promise<Game[]> => {
 };
 
 const getGamesByUserId = async (userId: number): Promise<Game[]> => {
+    if (userId == undefined) {
+        throw new Error('An id is required.');
+    }
+
     const games = (await gameDb.getGamesByUserId(userId)) || [];
 
     if (games.length === 0) {
         throw new Error('No games found for that user.');
-    }
-
-    if (userId == undefined) {
-        throw new Error('An id is required.');
     }
 
     return games;
@@ -144,4 +144,12 @@ const deleteGame = async (id: number): Promise<Game> => {
     return deletedGame;
 };
 
-export default { getAllGames, getGameById, createGame, updateGame, deleteGame, getGamesByTeamId, getGamesByUserId };
+export default {
+    getAllGames,
+    getGameById,
+    createGame,
+    updateGame,
+    deleteGame,
+    getGamesByTeamId,
+    getGamesByUserId,
+};
