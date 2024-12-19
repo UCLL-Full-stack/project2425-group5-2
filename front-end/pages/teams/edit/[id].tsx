@@ -37,6 +37,7 @@ const editTeamPage: React.FC = () => {
 
     const handleTeamUpdated = () => {
         router.push('/teams');
+        router.reload();
     };
 
     return (

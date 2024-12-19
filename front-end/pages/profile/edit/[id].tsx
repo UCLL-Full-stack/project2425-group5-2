@@ -6,12 +6,25 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { User } from 'types';
+import { useParams } from 'next/navigation';
+import UserService from '@services/UserService';
+import useSWR from 'swr';
 
 const ProfilePage: React.FC = () => {
     const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
     const { t } = useTranslation('common');
 
     const router = useRouter();
+
+    const { id } = useParams();
+
+    const fetcher = async () => {
+        const userResponse = await UserService.getUserById(Number(id));
+        if (userResponse.ok) {
+            const user = await userResponse.json();
+            return user;
+        }
+    };
 
     useEffect(() => {
         const user = sessionStorage.getItem('loggedInUser');
@@ -20,6 +33,8 @@ const ProfilePage: React.FC = () => {
             setLoggedInUser(parsedUser);
         }
     }, []);
+
+    const { data, isLoading, error } = useSWR(loggedInUser ? 'User' : null, fetcher);
 
     if (!loggedInUser) {
         return <div>{t('general.loading')}</div>;
@@ -43,7 +58,7 @@ const ProfilePage: React.FC = () => {
                         </h1>
                     </div>
                     <div className="bg-white p-6 rounded-lg shadow-md">
-                        <ProfileEditor loggedInUser={loggedInUser} handleLogout={handleLogout} />
+                        <ProfileEditor user={data} handleLogout={handleLogout} />
                     </div>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { User } from '../../types';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/router';
@@ -6,20 +6,29 @@ import UserService from '@services/UserService';
 import { useTranslation } from "next-i18next";
 
 type Props = {
-    loggedInUser: User;
+    user: User;
     handleLogout: () => void;
 };
 
-const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
+const ProfileEditor: React.FC<Props> = ({ user, handleLogout }) => {
     const [errors, setErrors] = useState<string[]>([]);
-    const [firstName, setFirstName] = useState<string>(loggedInUser.firstName);
-    const [lastName, setLastName] = useState<string>(loggedInUser.lastName);
-    const [email, setEmail] = useState<string>(loggedInUser.email);
-    const [phoneNumber, setPhoneNumber] = useState<string>(loggedInUser.phoneNumber);
+    const [firstName, setFirstName] = useState<string>(user.firstName);
+    const [lastName, setLastName] = useState<string>(user.lastName);
+    const [email, setEmail] = useState<string>(user.email);
+    const [phoneNumber, setPhoneNumber] = useState<string>(user.phoneNumber);
+    const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
 
     const router = useRouter();
 
     const { t } = useTranslation();
+
+    useEffect(() => {
+            const user = sessionStorage.getItem('loggedInUser');
+            if (user) {
+                const parsedUser = JSON.parse(user);
+                setLoggedInUser(parsedUser);
+            }
+        }, []);
 
     const handleUpdateUser = async () => {
         const validationErrors: string[] = [];
@@ -46,12 +55,12 @@ const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
         if (!loggedInUser.id) return;
 
         const updatedUser: User = {
-            id: loggedInUser.id,
+            id: user.id,
             firstName,
             lastName,
             email,
             phoneNumber,
-            role: loggedInUser.role,
+            role: user.role,
         };
 
         await UserService.updateUser(updatedUser);
@@ -60,7 +69,7 @@ const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
     };
 
     const goBack = () => {
-        router.push(`/profile/${loggedInUser.id}`);
+        router.push(`/profile/${user.id}`);
     };
 
     return (
@@ -76,7 +85,7 @@ const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
                     <h1 className="text-4xl font-extrabold mb-2 text-white tracking-tight">
                         {t('profileEditor.edit')}
                     </h1>
-                    <h2 className="text-2xl font-semibold text-secondary">{loggedInUser.firstName} {loggedInUser.lastName}</h2>
+                    <h2 className="text-2xl font-semibold text-secondary">{user.firstName} {user.lastName}</h2>
                 </div>
             </div>
             <form className="space-y-6">

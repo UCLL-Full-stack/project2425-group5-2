@@ -19,12 +19,12 @@ const ProfileOverview: React.FC<Props> = ({ user, teams }) => {
     const { t } = useTranslation();
 
     useEffect(() => {
-            const user = sessionStorage.getItem('loggedInUser');
-            if (user) {
-                const parsedUser = JSON.parse(user);
-                setLoggedInUser(parsedUser);
-            }
-        }, []);
+        const tempUser = sessionStorage.getItem('loggedInUser');
+        if (tempUser) {
+            const parsedUser = JSON.parse(tempUser);
+            setLoggedInUser(parsedUser);
+        }
+    }, []);
 
     if (!user || !loggedInUser) {
         return <p>{t('general.loading')}</p>;
@@ -40,7 +40,16 @@ const ProfileOverview: React.FC<Props> = ({ user, teams }) => {
 
     return (
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="p-6 space-y-6"> 
+            <div className="p-6 space-y-6">
+                {(loggedInUser.role === 'admin' || loggedInUser.id === user.id) && (
+                  <button
+                  onClick={editProfileRoute}
+                  className="px-6 py-3 bg-secondary text-white text-lg font-semibold rounded-md transition-all duration-300 hover:bg-accent hover:shadow-lg transform hover:scale-105 flex items-center"
+              >
+                  <Edit size={24} className="mr-2" />
+                  {t('profileIndex.edit')}
+              </button>
+                )}
                 <table className="w-full">
                     <thead className="bg-secondary text-white">
                         <tr>

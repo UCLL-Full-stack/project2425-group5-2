@@ -74,13 +74,6 @@ const ProfilePage: React.FC = () => {
                         <h1 className="text-4xl font-extrabold text-white tracking-tight">
                             {t('profileIndex.overview')}
                         </h1>
-                        <button
-                            onClick={editProfileRoute}
-                            className="px-6 py-3 bg-secondary text-white text-lg font-semibold rounded-md transition-all duration-300 hover:bg-accent hover:shadow-lg transform hover:scale-105 flex items-center"
-                        >
-                            <Edit size={24} className="mr-2" />
-                            {t('profileIndex.edit')}
-                        </button>
                     </div>
                     <div className="bg-white p-6 rounded-lg shadow-md">
                         {data && <ProfileOverview user={data.user} teams={data.teams} />}
