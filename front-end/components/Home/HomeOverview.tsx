@@ -78,7 +78,7 @@ export default function HomeOverview() {
                 ) : (
                     <div className="space-y-6">
                         <h2 className="text-3xl font-bold text-gray-900">{t('homeOverview.welcomeBack')}</h2>
-                        <p className="text-xl text-gray-600">{t('homeOverview.manageTeam')}</p>
+                        <p className="text-xl text-white-600">{t('homeOverview.manageTeam')}</p>
                     </div>
                 )}
             </div>
