@@ -40,9 +40,9 @@ const ProfilePage: React.FC = () => {
     };
 
     useEffect(() => {
-        const user = sessionStorage.getItem('loggedInUser');
-        if (user) {
-            const parsedUser = JSON.parse(user);
+        const tempUser = sessionStorage.getItem('loggedInUser');
+        if (tempUser) {
+            const parsedUser = JSON.parse(tempUser);
             setLoggedInUser(parsedUser);
         }
     }, []);
