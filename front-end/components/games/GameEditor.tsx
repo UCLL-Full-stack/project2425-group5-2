@@ -3,6 +3,7 @@ import { Game, Team } from '../../types';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/router';
 import GameService from '@services/GameService';
+import { useTranslation } from "react-i18next";
 
 type Props = {
     game: Game;
@@ -16,6 +17,8 @@ const GameEditor: React.FC<Props> = ({ game, gameUpdated }) => {
     const [errors, setErrors] = useState<string[]>([]);
     const [isPastDate, setIsPastDate] = useState<boolean>(false);
     const [currentDate, setCurrentDate] = useState<string>('');
+
+    const { t } = useTranslation();
 
     useEffect(() => {
         const gameDate = new Date(game.date);
@@ -33,11 +36,11 @@ const GameEditor: React.FC<Props> = ({ game, gameUpdated }) => {
         const validationErrors: string[] = [];
 
         if (!date) {
-            validationErrors.push('Date is required');
+            validationErrors.push(t('gameEditor.dateError'));
         }
 
         if (teams.length != 2) {
-            validationErrors.push('Exactly 2 teams required');
+            validationErrors.push(t('gameEditor.teamsError'));
         }
 
         if (validationErrors.length > 0) {
@@ -77,7 +80,7 @@ const GameEditor: React.FC<Props> = ({ game, gameUpdated }) => {
                 </button>
                 <div className="flex-grow text-center">
                     <h1 className="text-4xl font-extrabold mb-2 text-white tracking-tight">
-                        Edit Game
+                        t('gameEditor.edit')
                     </h1>
                 </div>
             </div>
@@ -87,7 +90,7 @@ const GameEditor: React.FC<Props> = ({ game, gameUpdated }) => {
                         htmlFor="CurrentDate"
                         className="block text-xl font-bold mb-2 text-white"
                     >
-                        Current Date
+                        t('gameEditor.currentDate')
                     </label>
                     <input
                         id="CurrentDate"
@@ -101,12 +104,12 @@ const GameEditor: React.FC<Props> = ({ game, gameUpdated }) => {
                 </div>
                 <div className="w-full">
                     <label htmlFor="Date" className="block text-xl font-bold mb-2 text-white">
-                        New Date
+                        t('gameEditor.newDate')
                     </label>
                     <input
                         id="Date"
                         type="Date"
-                        placeholder="Enter a new date"
+                        placeholder={t('gameEditor.newDatetext')}
                         value={date}
                         onChange={(e) => {
                             setDate(e.target.value);
@@ -131,12 +134,12 @@ const GameEditor: React.FC<Props> = ({ game, gameUpdated }) => {
                 <div className="w-full">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-2">
                         <label htmlFor="Score" className="block text-xl font-bold mb-2 text-white">
-                            Game score
+                            t('gameEditor.score')
                         </label>
                         <input
                             id="Score"
                             type="text"
-                            placeholder="Enter the score"
+                            placeholder={t('gameEditor.scoreText')}
                             value={score}
                             onChange={(e) => {
                                 setScore(e.target.value);
@@ -154,7 +157,7 @@ const GameEditor: React.FC<Props> = ({ game, gameUpdated }) => {
                         onClick={handleUpdateGame}
                         className="px-8 py-3 bg-secondary text-white text-lg font-semibold rounded-md transition-all duration-300 hover:bg-accent hover:shadow-lg transform hover:scale-105"
                     >
-                        Update Game
+                        t('gameEditor.updateGameButton')
                     </button>
                 </div>
             </form>

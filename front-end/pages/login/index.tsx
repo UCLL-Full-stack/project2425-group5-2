@@ -4,13 +4,23 @@ import Layout from '../../components/layout/Layout';
 
 const LoginPage = () => {
     return (
-      <Layout>
-        <Head>
-          <title>Login</title>
-        </Head>
-        <Login/>
-      </Layout>
+        <Layout>
+            <Head>
+                <title>t('loginIndex.title')</title>
+            </Head>
+            <Login />
+        </Layout>
     );
-  };
-  
-  export default LoginPage;
+};
+
+export const getServersideProps = async (context) => {
+    const { locale } = context;
+
+    return  {
+        props: {
+            ...(await serverSideTranslations(locale ?? "en", ['common'])),
+        },
+    };
+};
+
+export default LoginPage;

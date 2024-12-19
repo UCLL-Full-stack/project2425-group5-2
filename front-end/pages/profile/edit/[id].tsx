@@ -11,7 +11,7 @@ const ProfilePage: React.FC = () => {
 
     const router = useRouter();
 
-    useEffect (() => {
+    useEffect(() => {
         const user = sessionStorage.getItem('loggedInUser');
         if (user) {
             const parsedUser = JSON.parse(user);
@@ -20,7 +20,7 @@ const ProfilePage: React.FC = () => {
     }, []);
 
     if (!loggedInUser) {
-        return <div>Loading...</div>;
+        return <div>t('general.loading')</div>;
     }
 
     const handleLogout = () => {
@@ -29,24 +29,34 @@ const ProfilePage: React.FC = () => {
     };
 
     return (
-      <Layout>
-      <Head>
-        <title>Profile - TeamTrack</title>
-      </Head>
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-gradient-to-br from-primary to-accent p-8 rounded-lg shadow-xl max-w-5xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-4xl font-extrabold text-white tracking-tight">
-              Profile Overview
-            </h1>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <ProfileEditor loggedInUser={loggedInUser} handleLogout={handleLogout} />
-          </div>
-        </div>
-      </div>
-    </Layout>
-    )
+        <Layout>
+            <Head>
+                <title>t('profileEditIndex.title')</title>
+            </Head>
+            <div className="container mx-auto px-4 py-8">
+                <div className="bg-gradient-to-br from-primary to-accent p-8 rounded-lg shadow-xl max-w-5xl mx-auto">
+                    <div className="flex justify-between items-center mb-8">
+                        <h1 className="text-4xl font-extrabold text-white tracking-tight">
+                            t('profileEditIndex.overview')
+                        </h1>
+                    </div>
+                    <div className="bg-white p-6 rounded-lg shadow-md">
+                        <ProfileEditor loggedInUser={loggedInUser} handleLogout={handleLogout} />
+                    </div>
+                </div>
+            </div>
+        </Layout>
+    );
+};
+
+export const getServersideProps = async (context) => {
+    const { locale } = context;
+
+    return  {
+        props: {
+            ...(await serverSideTranslations(locale ?? "en", ['common'])),
+        },
+    };
 };
 
 export default ProfilePage;

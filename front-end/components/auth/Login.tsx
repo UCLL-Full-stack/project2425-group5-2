@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { StatusMessage } from 'types';
 import UserService from '@services/UserService';
+import { useTranslation } from 'react-i18next';
 
 const Login = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -15,6 +16,8 @@ const Login = () => {
     const [statusMessages, setStatusMessages] = useState<StatusMessage[]>([]);
 
     const router = useRouter();
+
+    const { t } = useTranslation();
 
     const clearErrors = () => {
         setEmailError(null);
@@ -58,7 +61,7 @@ const Login = () => {
         const response = await UserService.logInUser(user);
 
         if (response.status === 200) {
-            setStatusMessages([{ type: 'success', message: 'Login successful' }]);
+            setStatusMessages([{ type: t('login.success'), message: t('login.loginSuccess') }]);
 
             const loggedInUser = await response.json();
             sessionStorage.setItem(
@@ -80,7 +83,7 @@ const Login = () => {
             const { errorMessage } = await response.json();
             setStatusMessages([{ type: 'error', message: errorMessage }]);
         } else {
-            setStatusMessages([{ type: 'error', message: 'An error occured' }]);
+            setStatusMessages([{ type: 'error', message: t('general.error') }]);
         }
     };
 
@@ -89,14 +92,14 @@ const Login = () => {
             <div className="bg-gradient-to-br from-primary to-accent p-8 rounded-lg shadow-xl max-w-md w-full space-y-8">
                 <div>
                     <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-                        Login to your account
+                        t('login.login')
                     </h2>
                 </div>
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <div className="rounded-md shadow-sm -space-y-px">
                         <div>
                             <label htmlFor="email-address" className="sr-only">
-                                Email address
+                                t('login.email')
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -119,7 +122,7 @@ const Login = () => {
                         <div className="rounded-md shadow-sm -space-y-px">
                             <div>
                                 <label htmlFor="password" className="sr-only">
-                                    Password
+                                    t('login.password')
                                 </label>
                                 <div className="relative pt-2">
                                     <div className="absolute pt-2 inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -143,7 +146,9 @@ const Login = () => {
                                         className="pt-2 absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
                                         onClick={togglePasswordVisibility}
                                         aria-label={
-                                            isPasswordVisible ? 'Hide password' : 'Show password'
+                                            isPasswordVisible
+                                                ? t('login.hidePwd')
+                                                : t('login.showPwd')
                                         }
                                         role="button"
                                     >
@@ -189,7 +194,7 @@ const Login = () => {
                             className="pt-2 group relative w-full flex justify-center py-2 px-4 border border-transparent text-l font-bold rounded-md text-white bg-secondary hover:bg-accent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent transition duration-150 ease-in-out hover:shadow-lg hover:shadow-neutral-400"
                             disabled={loading}
                         >
-                            {loading ? 'Logging in...' : 'Login'}
+                            {loading ? t('login.loginButtonMessage') : t('login.loginButton')}
                         </button>
                     </div>
                 </form>
@@ -198,7 +203,7 @@ const Login = () => {
                         href="/register"
                         className="font-medium text-white hover:underline transition duration-150 ease-in-out"
                     >
-                        Don't have an account? Register
+                        t('login.registerMessage')
                     </Link>
                 </div>
             </div>

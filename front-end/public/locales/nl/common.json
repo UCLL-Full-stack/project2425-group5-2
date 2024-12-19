@@ -1,0 +1,100 @@
+{
+    "app.title": "TeamTrack",
+    "general.error": "Er is een fout opgetreden. Probeer het later opnieuw.",
+    "general.loading": "Laden...",
+    "nav": {
+        "home": "Home",
+        "team": "Team",
+        "teams": "Teams",
+        "profile": "Profiel",
+        "games": "Wedstrijden",
+        "login": "Inloggen",
+        "logout": "Uitloggen"
+    },
+    "layout": {
+        "footerCopyrightIcon": "©",
+        "footerText": "TeamTrack. Alle rechten voorbehouden."
+    },
+    "mainIndex": {
+        "title": "Home - TeamTrack",
+        "welcome": "Welkom bij TeamTrack!",
+        "description": "TeamTrack is een eenvoudige app om de prestaties van je team te monitoren, wedstrijden te beheren en spelers bij te houden. Begin vandaag nog met het organiseren van je teamgegevens!"
+    },
+    "registerMessage": "Registreren...",
+    "registerButton": "Registreren",
+    "loginMessage": "Heb je al een account? Inloggen",
+    "gameCreator": {
+        "teamsError": "Precies twee teams zijn vereist",
+        "dateError": "Datum is vereist",
+        "createGame": "Maak een nieuwe wedstrijd",
+        "date": "Datum",
+        "teamName": "Voer teamnaam in",
+        "teamSelect": "Selecteer teams",
+        "createGameButton": "Maak wedstrijd"
+    },
+    "gameDetails": {
+        "deleteError": "Fout bij het verwijderen van de wedstrijd:",
+        "teams": "Teams",
+        "result": "Resultaat",
+        "edit": "Bewerken",
+        "delete": "Verwijderen",
+        "noGames": "Geen wedstrijden beschikbaar."
+    },
+    "gameEditor": {
+        "teamsError": "Precies twee teams zijn vereist",
+        "dateError": "Datum is vereist",
+        "edit": "Wedstrijd bewerken",
+        "currentDate": "Huidige datum",
+        "newDate": "Nieuwe datum",
+        "newDateText": "Voer een nieuwe datum in",
+        "score": "Wedstrijdscore",
+        "scoreText": "Voer de score in",
+        "updateGameButton": "Wedstrijd bijwerken",
+        "backButton": "Terug naar wedstrijden",
+        "loading": "Wedstrijddetails laden...",
+        "updateSuccess": "Wedstrijd succesvol bijgewerkt!",
+        "updateError": "Fout bij het bijwerken van de wedstrijd."
+    },
+    "gameOverview": {
+        "title": "Wedstrijden Overzicht",
+        "teamName": "Teamnaam",
+        "gamesPlayed": "Gespeelde wedstrijden",
+        "noTeams": "Geen teams beschikbaar.",
+        "viewDetails": "Bekijk details",
+        "upcomingGames": "Aankomende wedstrijden",
+        "noUpcomingGames": "Geen aankomende wedstrijden gepland.",
+        "recentResults": "Recente resultaten",
+        "noRecentResults": "Geen recente resultaten beschikbaar.",
+        "expand": "Uitvouwen",
+        "collapse": "Inklappen"
+    },
+    "createText": "Klik op de knop 'Maak wedstrijd' om een wedstrijd te maken!",
+    "loginIndex": {
+        "title": "Inloggen"
+    },
+    "profileEditIndex": {
+        "title": "Profiel bewerken - TeamTrack",
+        "overview": "Profieloverzicht"
+    },
+    "profileIndex": {
+        "title": "Profiel - TeamTrack",
+        "overview": "Profieloverzicht",
+        "edit": "Profiel bewerken"
+    },
+    "registerIndex": {
+        "title": "Inloggen"
+    },
+    "teamCreateIndex": {
+        "title": "Team maken - TeamTrack"
+    },
+    "teamEditIndex": {
+        "title": "Team bewerken - TeamTrack"
+    },
+    "teamIndex": {
+        "title": "Teams - TeamTrack",
+        "teamOverview": "Teamoverzicht",
+        "createTeam": "Team maken",
+        "noTeams": "Geen teams gevonden.",
+        "createText": "Klik op de knop 'Team maken' om een team te maken!"
+    }
+}

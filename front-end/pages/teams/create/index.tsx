@@ -13,7 +13,7 @@ const TeamCreatePage: React.FC = () => {
     return (
         <Layout>
             <Head>
-                <title>Create Team - TeamTrack</title>
+                <title>t('teamCreateIndex.title')</title>
             </Head>
             <main className="d-flex flex-column justify-content-center align-items-center">
                 <TeamCreator onTeamCreated={handleTeamCreated} />
@@ -22,4 +22,13 @@ const TeamCreatePage: React.FC = () => {
     );
 };
 
+export const getServersideProps = async (context) => {
+    const { locale } = context;
+
+    return  {
+        props: {
+            ...(await serverSideTranslations(locale ?? "en", ['common'])),
+        },
+    };
+};
 export default TeamCreatePage;

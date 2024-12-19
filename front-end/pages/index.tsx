@@ -1,12 +1,15 @@
 import Head from 'next/head';
 import Layout from '../components/layout/Layout';
 import HomeOverview from '@components/Home/HomeOverview';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Home: React.FC = () => {
+    const { t } = useTranslation();
     return (
         <Layout>
             <Head>
-                <title>Home - TeamTrack</title>
+                <title>{t('mainIndex.title')}</title>
                 <meta
                     name="description"
                     content="TeamTrack app for tracking your team's performance, games, and players"
@@ -16,16 +19,25 @@ const Home: React.FC = () => {
             </Head>
             <div className="flex flex-col items-center justify-center space-y-8 py-12">
                 <h1 className="text-8xl text-center font-bold text-text border-b border-primary pb-5">
-                    Welcome to TeamTrack
+                    {t('mainIndex.welcome')}
                 </h1>
                 <p className="text-l text-center text-secondary max-w-2xl">
-                    TeamTrack is a simple app to help you monitor your team's performance, manage
-                    games, and keep track of players. Start organizing your team data today!
+                    {t('mainIndex.description')}
                 </p>
                 <HomeOverview />
             </div>
         </Layout>
     );
+};
+
+export const getServersideProps = async (context) => {
+    const { locale } = context;
+
+    return {
+        props: {
+            ...(await serverSideTranslations(locale ?? 'en', ['common'])),
+        },
+    };
 };
 
 export default Home;

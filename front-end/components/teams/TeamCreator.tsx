@@ -6,6 +6,8 @@ import PlayerService from '@services/PlayerService';
 import { ArrowLeft, Square, CheckSquare } from 'lucide-react';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
+import { t } from 'i18next';
+import { useTranslation } from "react-i18next";
 
 type Props = {
     onTeamCreated: () => void;
@@ -20,6 +22,8 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
 
     const router = useRouter();
+    
+    const { t } = useTranslation();
 
     const fetcher = async () => {
         const [coachesResponse, playersResponse, teamsResponse] = await Promise.all([
@@ -37,7 +41,7 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
 
             return { coaches, players, teams };
         } else {
-            throw new Error('Failed to fetch data');
+            throw new Error(t('general.fetchError'));
         }
     };
 
@@ -61,26 +65,26 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
             }
 
             setAssignedPlayers(assignedPlayers);
-        };
+        }
     }, [data]);
 
     if (!loggedInUser) {
-        return <p>Loading...</p>;
+        return <p>t('general.loading')</p>;
     }
 
     const handleCreateTeam = async () => {
         const validationErrors: string[] = [];
 
         if (!teamName) {
-            validationErrors.push('Team Name is required');
+            validationErrors.push(t('teamCreator.teamNameError'));
         }
 
         if (!selectedCoach) {
-            validationErrors.push('Coach is required');
+            validationErrors.push(t('teamCreator.coachError'));
         }
 
         if (selectedPlayers.length < 1) {
-            validationErrors.push('At least one player is required');
+            validationErrors.push(t('teamCreator.playersError'));
         }
 
         if (validationErrors.length > 0) {
@@ -130,19 +134,19 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
                 </button>
                 <div className="flex-grow text-center">
                     <h1 className="text-4xl font-extrabold mb-2 text-white tracking-tight">
-                        Create a New Team
+                        t('teamCreator.createTeam')
                     </h1>
                 </div>
             </div>
             <form className="space-y-6">
                 <div className="w-full">
                     <label htmlFor="teamName" className="block text-xl font-bold mb-2 text-white">
-                        Team Name
+                        t('teamCreator.teamName')
                     </label>
                     <input
                         id="teamName"
                         type="text"
-                        placeholder="Enter team name"
+                        placeholder={t('teamCreator.teamNamePlaceholder')}
                         value={teamName}
                         onChange={(e) => {
                             setTeamName(e.target.value);
@@ -163,83 +167,85 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
                 )}
 
                 <div className="w-full">
-                    <h3 className="text-2xl font-bold mb-4 text-white">Select Coach</h3>
+                    <h3 className="text-2xl font-bold mb-4 text-white">t('teamCreator.coach')</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                        {data && data.coaches.map((coach) => (
-                            <div key={coach.id}>
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        toggleCoachSelection(coach);
-                                        if (errors.length) setErrors([]);
-                                    }}
-                                    className={`w-full py-2 px-3 rounded-md transition-all duration-300 flex items-center justify-between text-sm ${
-                                        selectedCoach?.id === coach.id
-                                            ? 'bg-secondary text-white shadow-md'
-                                            : 'bg-white text-background hover:bg-accent hover:text-white'
-                                    }`}
-                                >
-                                    <span className="font-medium truncate">
-                                        {coach.user.firstName} {coach.user.lastName}
-                                    </span>
-                                    {selectedCoach?.id === coach.id ? (
-                                        <CheckSquare
-                                            className="text-white flex-shrink-0"
-                                            size={16}
-                                        />
-                                    ) : (
-                                        <Square
-                                            className="text-secondary flex-shrink-0"
-                                            size={16}
-                                        />
-                                    )}
-                                </button>
-                            </div>
-                        ))}
+                        {data &&
+                            data.coaches.map((coach) => (
+                                <div key={coach.id}>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            toggleCoachSelection(coach);
+                                            if (errors.length) setErrors([]);
+                                        }}
+                                        className={`w-full py-2 px-3 rounded-md transition-all duration-300 flex items-center justify-between text-sm ${
+                                            selectedCoach?.id === coach.id
+                                                ? 'bg-secondary text-white shadow-md'
+                                                : 'bg-white text-background hover:bg-accent hover:text-white'
+                                        }`}
+                                    >
+                                        <span className="font-medium truncate">
+                                            {coach.user.firstName} {coach.user.lastName}
+                                        </span>
+                                        {selectedCoach?.id === coach.id ? (
+                                            <CheckSquare
+                                                className="text-white flex-shrink-0"
+                                                size={16}
+                                            />
+                                        ) : (
+                                            <Square
+                                                className="text-secondary flex-shrink-0"
+                                                size={16}
+                                            />
+                                        )}
+                                    </button>
+                                </div>
+                            ))}
                     </div>
                 </div>
 
                 <div className="w-full">
-                    <h3 className="text-2xl font-bold mb-4 text-white">Select Players</h3>
+                    <h3 className="text-2xl font-bold mb-4 text-white">t('teamCreator.player')</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-2">
-                        {data && data.players.map((player) => (
-                            <div key={player.id}>
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        togglePlayerSelection(player);
-                                        if (errors.length) setErrors([]);
-                                    }}
-                                    disabled={assignedPlayers.has(player.id)}
-                                    className={`w-full py-2 px-3 rounded-md transition-all duration-300 flex items-center justify-between text-sm ${
-                                        assignedPlayers.has(player.id)
-                                            ? 'bg-grey-300 text-white shadow-md cursor-not-allowed'
-                                            : selectedPlayers.find((p) => p.id === player.id)
-                                              ? 'bg-secondary text-white shadow-md'
-                                              : 'bg-white text-background hover:bg-accent hover:text-white'
-                                    }`}
-                                >
-                                    <span className="font-medium truncate">
-                                        {player.user.firstName} {player.user.lastName}
-                                    </span>
-                                    {selectedPlayers.find((p) => p.id === player.id) ? (
-                                        <CheckSquare
-                                            className="text-white flex-shrink-0"
-                                            size={16}
-                                        />
-                                    ) : (
-                                        <Square
-                                            className={`${
-                                                assignedPlayers.has(player.id)
-                                                    ? 'text-grey-300'
-                                                    : 'text-secondary'
-                                            } flex-shrink-0`}
-                                            size={16}
-                                        />
-                                    )}
-                                </button>
-                            </div>
-                        ))}
+                        {data &&
+                            data.players.map((player) => (
+                                <div key={player.id}>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            togglePlayerSelection(player);
+                                            if (errors.length) setErrors([]);
+                                        }}
+                                        disabled={assignedPlayers.has(player.id)}
+                                        className={`w-full py-2 px-3 rounded-md transition-all duration-300 flex items-center justify-between text-sm ${
+                                            assignedPlayers.has(player.id)
+                                                ? 'bg-grey-300 text-white shadow-md cursor-not-allowed'
+                                                : selectedPlayers.find((p) => p.id === player.id)
+                                                  ? 'bg-secondary text-white shadow-md'
+                                                  : 'bg-white text-background hover:bg-accent hover:text-white'
+                                        }`}
+                                    >
+                                        <span className="font-medium truncate">
+                                            {player.user.firstName} {player.user.lastName}
+                                        </span>
+                                        {selectedPlayers.find((p) => p.id === player.id) ? (
+                                            <CheckSquare
+                                                className="text-white flex-shrink-0"
+                                                size={16}
+                                            />
+                                        ) : (
+                                            <Square
+                                                className={`${
+                                                    assignedPlayers.has(player.id)
+                                                        ? 'text-grey-300'
+                                                        : 'text-secondary'
+                                                } flex-shrink-0`}
+                                                size={16}
+                                            />
+                                        )}
+                                    </button>
+                                </div>
+                            ))}
                     </div>
                 </div>
 
@@ -249,7 +255,7 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
                         onClick={handleCreateTeam}
                         className="px-8 py-3 bg-secondary text-white text-lg font-semibold rounded-md transition-all duration-300 hover:bg-accent hover:shadow-lg transform hover:scale-105"
                     >
-                        Create Team
+                        t('teamCreator.createTeam')
                     </button>
                 </div>
             </form>

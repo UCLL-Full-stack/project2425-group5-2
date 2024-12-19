@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { User, Team } from '../../types'
 import { useRouter } from 'next/navigation'
 import { ChevronDown, ChevronUp, Edit } from 'lucide-react'
+import { useTranslation } from "react-i18next";
 
 
 type Props = {
@@ -12,11 +13,13 @@ type Props = {
 }
 
 const ProfileOverview: React.FC<Props> = ({ user, teams }) => {
-  const [expandedTeamId, setExpandedTeamId] = useState<number | null>(null)
-  const router = useRouter()
+  const [expandedTeamId, setExpandedTeamId] = useState<number | null>(null);
+  const router = useRouter();
+
+  const { t } = useTranslation();
 
     if (!user) {
-        return <p>Loading...</p>;
+        return <p>t('general.loading')</p>;
     }
 
   const toggleTeamDropdown = (teamId: number) => {
@@ -29,42 +32,42 @@ const ProfileOverview: React.FC<Props> = ({ user, teams }) => {
         <table className="w-full">
           <thead className="bg-secondary text-white">
             <tr>
-              <th className="px-6 py-3 text-left text-sm font-semibold">User Information</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold">t('profileOverview.userInfo')</th>
               <th className="px-6 py-3 text-left text-sm font-semibold"></th>
             </tr>
           </thead>
           <tbody>
             <tr className="border-b border-gray-200">
-              <td className="px-6 py-4 font-medium text-gray-900">Role</td>
+              <td className="px-6 py-4 font-medium text-gray-900">t('profileOverview.Role')</td>
               <td className="px-6 py-4 text-gray-700">{user.role}</td>
             </tr>
             <tr className="border-b border-gray-200">
-              <td className="px-6 py-4 font-medium text-gray-900">First Name</td>
+              <td className="px-6 py-4 font-medium text-gray-900">t('register.firstName')</td>
               <td className="px-6 py-4 text-gray-700">{user.firstName}</td>
             </tr>
             <tr className="border-b border-gray-200">
-              <td className="px-6 py-4 font-medium text-gray-900">Last Name</td>
+              <td className="px-6 py-4 font-medium text-gray-900">t('register.lastName')</td>
               <td className="px-6 py-4 text-gray-700">{user.lastName}</td>
             </tr>
             <tr className="border-b border-gray-200">
-              <td className="px-6 py-4 font-medium text-gray-900">Email</td>
+              <td className="px-6 py-4 font-medium text-gray-900">t('profileOverview.email')</td>
               <td className="px-6 py-4 text-gray-700">{user.email}</td>
             </tr>
             <tr className="border-b border-gray-200">
-              <td className="px-6 py-4 font-medium text-gray-900">Phone Number</td>
+              <td className="px-6 py-4 font-medium text-gray-900">t('register.phoneNr')</td>
               <td className="px-6 py-4 text-gray-700">{user.phoneNumber}</td>
             </tr>
           </tbody>
         </table>
       </div>
       <div className="bg-gray-50 p-6">
-        <h3 className="text-2xl font-bold mb-4 text-gray-900">Current Teams</h3>
+        <h3 className="text-2xl font-bold mb-4 text-gray-900">t('profileOverview.teams')</h3>
         {teams.length > 0 ? (
           <table className="w-full">
             <thead className="bg-secondary text-white">
               <tr>
-                <th className="px-6 py-3 text-left">Team Name</th>
-                <th className="px-6 py-3 text-left">Coach</th>
+                <th className="px-6 py-3 text-left">t('profileOverview.teamName')</th>
+                <th className="px-6 py-3 text-left">t('profileOverview.coach')</th>
               </tr>
             </thead>
             <tbody>
@@ -107,7 +110,7 @@ const ProfileOverview: React.FC<Props> = ({ user, teams }) => {
             </tbody>
           </table>
         ) : (
-          <p className="text-gray-700">No teams found</p>
+          <p className="text-gray-700">t('profileOverview.noTeams')</p>
         )}
       </div>
     </div>

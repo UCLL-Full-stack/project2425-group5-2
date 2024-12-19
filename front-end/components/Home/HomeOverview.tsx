@@ -2,9 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 import { User } from 'types';
+import { useTranslation } from "react-i18next";
 
 export default function HomeOverview() {
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
+
+    const { t } = useTranslation();
 
     useEffect(() => {
             const user = sessionStorage.getItem('loggedInUser');
@@ -20,18 +23,18 @@ export default function HomeOverview() {
                 {!loggedInUser ? (
                     <div className="space-y-6">
                         <h2 className="text-3xl font-bold text-black">
-                            Get Started with TeamTrack
+                            t('homeOverview.getStarted')
                         </h2>
                         <p className="text-xl text-gray-700">
-                            Join our community of teams and start tracking your performance today!
+                            t('homeOverview.joinCommunity')
                         </p>
                         <div className="flex space-x-4">
                         <table className="w-full">
                     <thead className="bg-secondary text-white">
                         <tr>
-                            <th className="px-6 py-3 text-left text-sm font-semibold">Email</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold">Password</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold">Role</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold">t('homeOverview.loginEmail')</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold">t('homeOverview.loginPwd')</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold">t('homeOverview.loginRole')</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,8 +77,8 @@ export default function HomeOverview() {
                     </div>
                 ) : (
                     <div className="space-y-6">
-                        <h2 className="text-3xl font-bold text-gray-900">Welcome back!</h2>
-                        <p className="text-xl text-gray-600">Ready to manage your team?</p>
+                        <h2 className="text-3xl font-bold text-gray-900">t('homeOverview.welcomeBack')</h2>
+                        <p className="text-xl text-gray-600">t('homeOverview.manageTeam')</p>
                     </div>
                 )}
             </div>

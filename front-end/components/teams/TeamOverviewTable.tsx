@@ -4,6 +4,7 @@ import TeamPlayers from './TeamPlayers';
 import { useRouter } from 'next/router';
 import { ChevronDown, ChevronUp, Edit, Trash } from 'lucide-react';
 import TeamService from '@services/TeamService';
+import { useTranslation } from "react-i18next";
 
 type Props = {
     teams: Array<Team>;
@@ -14,6 +15,8 @@ const TeamOverviewTable: React.FC<Props> = ({ teams }) => {
     const router = useRouter();
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
 
+    const { t } = useTranslation();
+
     useEffect(() => {
         const user = sessionStorage.getItem('loggedInUser');
         if (user) {
@@ -23,7 +26,7 @@ const TeamOverviewTable: React.FC<Props> = ({ teams }) => {
     }, []);
 
     if (!loggedInUser) {
-        return <p>Loading...</p>;
+        return <p>t('general.loading')</p>;
     }
     const toggleTeamDropdown = (teamId: number) => {
         setExpandedTeamId((prev) => (prev === teamId ? null : teamId));
@@ -42,12 +45,12 @@ const TeamOverviewTable: React.FC<Props> = ({ teams }) => {
             <table className="w-full">
                 <thead className="bg-secondary text-white">
                     <tr>
-                        <th className="px-6 py-4 text-left">Team Name</th>
-                        <th className="px-6 py-4 text-left">Coach</th>
+                        <th className="px-6 py-4 text-left">t('teamOverview.teamName')</th>
+                        <th className="px-6 py-4 text-left">t('teamOverview.coach')</th>
                         {(loggedInUser.role === 'coach' || loggedInUser.role === 'admin') && (
                             <>
-                                <th className="px-6 py-4 text-center">Actions</th>
-                                <th className="px-6 py-4 text-center">Delete</th>
+                                <th className="px-6 py-4 text-center">t('teamOverview.actions')</th>
+                                <th className="px-6 py-4 text-center">t('teamOverview.delete')</th>
                             </>
                         )}
                     </tr>
@@ -80,7 +83,7 @@ const TeamOverviewTable: React.FC<Props> = ({ teams }) => {
                                                 className="inline-flex items-center px-4 py-2 bg-secondary text-white rounded-md hover:bg-accent transition-all duration-300 transform hover:scale-105"
                                             >
                                                 <Edit size={18} className="mr-2" />
-                                                Edit
+                                                t('teamOverview.edit')
                                             </button>
                                         </td>
                                         <td className="px-2 py-4 text-center">

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Eye, EyeOff, Mail, Lock, User, ChevronDown, Phone } from 'lucide-react';
 import { Role, StatusMessage } from '../../types';
 import UserService from '@services/UserService';
+import { useTranslation } from "react-i18next";
 
 const Register = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -24,6 +25,8 @@ const Register = () => {
 
     const router = useRouter();
 
+    const { t } = useTranslation();
+
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
@@ -32,22 +35,26 @@ const Register = () => {
         let result = true;
 
         if (!userFirstName && userFirstName.trim() === '') {
-            setFirstNameError('Email is required');
+            setFirstNameError(t('register.firstNameError'));
             result = false;
         }
 
         if (!userLastName && userLastName.trim() === '') {
-            setLastNameError('Email is required');
+            setLastNameError(t('register.lastNameError'));
             result = false;
         }
 
         if (!userEmail && userEmail.trim() === '') {
-            setEmailError('Email is required');
+            setEmailError(t('register.emailError'));
             result = false;
         }
 
+        if (!userPhoneNumber && userPhoneNumber.trim() === '') {
+            setUserPhoneNumber(t('register.phoneNrError'))
+        }
+
         if (!userPassword && userPassword.trim() === '') {
-            setPasswordError('Password is required');
+            setPasswordError(t('register.pwdError'));
             result = false;
         }
 
@@ -75,7 +82,7 @@ const Register = () => {
         const response = await UserService.registerUser(user);
 
         if (response.status === 201) {
-            setStatusMessages([{ type: 'success', message: 'Registration successful' }]);
+            setStatusMessages([{ type: 'success', message: t('register.successMessage') }]);
             setLoading(false);
 
             setTimeout(() => {
@@ -86,7 +93,7 @@ const Register = () => {
             setStatusMessages([{ type: 'error', message: errorMessage }]);
         } else if (response.status === 204) {
         } else {
-            setStatusMessages([{ type: 'error', message: 'An error occurred' }]);
+            setStatusMessages([{ type: 'error', message: t('general.error') }]);
         }
     };
 
@@ -95,7 +102,7 @@ const Register = () => {
             <div className="bg-gradient-to-br from-primary to-accent p-8 rounded-lg shadow-xl max-w-md w-full space-y-8">
                 <div>
                     <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-                        Create a new account
+                        t('register.createAccount')
                     </h2>
                 </div>
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -103,7 +110,7 @@ const Register = () => {
                         <div className="flex gap-4 mb-4">
                             <div className="flex-1">
                                 <label htmlFor="firstName" className="sr-only">
-                                    First Name
+                                    t('register.firstName')
                                 </label>
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -126,7 +133,7 @@ const Register = () => {
                             </div>
                             <div className="flex-1">
                                 <label htmlFor="lastName" className="sr-only">
-                                    Last Name
+                                    t('register.lastName')
                                 </label>
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -150,7 +157,7 @@ const Register = () => {
                         </div>
                         <div>
                             <label htmlFor="email-address" className="sr-only">
-                                Email address
+                                t('register.email')
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -171,7 +178,7 @@ const Register = () => {
                         </div>
                         <div className="pt-2">
                             <label htmlFor="password" className="sr-only">
-                                Password
+                                t('register.pwd')
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -192,7 +199,7 @@ const Register = () => {
                                     className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
                                     onClick={togglePasswordVisibility}
                                     aria-label={
-                                        isPasswordVisible ? 'Hide password' : 'Show password'
+                                        isPasswordVisible ? t('login.hidePwd') : t('login.showPwd')
                                     }
                                     role="button"
                                 >
@@ -209,7 +216,7 @@ const Register = () => {
                         </div>
                         <div className="pt-4">
                             <label htmlFor="phoneNumber" className="sr-only">
-                                Phone Number
+                                t('register.phoneNr')
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -230,7 +237,7 @@ const Register = () => {
                         </div>
                         <div className="pt-4">
                             <label htmlFor="role" className="sr-only">
-                                Choose Role
+                                t('register.role')
                             </label>
                             <div className="relative">
                                 <select
@@ -242,10 +249,10 @@ const Register = () => {
                                     onChange={(e) => setUserRole(e.target.value as Role)}
                                 >
                                     <option value="" disabled selected>
-                                        Choose your role
+                                        t('register.role')
                                     </option>
-                                    <option value="coach">Coach</option>
-                                    <option value="player">Player</option>
+                                    <option value="coach">t('register.coach')</option>
+                                    <option value="player">t('register.player')</option>
                                 </select>
                                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                     <ChevronDown className="h-5 w-5" />
@@ -276,7 +283,7 @@ const Register = () => {
                             className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-l font-bold rounded-md text-white bg-secondary hover:bg-accent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent transition duration-150 ease-in-out hover:shadow-lg hover:shadow-neutral-400"
                             disabled={loading}
                         >
-                            {loading ? 'Registering...' : 'Register'}
+                            {loading ? t('register.registerMessage') : t('register.registerButton')}
                         </button>
                     </div>
                 </form>
@@ -285,7 +292,7 @@ const Register = () => {
                         href="/login"
                         className="font-medium text-white hover:underline transition duration-150 ease-in-out"
                     >
-                        Already have an account? Login
+                        t('register.loginMessage')
                     </Link>
                 </div>
             </div>

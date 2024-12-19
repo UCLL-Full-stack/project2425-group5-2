@@ -3,10 +3,13 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { User } from 'types';
 import { useRouter } from 'next/router';
+import { useTranslation } from "react-i18next";
 
 const Nav: React.FC = () => {
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
     const router = useRouter();
+
+    const { t } = useTranslation();
 
     useEffect(() => {
         setLoggedInUser(JSON.parse(sessionStorage.getItem('loggedInUser')));
@@ -40,7 +43,7 @@ const Nav: React.FC = () => {
                                 href="/"
                                 className="text-sm font-semibold hover:text-white hover:shadow-md hover:shadow-neutral-400 transition-shadow duration-200 rounded px-3 py-2 hover:bg-accent"
                             >
-                                Home
+                                t('nav.home')
                             </Link>
                         </li>
                         {loggedInUser && (
@@ -50,7 +53,7 @@ const Nav: React.FC = () => {
                                         href="/teams"
                                         className="text-sm font-semibold hover:text-white transition-colors  hover:shadow-md hover:shadow-neutral-400 duration-200 rounded px-3 py-2 hover:bg-accent"
                                     >
-                                        {loggedInUser.role == 'coach' ? 'Teams' : 'Team'}
+                                        {loggedInUser.role == 'coach' ? t("nav.teams") : t('nav.team')}
                                     </Link>
                                 </li>
                                 <li>
@@ -58,7 +61,7 @@ const Nav: React.FC = () => {
                                         href={'/profile/' + loggedInUser.id}
                                         className="text-sm font-semibold hover:text-white transition-colors  hover:shadow-md hover:shadow-neutral-400 duration-200 rounded px-3 py-2 hover:bg-accent"
                                     >
-                                        Profile
+                                        t('nav.profile')
                                     </Link>
                                 </li>
                                 <li>
@@ -66,7 +69,7 @@ const Nav: React.FC = () => {
                                         href="/games"
                                         className="text-sm font-semibold hover:text-white transition-colors  hover:shadow-md hover:shadow-neutral-400 duration-200 rounded px-3 py-2 hover:bg-accent"
                                     >
-                                        Games
+                                        t('nav.games')
                                     </Link>
                                 </li>
                             </ul>
@@ -78,14 +81,14 @@ const Nav: React.FC = () => {
                                     onClick={handleClick}
                                     className="text-sm font-semibold hover:text-white hover:shadow-md hover:shadow-neutral-400 transition-shadow duration-200 rounded px-3 py-2 hover:bg-accent"
                                 >
-                                    Logout
+                                    t('nav.logout')
                                 </button>
                             ) : (
                                 <Link
                                     href="/login"
                                     className="text-sm font-semibold hover:text-white hover:shadow-md hover:shadow-neutral-400 transition-shadow duration-200 rounded px-3 py-2 hover:bg-accent"
                                 >
-                                    Login
+                                    t('nav.login')
                                 </Link>
                             )}
                         </li>

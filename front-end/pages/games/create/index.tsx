@@ -6,30 +6,31 @@ import { useEffect, useState } from 'react';
 import { User } from 'types';
 import TeamService from '@services/TeamService';
 import useSWR from 'swr';
+import { t } from 'i18next';
 
 const GameCreatePage: React.FC = () => {
     const router = useRouter();
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
 
     const fetcher = async () => {
-            const teamsResponse = await TeamService.getAllTeams();
-            if (teamsResponse.ok) {
-                const teams = await teamsResponse.json();
-                return teams;
-            } else {
-                throw new Error('Failed to fetch data');
-            }
-        };
+        const teamsResponse = await TeamService.getAllTeams();
+        if (teamsResponse.ok) {
+            const teams = await teamsResponse.json();
+            return teams;
+        } else {
+            throw new Error(t('general.fetchError'));
+        }
+    };
 
     useEffect(() => {
-            const user = sessionStorage.getItem('loggedInUser');
-            if (user) {
-                const parsedUser = JSON.parse(user);
-                setLoggedInUser(parsedUser);
-            }
-        }, []);
+        const user = sessionStorage.getItem('loggedInUser');
+        if (user) {
+            const parsedUser = JSON.parse(user);
+            setLoggedInUser(parsedUser);
+        }
+    }, []);
 
-    const { data, isLoading, error } = useSWR(loggedInUser ? "Teams" : null, fetcher);
+    const { data, isLoading, error } = useSWR(loggedInUser ? 'Teams' : null, fetcher);
 
     const handleGameCreated = async () => {
         router.push('/games');
@@ -38,13 +39,23 @@ const GameCreatePage: React.FC = () => {
     return (
         <Layout>
             <Head>
-                <title>Create Team - TeamTrack</title>
+                <title>t('gamesCreateIndex.title')</title>
             </Head>
             <main className="d-flex flex-column justify-content-center align-items-center">
                 {data && <GameCreator onGameCreated={handleGameCreated} teams={data} />}
             </main>
         </Layout>
     );
+};
+
+export const getServersideProps = async (context) => {
+    const { locale } = context;
+
+    return {
+        props: {
+            ...(await serverSideTranslations(locale ?? 'en', ['common'])),
+        },
+    };
 };
 
 export default GameCreatePage;

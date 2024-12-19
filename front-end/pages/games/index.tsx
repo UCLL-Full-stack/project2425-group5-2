@@ -8,6 +8,7 @@ import { Plus } from 'lucide-react';
 import GameService from '@services/GameService';
 import GamesOverview from '@components/games/GamesOverview';
 import useSWR from 'swr';
+import { t } from 'i18next';
 
 const GamesPage: React.FC = () => {
     const router = useRouter();
@@ -29,13 +30,10 @@ const GamesPage: React.FC = () => {
         }
 
         if (teamsResponse.ok && gamesResponse.ok) {
-            const [teams, games] = await Promise.all([
-                teamsResponse.json(),
-                gamesResponse.json(),
-            ]);
+            const [teams, games] = await Promise.all([teamsResponse.json(), gamesResponse.json()]);
             return { teams, games };
         } else {
-            throw new Error('Failed to fetch data');
+            throw new Error(t('general.fetchError'));
         }
     };
 
@@ -47,10 +45,10 @@ const GamesPage: React.FC = () => {
         }
     }, []);
 
-    const { data, isLoading, error } = useSWR(loggedInUser ? "TeamsGames" : null, fetcher);
+    const { data, isLoading, error } = useSWR(loggedInUser ? 'TeamsGames' : null, fetcher);
 
     if (!loggedInUser) {
-        return <p>Loading</p>;
+        return <p>t('general.loading')</p>;
     }
 
     const createGameRoute = () => {
@@ -60,13 +58,13 @@ const GamesPage: React.FC = () => {
     return (
         <Layout>
             <Head>
-                <title>Games - TeamTrack</title>
+                <title>t('gamesIndex.title')</title>
             </Head>
             <div className="container mx-auto px-4 py-8">
                 <div className="bg-gradient-to-br from-primary to-accent p-8 rounded-lg shadow-xl max-w-5xl mx-auto">
                     <div className="flex justify-between items-center mb-8">
                         <h1 className="text-4xl font-extrabold text-white tracking-tight">
-                            Games Overview
+                            t('gamesIndex.gamesOverview')
                         </h1>
                         {(loggedInUser.role == 'admin' || loggedInUser.role == 'coach') && (
                             <button
@@ -74,18 +72,18 @@ const GamesPage: React.FC = () => {
                                 className="px-6 py-3 bg-secondary text-white text-lg font-semibold rounded-md transition-all duration-300 hover:bg-accent hover:shadow-lg transform hover:scale-105 flex items-center"
                             >
                                 <Plus size={24} className="mr-2" />
-                                Create Game
+                                t('gamesIndex.createGame')
                             </button>
                         )}
                     </div>
-                    {(data && data.teams.length > 0) ? (
+                    {data && data.teams.length > 0 ? (
                         <GamesOverview teams={data.teams} games={data.games} />
                     ) : (
                         <div className="text-center py-12">
-                            <p className="text-2xl font-semibold text-white mb-4">No Games found</p>
-                            <p className="text-lg text-white">
-                                Click the 'Create Game' button to create a game!
-                            </p> 
+                            <p className="text-2xl font-semibold text-white mb-4">
+                                t('gamesIndex.noGames')
+                            </p>
+                            <p className="text-lg text-white">t('gamesIndex.createText')</p>
                         </div>
                     )}
                 </div>
@@ -93,4 +91,15 @@ const GamesPage: React.FC = () => {
         </Layout>
     );
 };
+
+export const getServersideProps = async (context) => {
+    const { locale } = context;
+
+    return  {
+        props: {
+            ...(await serverSideTranslations(locale ?? "en", ['common'])),
+        },
+    };
+};
+
 export default GamesPage;

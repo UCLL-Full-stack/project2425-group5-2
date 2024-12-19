@@ -7,6 +7,7 @@ import TeamService from '@services/TeamService';
 import { Team, User } from '../../types';
 import { Plus } from 'lucide-react';
 import useSWR from 'swr';
+import { t } from 'i18next';
 
 const Teams: React.FC = () => {
     const router = useRouter();
@@ -15,18 +16,18 @@ const Teams: React.FC = () => {
     const fetcher = async () => {
         let teamsResponse;
         if (loggedInUser?.role === 'admin') {
-          teamsResponse = await TeamService.getAllTeams();
+            teamsResponse = await TeamService.getAllTeams();
         } else {
-          teamsResponse = await TeamService.getTeamsByUserId(loggedInUser.id);
+            teamsResponse = await TeamService.getTeamsByUserId(loggedInUser.id);
         }
-    
+
         if (teamsResponse.ok) {
             const teams = await teamsResponse.json();
             return teams;
         } else {
-            throw new Error('Failed to fetch data');
+            throw new Error(t('general.fetchError'));
         }
-      };
+    };
 
     useEffect(() => {
         const user = sessionStorage.getItem('loggedInUser');
@@ -36,11 +37,11 @@ const Teams: React.FC = () => {
         }
     }, []);
 
-    const { data, isLoading, error } = useSWR(loggedInUser ? "Teams" : null, fetcher);
+    const { data, isLoading, error } = useSWR(loggedInUser ? 'Teams' : null, fetcher);
 
     if (!loggedInUser) {
-        return <p>Loading</p>;
-    };
+        return <p>t('general.loading')</p>;
+    }
 
     const createTeamRoute = () => {
         router.push('/teams/create');
@@ -49,13 +50,13 @@ const Teams: React.FC = () => {
     return (
         <Layout>
             <Head>
-                <title>Teams - TeamTrack</title>
+                <title>t('teamIndex.title')</title>
             </Head>
             <div className="container mx-auto px-4 py-8">
                 <div className="bg-gradient-to-br from-primary to-accent p-8 rounded-lg shadow-xl max-w-5xl mx-auto">
                     <div className="flex justify-between items-center mb-8">
                         <h1 className="text-4xl font-extrabold text-white tracking-tight">
-                            Team Overview
+                            t('teamIndex.teamOverview')
                         </h1>
                         {(loggedInUser.role == 'admin' || loggedInUser.role == 'coach') && (
                             <button
@@ -63,7 +64,7 @@ const Teams: React.FC = () => {
                                 className="px-6 py-3 bg-secondary text-white text-lg font-semibold rounded-md transition-all duration-300 hover:bg-accent hover:shadow-lg transform hover:scale-105 flex items-center"
                             >
                                 <Plus size={24} className="mr-2" />
-                                Create Team
+                                t('teamIndex.createTeam')
                             </button>
                         )}
                     </div>
@@ -71,16 +72,26 @@ const Teams: React.FC = () => {
                         <TeamOverviewTable teams={data} />
                     ) : (
                         <div className="text-center py-12">
-                            <p className="text-2xl font-semibold text-white mb-4">No teams found</p>
-                            <p className="text-lg text-white">
-                                Click the 'Create Team' button to get started!
+                            <p className="text-2xl font-semibold text-white mb-4">
+                                t('teamIndex.noTeams')
                             </p>
+                            <p className="text-lg text-white">t('teamIndex.createText')</p>
                         </div>
                     )}
                 </div>
             </div>
         </Layout>
     );
+};
+
+export const getServersideProps = async (context) => {
+    const { locale } = context;
+
+    return  {
+        props: {
+            ...(await serverSideTranslations(locale ?? "en", ['common'])),
+        },
+    };
 };
 
 export default Teams;

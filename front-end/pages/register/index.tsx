@@ -4,13 +4,23 @@ import Layout from '../../components/layout/Layout';
 
 const RegisterPage = () => {
     return (
-      <Layout>
-        <Head>
-          <title>Login</title>
-        </Head>
-        <Register/>
-      </Layout>
+        <Layout>
+            <Head>
+                <title>t('registerIndex.title')</title>
+            </Head>
+            <Register />
+        </Layout>
     );
-  };
-  
-  export default RegisterPage;
+};
+
+export const getServersideProps = async (context) => {
+    const { locale } = context;
+
+    return  {
+        props: {
+            ...(await serverSideTranslations(locale ?? "en", ['common'])),
+        },
+    };
+};
+
+export default RegisterPage;

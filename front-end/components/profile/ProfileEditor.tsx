@@ -3,6 +3,7 @@ import { User } from '../../types';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/router';
 import UserService from '@services/UserService';
+import { useTranslation } from "react-i18next";
 
 type Props = {
     loggedInUser: User;
@@ -18,19 +19,21 @@ const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
 
     const router = useRouter();
 
+    const { t } = useTranslation();
+
     const handleUpdateUser = async () => {
         const validationErrors: string[] = [];
 
         if (!firstName) {
-            validationErrors.push('First name is required');
+            validationErrors.push(t('register.firstNameError'));
         }
 
         if (!lastName) {
-            validationErrors.push('Last name is required');
+            validationErrors.push(t('register.lastNameError'));
         }
 
         if (!phoneNumber) {
-            validationErrors.push('Phone number is required');
+            validationErrors.push(t('register.phoneNrerror'));
         }
         
         if (!email)
@@ -71,7 +74,7 @@ const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
                 </button>
                 <div className="flex-grow text-center">
                     <h1 className="text-4xl font-extrabold mb-2 text-white tracking-tight">
-                        Edit User
+                        t('profileEditor.edit')
                     </h1>
                     <h2 className="text-2xl font-semibold text-secondary">{loggedInUser.firstName} {loggedInUser.lastName}</h2>
                 </div>
@@ -79,7 +82,7 @@ const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
             <form className="space-y-6">
                 <div className="w-full">
                     <label htmlFor="firstName" className="block text-xl font-bold mb-2 text-white">
-                        First name
+                        t('register.firstName')
                     </label>
                     <input
                         id="firstName"
@@ -94,7 +97,7 @@ const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
                 </div>
                 <div className="w-full">
                     <label htmlFor="lastName" className="block text-xl font-bold mb-2 text-white">
-                        Last name
+                        t('register.lastName')
                     </label>
                     <input
                         id="lastName"
@@ -109,7 +112,7 @@ const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
                 </div>
                 <div className="w-full">
                     <label htmlFor="email" className="block text-xl font-bold mb-2 text-white">
-                       Email
+                       t('register.emil')
                     </label>
                     <input
                         id="email"
@@ -124,7 +127,7 @@ const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
                 </div>
                 <div className="w-full">
                     <label htmlFor="phoneNumber" className="block text-xl font-bold mb-2 text-white">
-                        Phone number
+                        t('register.phoneNr')
                     </label>
                     <input
                         id="phoneNumber"
@@ -154,10 +157,10 @@ const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
                         onClick={handleUpdateUser}
                         className="px-8 py-3 bg-secondary text-white text-lg font-semibold rounded-md transition-all duration-300 hover:bg-accent hover:shadow-lg transform hover:scale-105"
                     >
-                        Save
+                        t('profileEditor.save')
                     </button>
                 </div>
-                <div className="flex justify-center pt-6"><p className='text-white text-lg'>You will need to log back in after saving!</p></div>
+                <div className="flex justify-center pt-6"><p className='text-white text-lg'>t('profileEditor.saveMessages')</p></div>
             </form>
         </div>
     );
