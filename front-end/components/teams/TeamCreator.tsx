@@ -6,8 +6,7 @@ import PlayerService from '@services/PlayerService';
 import { ArrowLeft, Square, CheckSquare } from 'lucide-react';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
-import { t } from 'i18next';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 type Props = {
     onTeamCreated: () => void;
@@ -69,7 +68,7 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
     }, [data]);
 
     if (!loggedInUser) {
-        return <p>t('general.loading')</p>;
+        return <p>{t('general.loading')}</p>;
     }
 
     const handleCreateTeam = async () => {
@@ -134,14 +133,15 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
                 </button>
                 <div className="flex-grow text-center">
                     <h1 className="text-4xl font-extrabold mb-2 text-white tracking-tight">
-                        t('teamCreator.createTeam')
+                        {t('teamCreator.createTeam')}
                     </h1>
                 </div>
             </div>
             <form className="space-y-6">
                 <div className="w-full">
                     <label htmlFor="teamName" className="block text-xl font-bold mb-2 text-white">
-                        t('teamCreator.teamName')
+                        {t('teamCreator.teamName')}
+                        <span><p className='text-sm'>{t('teamCreator.required')}</p></span>
                     </label>
                     <input
                         id="teamName"
@@ -167,7 +167,9 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
                 )}
 
                 <div className="w-full">
-                    <h3 className="text-2xl font-bold mb-4 text-white">t('teamCreator.coach')</h3>
+                    <h3 className="text-2xl font-bold mb-4 text-white">{t('teamCreator.coach')}
+                    <span><p className='text-sm'>{t('teamCreator.selectOne')}</p></span>
+                    </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                         {data &&
                             data.coaches.map((coach) => (
@@ -205,7 +207,9 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
                 </div>
 
                 <div className="w-full">
-                    <h3 className="text-2xl font-bold mb-4 text-white">t('teamCreator.player')</h3>
+                    <h3 className="text-2xl font-bold mb-4 text-white">{t('teamCreator.player')}
+                    <span><p className='text-sm font-semibold'>{t('teamCreator.selectOneToFour')}</p></span>
+                    </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-2">
                         {data &&
                             data.players.map((player) => (
@@ -255,7 +259,7 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
                         onClick={handleCreateTeam}
                         className="px-8 py-3 bg-secondary text-white text-lg font-semibold rounded-md transition-all duration-300 hover:bg-accent hover:shadow-lg transform hover:scale-105"
                     >
-                        t('teamCreator.createTeam')
+                        {t('teamCreator.createTeam')}
                     </button>
                 </div>
             </form>

@@ -3,7 +3,8 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { User } from 'types';
 import { useRouter } from 'next/router';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
+import Language from '@components/languages/Language';
 
 const Nav: React.FC = () => {
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
@@ -43,7 +44,7 @@ const Nav: React.FC = () => {
                                 href="/"
                                 className="text-sm font-semibold hover:text-white hover:shadow-md hover:shadow-neutral-400 transition-shadow duration-200 rounded px-3 py-2 hover:bg-accent"
                             >
-                                t('nav.home')
+                                {t('nav.home')}
                             </Link>
                         </li>
                         {loggedInUser && (
@@ -61,7 +62,7 @@ const Nav: React.FC = () => {
                                         href={'/profile/' + loggedInUser.id}
                                         className="text-sm font-semibold hover:text-white transition-colors  hover:shadow-md hover:shadow-neutral-400 duration-200 rounded px-3 py-2 hover:bg-accent"
                                     >
-                                        t('nav.profile')
+                                        {t('nav.profile')}
                                     </Link>
                                 </li>
                                 <li>
@@ -69,7 +70,7 @@ const Nav: React.FC = () => {
                                         href="/games"
                                         className="text-sm font-semibold hover:text-white transition-colors  hover:shadow-md hover:shadow-neutral-400 duration-200 rounded px-3 py-2 hover:bg-accent"
                                     >
-                                        t('nav.games')
+                                        {t('nav.games')}
                                     </Link>
                                 </li>
                             </ul>
@@ -81,16 +82,19 @@ const Nav: React.FC = () => {
                                     onClick={handleClick}
                                     className="text-sm font-semibold hover:text-white hover:shadow-md hover:shadow-neutral-400 transition-shadow duration-200 rounded px-3 py-2 hover:bg-accent"
                                 >
-                                    t('nav.logout')
+                                    {t('nav.logout')}
                                 </button>
                             ) : (
                                 <Link
                                     href="/login"
                                     className="text-sm font-semibold hover:text-white hover:shadow-md hover:shadow-neutral-400 transition-shadow duration-200 rounded px-3 py-2 hover:bg-accent"
                                 >
-                                    t('nav.login')
+                                    {t('nav.login')}
                                 </Link>
                             )}
+                        </li>
+                        <li>
+                            <Language/>
                         </li>
                     </ul>
                 </nav>

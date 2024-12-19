@@ -3,7 +3,7 @@ import { Game, Team, User } from '../../types';
 import { useRouter } from 'next/router';
 import { Edit, Trash } from 'lucide-react';
 import GameService from '@services/GameService';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 type Props = {
     games: Game[];
@@ -34,7 +34,7 @@ const GameDetailsTable: React.FC<Props> = ({ games, team }) => {
     }, [games, team]);
 
     if (!loggedInUser) {
-        return <p className="text-center py-4">t('general.loading')</p>;
+        return <p className="text-center py-4">{t('general.loading')}</p>;
     }
 
     const deleteGame = async (gameId: number) => {
@@ -58,27 +58,27 @@ const GameDetailsTable: React.FC<Props> = ({ games, team }) => {
 
     return (
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <h3 className="text-2xl font-bold mb-4 text-gray-800 px-6 pt-4">Games Played</h3>
+            <h3 className="text-2xl font-bold mb-4 text-gray-800 px-6 pt-4">{t('nav.games')}</h3>
             {games && games.length > 0 ? (
                 <table className="w-full">
                     <thead className="bg-secondary text-white">
                         <tr>
                             <th className="px-6 py-3 text-left text-sm font-semibold">
-                                t('gameCreator.date')
+                                {t('gameCreator.date')}
                             </th>
                             <th className="px-6 py-3 text-left text-sm font-semibold">
-                                t('gameDetails.teams')
+                                {t('gameDetails.teams')}
                             </th>
                             <th className="px-6 py-3 text-left text-sm font-semibold">
-                                t'('gameDetails.Result')
+                                {t('gameDetails.result')}
                             </th>
                             {(loggedInUser.role === 'coach' || loggedInUser.role === 'admin') && (
                                 <>
                                     <th className="px-6 py-3 text-center text-sm font-semibold">
-                                        t('gameDetails.edit')
+                                        {t('gameDetails.edit')}
                                     </th>
                                     <th className="px-6 py-3 text-center text-sm font-semibold">
-                                        t('gameDetails.delete')
+                                        {t('gameDetails.delete')}
                                     </th>
                                 </>
                             )}
@@ -110,7 +110,7 @@ const GameDetailsTable: React.FC<Props> = ({ games, team }) => {
                                                 className="inline-flex items-center px-4 py-2 bg-secondary text-white rounded-md hover:bg-accent transition-all duration-300 transform hover:scale-105"
                                             >
                                                 <Edit size={18} className="mr-2" />
-                                                t('gameDetails.edit')
+                                                {t('gameDetails.edit')}
                                             </button>
                                         </td>
                                         <td className="px-6 py-4 text-center">
@@ -119,7 +119,7 @@ const GameDetailsTable: React.FC<Props> = ({ games, team }) => {
                                                 className="inline-flex items-center px-4 py-2 bg-red-700 text-white rounded-md hover:bg-red-300 transition-all duration-300 transform hover:scale-105"
                                             >
                                                 <Trash size={18} className="mr-2" />
-                                                t('gameDetails.delete')
+                                                {t('gameDetails.delete')}
                                             </button>
                                         </td>
                                     </>
@@ -129,7 +129,7 @@ const GameDetailsTable: React.FC<Props> = ({ games, team }) => {
                     </tbody>
                 </table>
             ) : (
-                <p className="text-gray-600 text-center py-4">t('gameDetails.noGames')</p>
+                <p className="text-gray-600 text-center py-4">{t('gameDetails.noGames')}</p>
             )}
         </div>
     );

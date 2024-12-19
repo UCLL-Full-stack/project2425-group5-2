@@ -3,7 +3,7 @@ import { User } from '../../types';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/router';
 import UserService from '@services/UserService';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 type Props = {
     loggedInUser: User;
@@ -74,7 +74,7 @@ const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
                 </button>
                 <div className="flex-grow text-center">
                     <h1 className="text-4xl font-extrabold mb-2 text-white tracking-tight">
-                        t('profileEditor.edit')
+                        {t('profileEditor.edit')}
                     </h1>
                     <h2 className="text-2xl font-semibold text-secondary">{loggedInUser.firstName} {loggedInUser.lastName}</h2>
                 </div>
@@ -82,7 +82,7 @@ const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
             <form className="space-y-6">
                 <div className="w-full">
                     <label htmlFor="firstName" className="block text-xl font-bold mb-2 text-white">
-                        t('register.firstName')
+                        {t('register.firstName')}
                     </label>
                     <input
                         id="firstName"
@@ -97,7 +97,7 @@ const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
                 </div>
                 <div className="w-full">
                     <label htmlFor="lastName" className="block text-xl font-bold mb-2 text-white">
-                        t('register.lastName')
+                        {t('register.lastName')}
                     </label>
                     <input
                         id="lastName"
@@ -112,7 +112,7 @@ const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
                 </div>
                 <div className="w-full">
                     <label htmlFor="email" className="block text-xl font-bold mb-2 text-white">
-                       t('register.emil')
+                       {t('register.emil')}
                     </label>
                     <input
                         id="email"
@@ -127,7 +127,7 @@ const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
                 </div>
                 <div className="w-full">
                     <label htmlFor="phoneNumber" className="block text-xl font-bold mb-2 text-white">
-                        t('register.phoneNr')
+                        {t('register.phoneNr')}
                     </label>
                     <input
                         id="phoneNumber"
@@ -157,7 +157,7 @@ const ProfileEditor: React.FC<Props> = ({ loggedInUser, handleLogout }) => {
                         onClick={handleUpdateUser}
                         className="px-8 py-3 bg-secondary text-white text-lg font-semibold rounded-md transition-all duration-300 hover:bg-accent hover:shadow-lg transform hover:scale-105"
                     >
-                        t('profileEditor.save')
+                        {t('profileEditor.save')}
                     </button>
                 </div>
                 <div className="flex justify-center pt-6"><p className='text-white text-lg'>t('profileEditor.saveMessages')</p></div>

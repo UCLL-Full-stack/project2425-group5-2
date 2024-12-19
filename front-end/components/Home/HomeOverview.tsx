@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { User } from 'types';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 export default function HomeOverview() {
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
@@ -23,18 +23,18 @@ export default function HomeOverview() {
                 {!loggedInUser ? (
                     <div className="space-y-6">
                         <h2 className="text-3xl font-bold text-black">
-                            t('homeOverview.getStarted')
+                            {t('homeOverview.getStarted')}
                         </h2>
                         <p className="text-xl text-gray-700">
-                            t('homeOverview.joinCommunity')
+                            {t('homeOverview.joinCommunity')}
                         </p>
                         <div className="flex space-x-4">
                         <table className="w-full">
                     <thead className="bg-secondary text-white">
                         <tr>
-                            <th className="px-6 py-3 text-left text-sm font-semibold">t('homeOverview.loginEmail')</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold">t('homeOverview.loginPwd')</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold">t('homeOverview.loginRole')</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold">{t('homeOverview.loginEmail')}</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold">{t('homeOverview.loginPwd')}</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold">{t('homeOverview.loginRole')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -77,8 +77,8 @@ export default function HomeOverview() {
                     </div>
                 ) : (
                     <div className="space-y-6">
-                        <h2 className="text-3xl font-bold text-gray-900">t('homeOverview.welcomeBack')</h2>
-                        <p className="text-xl text-gray-600">t('homeOverview.manageTeam')</p>
+                        <h2 className="text-3xl font-bold text-gray-900">{t('homeOverview.welcomeBack')}</h2>
+                        <p className="text-xl text-gray-600">{t('homeOverview.manageTeam')}</p>
                     </div>
                 )}
             </div>

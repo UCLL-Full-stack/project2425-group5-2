@@ -1,3 +1,4 @@
+import { get } from 'http';
 import { Team, User } from '../types';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -33,6 +34,16 @@ const updateUser = (user: User) => {
     });
 }
 
-const UserService = { logInUser, registerUser, updateUser};
+const getUserById = (id: number) => {
+    return fetch(apiUrl + `/users/${id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
+
+const UserService = { logInUser, registerUser, updateUser, getUserById };
 
 export default UserService;

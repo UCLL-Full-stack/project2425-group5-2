@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Eye, EyeOff, Mail, Lock, User, ChevronDown, Phone } from 'lucide-react';
 import { Role, StatusMessage } from '../../types';
 import UserService from '@services/UserService';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 const Register = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -102,7 +102,7 @@ const Register = () => {
             <div className="bg-gradient-to-br from-primary to-accent p-8 rounded-lg shadow-xl max-w-md w-full space-y-8">
                 <div>
                     <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-                        t('register.createAccount')
+                        {t('register.createAccount')}
                     </h2>
                 </div>
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -110,7 +110,7 @@ const Register = () => {
                         <div className="flex gap-4 mb-4">
                             <div className="flex-1">
                                 <label htmlFor="firstName" className="sr-only">
-                                    t('register.firstName')
+                                    {t('register.firstName')}
                                 </label>
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -133,7 +133,7 @@ const Register = () => {
                             </div>
                             <div className="flex-1">
                                 <label htmlFor="lastName" className="sr-only">
-                                    t('register.lastName')
+                                    {t('register.lastName')}
                                 </label>
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -157,7 +157,7 @@ const Register = () => {
                         </div>
                         <div>
                             <label htmlFor="email-address" className="sr-only">
-                                t('register.email')
+                                {t('register.email')}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -178,7 +178,7 @@ const Register = () => {
                         </div>
                         <div className="pt-2">
                             <label htmlFor="password" className="sr-only">
-                                t('register.pwd')
+                                {t('register.pwd')}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -216,7 +216,7 @@ const Register = () => {
                         </div>
                         <div className="pt-4">
                             <label htmlFor="phoneNumber" className="sr-only">
-                                t('register.phoneNr')
+                                {t('register.phoneNr')}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -237,7 +237,7 @@ const Register = () => {
                         </div>
                         <div className="pt-4">
                             <label htmlFor="role" className="sr-only">
-                                t('register.role')
+                                {t('register.role')}
                             </label>
                             <div className="relative">
                                 <select
@@ -249,10 +249,10 @@ const Register = () => {
                                     onChange={(e) => setUserRole(e.target.value as Role)}
                                 >
                                     <option value="" disabled selected>
-                                        t('register.role')
+                                        {t('register.role')}
                                     </option>
-                                    <option value="coach">t('register.coach')</option>
-                                    <option value="player">t('register.player')</option>
+                                    <option value="coach">{t('register.coach')}</option>
+                                    <option value="player">{t('register.player')}</option>
                                 </select>
                                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                     <ChevronDown className="h-5 w-5" />
@@ -292,7 +292,7 @@ const Register = () => {
                         href="/login"
                         className="font-medium text-white hover:underline transition duration-150 ease-in-out"
                     >
-                        t('register.loginMessage')
+                        {t('register.loginMessage')}
                     </Link>
                 </div>
             </div>

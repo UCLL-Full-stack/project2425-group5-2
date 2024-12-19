@@ -254,7 +254,7 @@ teamRouter.post('/', async (req: Request, res: Response, next: NextFunction) => 
  *       401:
  *         description: Unauthorized
  */
-teamRouter.put('/:id', async (req: Request, res: Response, next: NextFunction) => {
+teamRouter.put('/edit/:id', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const teamData = req.body;
         const id = req.params.id;

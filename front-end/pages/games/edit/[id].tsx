@@ -1,4 +1,4 @@
-import { Game, Team, User } from '../../../types';
+import { User } from '../../../types';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -6,12 +6,14 @@ import Layout from '@components/layout/Layout';
 import GameService from '@services/GameService';
 import GameEditor from '@components/games/GameEditor';
 import useSWR from 'swr';
-import { t } from 'i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 
 const editGamePage: React.FC = () => {
     const router = useRouter();
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
     const { id } = router.query;
+    const { t } = useTranslation();
 
     const fetcher = async () => {
         const gameResponse = await GameService.getGameById(Number(id));
@@ -34,7 +36,7 @@ const editGamePage: React.FC = () => {
     const { data, isLoading, error } = useSWR(loggedInUser && id ? 'Game' : null, fetcher);
 
     if (!loggedInUser) {
-        return <p>t('general.loading')</p>;
+        return <p>{t('general.loading')}</p>;
     }
 
     const handleGameUpdated = () => {
@@ -51,13 +53,12 @@ const editGamePage: React.FC = () => {
     );
 };
 
-export const getServersideProps = async (context) => {
+export const getServerSideProps = async (context) => {
     const { locale } = context;
-
-    return  {
+    return {
         props: {
-            ...(await serverSideTranslations(locale ?? "en", ['common'])),
-        },
+            ...(await serverSideTranslations(locale ?? "en", ["common"])),
+        }
     };
 };
 

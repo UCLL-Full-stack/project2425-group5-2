@@ -6,11 +6,13 @@ import { useEffect, useState } from 'react';
 import { User } from 'types';
 import TeamService from '@services/TeamService';
 import useSWR from 'swr';
-import { t } from 'i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 
 const GameCreatePage: React.FC = () => {
     const router = useRouter();
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
+    const { t } = useTranslation();
 
     const fetcher = async () => {
         const teamsResponse = await TeamService.getAllTeams();
@@ -39,7 +41,7 @@ const GameCreatePage: React.FC = () => {
     return (
         <Layout>
             <Head>
-                <title>t('gamesCreateIndex.title')</title>
+                <title>{t('gamesCreateIndex.title')}</title>
             </Head>
             <main className="d-flex flex-column justify-content-center align-items-center">
                 {data && <GameCreator onGameCreated={handleGameCreated} teams={data} />}
@@ -48,13 +50,12 @@ const GameCreatePage: React.FC = () => {
     );
 };
 
-export const getServersideProps = async (context) => {
+export const getServerSideProps = async (context) => {
     const { locale } = context;
-
     return {
         props: {
-            ...(await serverSideTranslations(locale ?? 'en', ['common'])),
-        },
+            ...(await serverSideTranslations(locale ?? "en", ["common"])),
+        }
     };
 };
 

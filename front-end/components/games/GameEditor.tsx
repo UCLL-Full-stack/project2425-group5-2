@@ -3,7 +3,7 @@ import { Game, Team } from '../../types';
 import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/router';
 import GameService from '@services/GameService';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 type Props = {
     game: Game;
@@ -80,7 +80,7 @@ const GameEditor: React.FC<Props> = ({ game, gameUpdated }) => {
                 </button>
                 <div className="flex-grow text-center">
                     <h1 className="text-4xl font-extrabold mb-2 text-white tracking-tight">
-                        t('gameEditor.edit')
+                        {t('gameEditor.edit')}
                     </h1>
                 </div>
             </div>
@@ -90,7 +90,7 @@ const GameEditor: React.FC<Props> = ({ game, gameUpdated }) => {
                         htmlFor="CurrentDate"
                         className="block text-xl font-bold mb-2 text-white"
                     >
-                        t('gameEditor.currentDate')
+                        {t('gameEditor.currentDate')}
                     </label>
                     <input
                         id="CurrentDate"
@@ -104,7 +104,7 @@ const GameEditor: React.FC<Props> = ({ game, gameUpdated }) => {
                 </div>
                 <div className="w-full">
                     <label htmlFor="Date" className="block text-xl font-bold mb-2 text-white">
-                        t('gameEditor.newDate')
+                        {t('gameEditor.newDate')}
                     </label>
                     <input
                         id="Date"
@@ -134,7 +134,7 @@ const GameEditor: React.FC<Props> = ({ game, gameUpdated }) => {
                 <div className="w-full">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-2">
                         <label htmlFor="Score" className="block text-xl font-bold mb-2 text-white">
-                            t('gameEditor.score')
+                            {t('gameEditor.score')}
                         </label>
                         <input
                             id="Score"
@@ -157,7 +157,7 @@ const GameEditor: React.FC<Props> = ({ game, gameUpdated }) => {
                         onClick={handleUpdateGame}
                         className="px-8 py-3 bg-secondary text-white text-lg font-semibold rounded-md transition-all duration-300 hover:bg-accent hover:shadow-lg transform hover:scale-105"
                     >
-                        t('gameEditor.updateGameButton')
+                        {t('gameEditor.updateGameButton')}
                     </button>
                 </div>
             </form>

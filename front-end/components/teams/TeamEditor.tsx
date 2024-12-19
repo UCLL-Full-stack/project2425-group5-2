@@ -5,8 +5,7 @@ import { Player, Team } from '../../types';
 import { ArrowLeft, Square, CheckSquare } from 'lucide-react';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
-import { t } from 'i18next';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 type Props = {
     team: Team;
@@ -18,7 +17,6 @@ const TeamEditor: React.FC<Props> = ({ team, TeamUpdated }) => {
     const [selectedPlayers, setSelectedPlayers] = useState<Array<Player>>(team.players);
     const [assignedPlayers, setAssignedPlayers] = useState<Set<number>>(new Set());
     const [errors, setErrors] = useState<string[]>([]);
-
     const router = useRouter();
 
     const { t } = useTranslation();
@@ -116,7 +114,7 @@ const TeamEditor: React.FC<Props> = ({ team, TeamUpdated }) => {
                 </button>
                 <div className="flex-grow text-center">
                     <h1 className="text-4xl font-extrabold mb-2 text-white tracking-tight">
-                        t('teamEditor.edit')
+                        {t('teamEditor.edit')}
                     </h1>
                     <h2 className="text-2xl font-semibold text-secondary">{team.teamName}</h2>
                 </div>
@@ -124,7 +122,7 @@ const TeamEditor: React.FC<Props> = ({ team, TeamUpdated }) => {
             <form className="space-y-6">
                 <div className="w-full">
                     <label htmlFor="teamName" className="block text-xl font-bold mb-2 text-white">
-                        t('teamEditor.teamName')
+                        {t('teamEditor.teamName')}
                     </label>
                     <input
                         id="teamName"
@@ -150,9 +148,11 @@ const TeamEditor: React.FC<Props> = ({ team, TeamUpdated }) => {
                 )}
 
                 <div className="w-full">
-                    <h3 className="text-2xl font-bold mb-4 text-white">t('teamEditor.player')</h3>
+                    <h3 className="text-2xl font-bold mb-4 text-white">{t('teamEditor.player')}
+                    <span><p className='text-sm font-semibold'>{t('teamCreator.selectOneToFour')}</p></span>
+                    </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-2">
-                        {data.players.map((player) => (
+                        {data && data.players.map((player) => (
                             <div key={player.id}>
                                 <button
                                     type="button"
@@ -204,7 +204,7 @@ const TeamEditor: React.FC<Props> = ({ team, TeamUpdated }) => {
                         onClick={handleUpdateTeam}
                         className="px-8 py-3 bg-secondary text-white text-lg font-semibold rounded-md transition-all duration-300 hover:bg-accent hover:shadow-lg transform hover:scale-105"
                     >
-                        t('teamEditor.updateTeamButton')
+                        {t('teamEditor.updateTeamButton')}
                     </button>
                 </div>
             </form>

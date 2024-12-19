@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Game, Team, User } from '../../types';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import GameDetails from './GameDetails';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 type GamesOverviewProps = {
     teams: Team[];
@@ -24,7 +24,7 @@ const GamesOverview: React.FC<GamesOverviewProps> = ({ teams, games }) => {
     }, []);
 
     if (!loggedInUser) {
-        return <p>t('general.loading')</p>;
+        return <p>{t('general.loading')}</p>;
     }
     const toggleTeamDropdown = (teamId: number) => {
         setExpandedTeamId((prev) => (prev === teamId ? null : teamId));
@@ -35,8 +35,8 @@ const GamesOverview: React.FC<GamesOverviewProps> = ({ teams, games }) => {
             <table className="w-full">
                 <thead className="bg-secondary text-white">
                     <tr>
-                        <th className="px-6 py-4 text-left">t('gameOverview.teamName')</th>
-                        <th className="px-6 py-4 text-left">t('gameOverview.games')</th>
+                        <th className="px-6 py-4 text-left">{t('gameOverview.teamName')}</th>
+                        <th className="px-6 py-4 text-left">{t('gameOverview.games')}</th>
                     </tr>
                 </thead>
                 <tbody>

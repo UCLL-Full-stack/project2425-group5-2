@@ -69,7 +69,9 @@
         "date": "Date",
         "teamName": "Enter team name",
         "teamSelect": "Select Teams",
-        "createGameButton": "Create Game"
+        "createGameButton": "Create Game",
+        "required": "Required*",
+        "selectTwo": "Select 2*"
     },
     "gameDetails": {
         "deleteError": "Error deleting game:",
@@ -77,7 +79,8 @@
         "result": "Result",
         "edit": "Edit",
         "delete": "Delete",
-        "noGames": "No games available."
+        "noGames": "No games available.",
+        "games": "Games Played"
     },
     "gameEditor": {
         "teamsError": "Exactly two teams are required",
@@ -102,11 +105,15 @@
     "profileOverview": {
         "userInfo": "User Information",
         "role": "Role",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "phoneNumber": "Phone Number",
         "email": "Email",
         "teams": "Current Teams",
         "teamName": "Team Name",
         "coach": "Coach",
-        "noTeams": "No teams found"
+        "noTeams": "No teams found",
+        "teamPlayers": "Team Players:"
     },
     "teamCreator": {
         "teamNameError": "Team Name is required",
@@ -117,7 +124,10 @@
         "teamNamePlaceholder": "Enter team name",
         "coach": "Select Coach",
         "player": "Select Players",
-        "createTeamButton": "Create Team"
+        "createTeamButton": "Create Team",
+        "required": "Required*",
+        "selectOne": "Select 1*",
+        "selectOneToFour": "Select 1-4*"
     },
     "teamEditor": {
         "teamNameError": "Team Name is required",
@@ -181,5 +191,10 @@
         "createTeam": "Create Team",
         "noTeams": "No teams found.",
         "createText": "Click the 'Create Team' button to create a team!"
+    },
+    "language": {
+        "language": "Language: ",
+        "english": "English",
+        "dutch": "Dutch"
     }
 }

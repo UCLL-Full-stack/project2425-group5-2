@@ -4,14 +4,16 @@ import { useRouter } from 'next/router';
 import Layout from '@components/layout/Layout';
 import TeamOverviewTable from '@components/teams/TeamOverviewTable';
 import TeamService from '@services/TeamService';
-import { Team, User } from '../../types';
+import { User } from '../../types';
 import { Plus } from 'lucide-react';
 import useSWR from 'swr';
-import { t } from 'i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 
 const Teams: React.FC = () => {
     const router = useRouter();
     const [loggedInUser, setLoggedInUser] = useState<User>(null);
+    const { t } = useTranslation();
 
     const fetcher = async () => {
         let teamsResponse;
@@ -40,7 +42,7 @@ const Teams: React.FC = () => {
     const { data, isLoading, error } = useSWR(loggedInUser ? 'Teams' : null, fetcher);
 
     if (!loggedInUser) {
-        return <p>t('general.loading')</p>;
+        return <p>{t('general.loading')}</p>;
     }
 
     const createTeamRoute = () => {
@@ -50,13 +52,13 @@ const Teams: React.FC = () => {
     return (
         <Layout>
             <Head>
-                <title>t('teamIndex.title')</title>
+                <title>{t('teamIndex.title')}</title>
             </Head>
             <div className="container mx-auto px-4 py-8">
                 <div className="bg-gradient-to-br from-primary to-accent p-8 rounded-lg shadow-xl max-w-5xl mx-auto">
                     <div className="flex justify-between items-center mb-8">
                         <h1 className="text-4xl font-extrabold text-white tracking-tight">
-                            t('teamIndex.teamOverview')
+                            {t('teamIndex.teamOverview')}
                         </h1>
                         {(loggedInUser.role == 'admin' || loggedInUser.role == 'coach') && (
                             <button
@@ -64,7 +66,7 @@ const Teams: React.FC = () => {
                                 className="px-6 py-3 bg-secondary text-white text-lg font-semibold rounded-md transition-all duration-300 hover:bg-accent hover:shadow-lg transform hover:scale-105 flex items-center"
                             >
                                 <Plus size={24} className="mr-2" />
-                                t('teamIndex.createTeam')
+                                {t('teamIndex.createTeam')}
                             </button>
                         )}
                     </div>
@@ -73,9 +75,9 @@ const Teams: React.FC = () => {
                     ) : (
                         <div className="text-center py-12">
                             <p className="text-2xl font-semibold text-white mb-4">
-                                t('teamIndex.noTeams')
+                                {t('teamIndex.noTeams')}
                             </p>
-                            <p className="text-lg text-white">t('teamIndex.createText')</p>
+                            <p className="text-lg text-white">{t('teamIndex.createText')}</p>
                         </div>
                     )}
                 </div>
@@ -84,13 +86,12 @@ const Teams: React.FC = () => {
     );
 };
 
-export const getServersideProps = async (context) => {
+export const getServerSideProps = async (context) => {
     const { locale } = context;
-
-    return  {
+    return {
         props: {
-            ...(await serverSideTranslations(locale ?? "en", ['common'])),
-        },
+            ...(await serverSideTranslations(locale ?? "en", ["common"])),
+        }
     };
 };
 

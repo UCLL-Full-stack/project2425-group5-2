@@ -3,7 +3,7 @@ import { Team, User, Game } from '../../types';
 import { ArrowLeft, Square, CheckSquare } from 'lucide-react';
 import { useRouter } from 'next/router';
 import GameService from '@services/GameService';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
 
 type Props = {
     onGameCreated: () => void;
@@ -29,7 +29,7 @@ const GameCreator: React.FC<Props> = ({ onGameCreated, teams }) => {
     }, []);
 
     if (!loggedInUser) {
-        return <p>t('general.loading')</p>;
+        return <p>{t('general.loading')}</p>;
     }
 
     const handleCreateGame = async () => {
@@ -87,14 +87,15 @@ const GameCreator: React.FC<Props> = ({ onGameCreated, teams }) => {
                 </button>
                 <div className="flex-grow text-center">
                     <h1 className="text-4xl font-extrabold mb-2 text-white tracking-tight">
-                        t('gameCreator.createGame')
+                        {t('gameCreator.createGame')}
                     </h1>
                 </div>
             </div>
             <form className="space-y-6">
                 <div className="w-full">
                     <label htmlFor="date" className="block text-xl font-bold mb-2 text-white">
-                        t('gameCreator.date')
+                        {t('gameCreator.date')}
+                        <span><p className='text-sm font-semibold'>{t('gameCreator.required')}</p></span>
                     </label>
                     <input
                         id="date"
@@ -120,7 +121,10 @@ const GameCreator: React.FC<Props> = ({ onGameCreated, teams }) => {
                 )}
 
                 <div className="w-full">
-                    <h3 className="text-2xl font-bold mb-4 text-white">t('gameCreator.teamSelect')</h3>
+                    <h3 className="text-2xl font-bold mb-4 text-white">{t('gameCreator.teamSelect')}
+                    <span><p className='text-sm font-semibold'>{t('gameCreator.selectTwo')}</p></span>
+
+                    </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-2">
                         {teams.map((team) => (
                             <div key={team.id}>
@@ -165,7 +169,7 @@ const GameCreator: React.FC<Props> = ({ onGameCreated, teams }) => {
                         onClick={handleCreateGame}
                         className="px-8 py-3 bg-secondary text-white text-lg font-semibold rounded-md transition-all duration-300 hover:bg-accent hover:shadow-lg transform hover:scale-105"
                     >
-                        t('gameCreator.createGameButton')
+                        {t('gameCreator.createGameButton')}
                     </button>
                 </div>
             </form>

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { StatusMessage } from 'types';
 import UserService from '@services/UserService';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 
 const Login = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -61,7 +61,7 @@ const Login = () => {
         const response = await UserService.logInUser(user);
 
         if (response.status === 200) {
-            setStatusMessages([{ type: t('login.success'), message: t('login.loginSuccess') }]);
+            setStatusMessages([{ type: 'success', message: t('login.loginSuccess') }]);
 
             const loggedInUser = await response.json();
             sessionStorage.setItem(
@@ -92,14 +92,14 @@ const Login = () => {
             <div className="bg-gradient-to-br from-primary to-accent p-8 rounded-lg shadow-xl max-w-md w-full space-y-8">
                 <div>
                     <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-                        t('login.login')
+                        {t('login.login')}
                     </h2>
                 </div>
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <div className="rounded-md shadow-sm -space-y-px">
                         <div>
                             <label htmlFor="email-address" className="sr-only">
-                                t('login.email')
+                                {t('login.email')}
                             </label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -122,7 +122,7 @@ const Login = () => {
                         <div className="rounded-md shadow-sm -space-y-px">
                             <div>
                                 <label htmlFor="password" className="sr-only">
-                                    t('login.password')
+                                    {t('login.password')}
                                 </label>
                                 <div className="relative pt-2">
                                     <div className="absolute pt-2 inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -203,7 +203,7 @@ const Login = () => {
                         href="/register"
                         className="font-medium text-white hover:underline transition duration-150 ease-in-out"
                     >
-                        t('login.registerMessage')
+                        {t('login.registerMessage')}
                     </Link>
                 </div>
             </div>

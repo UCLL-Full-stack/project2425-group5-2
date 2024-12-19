@@ -1,7 +1,8 @@
 import React from 'react';
 import { Player } from '../../types';
 import { UserCircle } from 'lucide-react';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
+import Link from 'next/link';
 
 type Props = {
     players: Array<Player>;
@@ -13,17 +14,17 @@ const TeamPlayers: React.FC<Props> = ({ players }) => {
     return (
         <div className="bg-primary rounded-lg shadow-md overflow-hidden">
             <h3 className="text-2xl font-bold mb-4 text-gray-800 px-6 pt-4">
-                t('teamPlayers.teamPlayers')
+                {t('teamPlayers.teamPlayers')}
             </h3>
             {players && players.length > 0 ? (
                 <table className="w-full">
                     <thead className="bg-secondary text-white">
                         <tr>
                             <th className="px-6 py-3 text-left text-sm font-semibold">
-                                t('teamPlayers.firstName')
+                                {t('teamPlayers.firstName')}
                             </th>
                             <th className="px-6 py-3 text-left text-sm font-semibold">
-                                t('teamPlayers.lastName')
+                                {t('teamPlayers.lastName')}
                             </th>
                         </tr>
                     </thead>
@@ -37,17 +38,17 @@ const TeamPlayers: React.FC<Props> = ({ players }) => {
                             >
                                 <td className="px-6 py-4 text-sm text-gray-900 flex items-center">
                                     <UserCircle size={20} className="mr-2 text-secondary" />
-                                    {player.user.firstName}
+                                    <Link href={`/profile/${player.user.id}`}>{player.user.firstName}</Link>
                                 </td>
                                 <td className="px-6 py-4 text-sm text-gray-900">
-                                    {player.user.lastName}
+                                    <Link href={`/profile/${player.user.id}`}>{player.user.lastName}</Link>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             ) : (
-                <p className="text-gray-600 text-center py-4">t('teamPlayers.noPlayers')</p>
+                <p className="text-gray-600 text-center py-4">{t('teamPlayers.noPlayers')}</p>
             )}
         </div>
     );

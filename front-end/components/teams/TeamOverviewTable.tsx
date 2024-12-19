@@ -4,7 +4,8 @@ import TeamPlayers from './TeamPlayers';
 import { useRouter } from 'next/router';
 import { ChevronDown, ChevronUp, Edit, Trash } from 'lucide-react';
 import TeamService from '@services/TeamService';
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "next-i18next";
+import Link from 'next/link';
 
 type Props = {
     teams: Array<Team>;
@@ -26,7 +27,7 @@ const TeamOverviewTable: React.FC<Props> = ({ teams }) => {
     }, []);
 
     if (!loggedInUser) {
-        return <p>t('general.loading')</p>;
+        return <p>{t('general.loading')}</p>;
     }
     const toggleTeamDropdown = (teamId: number) => {
         setExpandedTeamId((prev) => (prev === teamId ? null : teamId));
@@ -45,12 +46,12 @@ const TeamOverviewTable: React.FC<Props> = ({ teams }) => {
             <table className="w-full">
                 <thead className="bg-secondary text-white">
                     <tr>
-                        <th className="px-6 py-4 text-left">t('teamOverview.teamName')</th>
-                        <th className="px-6 py-4 text-left">t('teamOverview.coach')</th>
+                        <th className="px-6 py-4 text-left">{t('teamOverview.teamName')}</th>
+                        <th className="px-6 py-4 text-left">{t('teamOverview.coach')}</th>
                         {(loggedInUser.role === 'coach' || loggedInUser.role === 'admin') && (
                             <>
-                                <th className="px-6 py-4 text-center">t('teamOverview.actions')</th>
-                                <th className="px-6 py-4 text-center">t('teamOverview.delete')</th>
+                                <th className="px-6 py-4 text-center">{t('teamOverview.actions')}</th>
+                                <th className="px-6 py-4 text-center">{t('teamOverview.delete')}</th>
                             </>
                         )}
                     </tr>
@@ -73,7 +74,7 @@ const TeamOverviewTable: React.FC<Props> = ({ teams }) => {
                                     </button>
                                 </td>
                                 <td className="px-6 py-4 text-gray-900">
-                                    {team.coach.user.firstName} {team.coach.user.lastName}
+                                    <Link href={`/profile/${team.coach.user.id}`}>{team.coach.user.firstName} {team.coach.user.lastName}</Link>
                                 </td>
                                 {(loggedInUser.role == 'coach' || loggedInUser.role == 'admin') && (
                                     <>
@@ -83,7 +84,7 @@ const TeamOverviewTable: React.FC<Props> = ({ teams }) => {
                                                 className="inline-flex items-center px-4 py-2 bg-secondary text-white rounded-md hover:bg-accent transition-all duration-300 transform hover:scale-105"
                                             >
                                                 <Edit size={18} className="mr-2" />
-                                                t('teamOverview.edit')
+                                                {t('teamOverview.edit')}
                                             </button>
                                         </td>
                                         <td className="px-2 py-4 text-center">

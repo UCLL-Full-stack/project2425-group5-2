@@ -30,13 +30,12 @@ const Home: React.FC = () => {
     );
 };
 
-export const getServersideProps = async (context) => {
+export const getServerSideProps = async (context) => {
     const { locale } = context;
-
     return {
         props: {
-            ...(await serverSideTranslations(locale ?? 'en', ['common'])),
-        },
+            ...(await serverSideTranslations(locale ?? "en", ["common"])),
+        }
     };
 };
 

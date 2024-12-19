@@ -17,8 +17,8 @@ export default function Layout({ children }: LayoutProps) {
             <main className="flex-grow container mx-auto px-4 py-8 max-w-7xl">{children}</main>
             <footer className="bg-background">
                 <div className="text-white container mx-auto px-4 py-6 text-center text-sm">
-                    t('layout.footerCopyrightIcon') {new Date().getFullYear()}{' '}
-                    t('layout.footerText')
+                    {t('layout.footerCopyrightIcon')} {new Date().getFullYear()}{' '}
+                    {t('layout.footerText')}
                 </div>
             </footer>
         </div>
