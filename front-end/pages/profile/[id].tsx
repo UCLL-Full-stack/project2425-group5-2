@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Head from 'next/head';
 import Layout from '@components/layout/Layout';
-import ProfileOverview from '@components/profile/ProfileOverview';
+import ProfileOverview from '../../components/profile/ProfileOverview';
 import { User } from '../../types';
 import TeamService from '@services/TeamService';
 import { Edit } from 'lucide-react';
