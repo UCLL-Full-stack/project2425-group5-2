@@ -11,7 +11,7 @@ import { useTranslation } from 'next-i18next';
 
 const GameCreatePage: React.FC = () => {
     const router = useRouter();
-    const [loggedInUser, setLoggedInUser] = useState<User>(null);
+    const [loggedInUser, setLoggedInUser] = useState<User|null>(null);
     const { t } = useTranslation();
 
     const fetcher = async () => {
@@ -50,7 +50,7 @@ const GameCreatePage: React.FC = () => {
     );
 };
 
-export const getServerSideProps = async (context) => {
+export const getServerSideProps = async (context: any) => {
     const { locale } = context;
     return {
         props: {

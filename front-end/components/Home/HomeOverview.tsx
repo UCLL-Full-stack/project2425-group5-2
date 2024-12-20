@@ -5,7 +5,7 @@ import { User } from 'types';
 import { useTranslation } from "next-i18next";
 
 export default function HomeOverview() {
-    const [loggedInUser, setLoggedInUser] = useState<User>(null);
+    const [loggedInUser, setLoggedInUser] = useState<User|null>(null);
 
     const { t } = useTranslation();
 

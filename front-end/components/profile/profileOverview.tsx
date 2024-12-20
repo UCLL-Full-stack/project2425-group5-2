@@ -6,7 +6,8 @@ import { useRouter } from 'next/navigation';
 import { ChevronDown, ChevronUp, Edit } from 'lucide-react';
 import { useTranslation } from 'next-i18next';
 import TeamService from '@services/TeamService';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
+import useInterval from 'use-interval';
 
 type Props = {
     user: User;
@@ -42,6 +43,10 @@ const ProfileOverview: React.FC<Props> = ({ user }) => {
             setLoggedInUser(parsedUser);
         }
     }, []);
+
+    useInterval(() => {
+        mutate(loggedInUser ? `teams-${user.id}` : null, fetcher());
+    }, 500);
 
     const { data, isLoading, error } = useSWR(loggedInUser ? `teams-${user.id}` : null, fetcher);
 
@@ -129,7 +134,7 @@ const ProfileOverview: React.FC<Props> = ({ user }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map((team) => (
+                            {data.map((team: Team) => (
                                 <React.Fragment key={team.id}>
                                     <tr className="border-b border-gray-200 hover:bg-gray-100 transition-colors duration-200">
                                         <td className="px-6 py-4">

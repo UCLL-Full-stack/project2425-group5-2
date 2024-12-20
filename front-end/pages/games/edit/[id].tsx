@@ -8,10 +8,11 @@ import GameEditor from '@components/games/GameEditor';
 import useSWR from 'swr';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
+import { GetServerSideProps } from 'next';
 
 const editGamePage: React.FC = () => {
     const router = useRouter();
-    const [loggedInUser, setLoggedInUser] = useState<User>(null);
+    const [loggedInUser, setLoggedInUser] = useState<User|null>(null);
     const { id } = router.query;
     const { t } = useTranslation();
 
@@ -53,7 +54,7 @@ const editGamePage: React.FC = () => {
     );
 };
 
-export const getServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
     const { locale } = context;
     return {
         props: {

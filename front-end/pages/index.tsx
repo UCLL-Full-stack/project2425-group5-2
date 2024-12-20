@@ -3,6 +3,7 @@ import Layout from '../components/layout/Layout';
 import HomeOverview from '@components/Home/HomeOverview';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { GetServerSideProps } from 'next';
 
 const Home: React.FC = () => {
     const { t } = useTranslation();
@@ -30,7 +31,7 @@ const Home: React.FC = () => {
     );
 };
 
-export const getServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
     const { locale } = context;
     return {
         props: {

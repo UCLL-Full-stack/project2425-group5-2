@@ -1,51 +1,51 @@
 {
-    "compilerOptions": {
-      "baseUrl": ".",
-      "paths": {
-        "@components/*": [
-          "components/*"
-        ],
-        "@services/*": [
-          "services/*"
-        ],
-        "@types": [
-          "types/index.ts"
-        ],
-        "@styles/*": [
-          "styles/*"
-        ]
-      },
-      "lib": [
-        "dom",
-        "dom.iterable",
-        "esnext"
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": [
+        "components/*"
       ],
-      "allowJs": true,
-      "skipLibCheck": true,
-      "strict": true,
-      "forceConsistentCasingInFileNames": true,
-      "noEmit": true,
-      "incremental": true,
-      "esModuleInterop": true,
-      "module": "esnext",
-      "moduleResolution": "node",
-      "resolveJsonModule": true,
-      "isolatedModules": true,
-      "jsx": "preserve",
-      "plugins": [
-        {
-          "name": "next"
-        }
+      "@services/*": [
+        "services/*"
       ],
-      "strictNullChecks": true
+      "@types": [
+        "types/index.ts"
+      ],
+      "@styles/*": [
+        "styles/*"
+      ]
     },
-    "include": [
-      "next-env.d.ts",
-      "**/*.ts",
-      "**/*.tsx",
-      ".next/types/**/*.ts"
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
     ],
-    "exclude": [
-      "node_modules"
-    ]
-  }
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "strictNullChecks": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

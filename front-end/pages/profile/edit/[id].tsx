@@ -9,6 +9,7 @@ import { User } from 'types';
 import { useParams } from 'next/navigation';
 import UserService from '@services/UserService';
 import useSWR from 'swr';
+import { GetServerSideProps } from 'next';
 
 const ProfilePage: React.FC = () => {
     const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
@@ -66,7 +67,7 @@ const ProfilePage: React.FC = () => {
     );
 };
 
-export const getServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
     const { locale } = context;
     return {
         props: {

@@ -7,13 +7,17 @@ import { useTranslation } from "next-i18next";
 import Language from '@components/languages/Language';
 
 const Nav: React.FC = () => {
-    const [loggedInUser, setLoggedInUser] = useState<User>(null);
+    const [loggedInUser, setLoggedInUser] = useState<User|null>(null);
     const router = useRouter();
 
     const { t } = useTranslation();
 
     useEffect(() => {
-        setLoggedInUser(JSON.parse(sessionStorage.getItem('loggedInUser')));
+        const user = sessionStorage.getItem('loggedInUser');
+        if (user) {
+            const parsedUser = JSON.parse(user);
+            setLoggedInUser(parsedUser);
+        }
     }, []);
 
     const handleClick = () => {
@@ -54,7 +58,7 @@ const Nav: React.FC = () => {
                                         href="/teams"
                                         className="text-sm font-semibold hover:text-white transition-colors  hover:shadow-md hover:shadow-neutral-400 duration-200 rounded px-3 py-2 hover:bg-accent"
                                     >
-                                        {loggedInUser.role == 'coach' ? t("nav.teams") : t('nav.team')}
+                                        {(loggedInUser.role == 'coach' || loggedInUser.role == 'admin') ? t("nav.teams") : t('nav.team')}
                                     </Link>
                                 </li>
                                 <li>

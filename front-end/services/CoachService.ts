@@ -1,5 +1,5 @@
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-const token = typeof window !== 'undefined' ? JSON.parse(sessionStorage.getItem("loggedInUser"))?.token : null;
+const token = typeof window !== 'undefined' ? JSON.parse(sessionStorage.getItem("loggedInUser") || '{}')?.token : '';
 
 const getAllCoaches = () => {
     return fetch(apiUrl + '/coaches', {

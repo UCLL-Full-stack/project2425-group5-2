@@ -11,7 +11,7 @@ type Props = {
 };
 
 const GameDetailsTable: React.FC<Props> = ({ games, team }) => {
-    const [loggedInUser, setLoggedInUser] = useState<User>(null);
+    const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
     const [filteredGames, setFilteredGames] = useState<Game[]>([]);
     
     const router = useRouter();

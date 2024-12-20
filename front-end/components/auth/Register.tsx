@@ -14,7 +14,7 @@ const Register = () => {
     const [userLastName, setUserLastName] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [userPassword, setUserPassword] = useState('');
-    const [userRole, setUserRole] = useState<Role>(null);
+    const [userRole, setUserRole] = useState<Role>(undefined);
     const [loading, setLoading] = useState(false);
     const [userPhoneNumber, setUserPhoneNumber] = useState('');
     const [firstNameError, setFirstNameError] = useState<string | null>(null);
@@ -79,7 +79,7 @@ const Register = () => {
         };
         
 
-        const response = await UserService.registerUser(user);
+        const response = await UserService.registerUser({id: 0, ...user});
 
         if (response.status === 201) {
             setStatusMessages([{ type: 'success', message: t('register.successMessage') }]);
@@ -245,7 +245,7 @@ const Register = () => {
                                     name="role"
                                     required
                                     className="hover:shadow-lg hover:shadow-neutral-400 rounded-lg block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-accent focus:border-accent focus:z-10 sm:text-sm appearance-none"
-                                    value={userRole}
+                                    value={""+userRole}
                                     onChange={(e) => setUserRole(e.target.value as Role)}
                                 >
                                     <option value="" disabled selected>

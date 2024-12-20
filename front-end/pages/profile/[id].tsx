@@ -12,6 +12,7 @@ import useSWR from 'swr';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
 import UserService from '@services/UserService';
+import { GetServerSideProps } from 'next';
 
 const ProfilePage: React.FC = () => {
     const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
@@ -73,7 +74,7 @@ const ProfilePage: React.FC = () => {
     );
 };
 
-export const getServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
     const { locale } = context;
     return {
         props: {

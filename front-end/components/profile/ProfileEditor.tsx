@@ -52,7 +52,7 @@ const ProfileEditor: React.FC<Props> = ({ user, handleLogout }) => {
             return;
         }
 
-        if (!loggedInUser.id) return;
+        if (!loggedInUser?.id) return;
 
         const updatedUser: User = {
             id: user.id,

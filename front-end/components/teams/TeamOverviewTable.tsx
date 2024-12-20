@@ -14,7 +14,7 @@ type Props = {
 const TeamOverviewTable: React.FC<Props> = ({ teams }) => {
     const [expandedTeamId, setExpandedTeamId] = useState<number | null>(null);
     const router = useRouter();
-    const [loggedInUser, setLoggedInUser] = useState<User>(null);
+    const [loggedInUser, setLoggedInUser] = useState<User|null>(null);
 
     const { t } = useTranslation();
 

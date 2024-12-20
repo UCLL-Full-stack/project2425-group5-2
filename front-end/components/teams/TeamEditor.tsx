@@ -152,7 +152,7 @@ const TeamEditor: React.FC<Props> = ({ team, TeamUpdated }) => {
                     <span><p className='text-sm font-semibold'>{t('teamCreator.selectOneToFour')}</p></span>
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-2">
-                        {data && data.players.map((player) => (
+                        {data && data.players.map((player: Player) => (
                             <div key={player.id}>
                                 <button
                                     type="button"

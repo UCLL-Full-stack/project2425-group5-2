@@ -11,7 +11,7 @@ type GamesOverviewProps = {
 
 const GamesOverview: React.FC<GamesOverviewProps> = ({ teams, games }) => {
     const [expandedTeamId, setExpandedTeamId] = useState<number | null>(null);
-    const [loggedInUser, setLoggedInUser] = useState<User>(null);
+    const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
 
     const { t } = useTranslation();
 

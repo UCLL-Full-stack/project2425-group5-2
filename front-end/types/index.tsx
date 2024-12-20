@@ -1,4 +1,4 @@
-export type Role = 'admin' | 'player' | 'coach';
+export type Role = undefined |'admin' | 'player' | 'coach';
 
 export type Player = {
     id: number;
@@ -11,7 +11,7 @@ export type Coach = {
 };
 
 export type Team = {
-    id?: number;
+    id: number;
     teamName: string;
     players: Player[];
     coach: Coach;
@@ -19,19 +19,19 @@ export type Team = {
 };
 
 export type User = {
-    id?: number;
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    phoneNumber?: string;
-    role?: Role;
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    role: Role;
 };
 
 export type Game = {
-    id?: number;
-    date?: string;
-    teams?: Team[];
-    result?: string;
+    id: number;
+    date: string;
+    teams: Team[];
+    result: string;
 };
 
 export type StatusMessage = {

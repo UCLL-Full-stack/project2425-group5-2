@@ -8,9 +8,10 @@ import Layout from '@components/layout/Layout';
 import useSWR from 'swr';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
+import { GetServerSideProps } from 'next';
 
 const editTeamPage: React.FC = () => {
-    const [loggedInUser, setLoggedInUser] = useState<User>(null);
+    const [loggedInUser, setLoggedInUser] = useState<User|null>(null);
     const router = useRouter();
     const { id } = router.query;
     const { t } = useTranslation();
@@ -50,7 +51,7 @@ const editTeamPage: React.FC = () => {
     );
 };
 
-export const getServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
     const { locale } = context;
     return {
         props: {

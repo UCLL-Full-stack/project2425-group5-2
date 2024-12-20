@@ -14,7 +14,7 @@ const GameCreator: React.FC<Props> = ({ onGameCreated, teams }) => {
     const [date, setDate] = useState<string>('');
     const [selectedTeams, setSelectedTeams] = useState<Team[]>([]);
     const [errors, setErrors] = useState<string[]>([]);
-    const [loggedInUser, setLoggedInUser] = useState<User>(null);
+    const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
 
     const router = useRouter();
 
@@ -51,9 +51,10 @@ const GameCreator: React.FC<Props> = ({ onGameCreated, teams }) => {
         const formattedDate = new Date(date).toISOString();
 
         const newGame: Game = {
+            id: 0,
             date: formattedDate,
             teams: selectedTeams,
-            result: null,
+            result: '',
         };
 
         await GameService.createGame(newGame);

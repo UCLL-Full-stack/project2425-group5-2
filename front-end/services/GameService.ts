@@ -1,7 +1,7 @@
 import { Game } from 'types';
 
 const apiURL = process.env.NEXT_PUBLIC_API_URL;
-const token = typeof window !== 'undefined' ? JSON.parse(sessionStorage.getItem("loggedInUser"))?.token : null;
+const token = typeof window !== 'undefined' ? JSON.parse(sessionStorage.getItem("loggedInUser") || '{}')?.token : '';
 
 const getAllGames = () => {
     return fetch(apiURL + '/games', {

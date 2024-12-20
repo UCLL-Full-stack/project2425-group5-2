@@ -18,7 +18,7 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
     const [selectedPlayers, setSelectedPlayers] = useState<Array<Player>>([]);
     const [assignedPlayers, setAssignedPlayers] = useState<Set<number>>(new Set());
     const [errors, setErrors] = useState<string[]>([]);
-    const [loggedInUser, setLoggedInUser] = useState<User>(null);
+    const [loggedInUser, setLoggedInUser] = useState<User|null>(null);
 
     const router = useRouter();
     
@@ -91,7 +91,8 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
             return;
         }
 
-        const newTeam: Team = {
+        const newTeam: Team = { 
+            id: 0,
             teamName,
             coach: selectedCoach as Coach,
             players: selectedPlayers,
@@ -172,7 +173,7 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                         {data &&
-                            data.coaches.map((coach) => (
+                            data.coaches.map((coach: Coach) => (
                                 <div key={coach.id}>
                                     <button
                                         type="button"
@@ -212,7 +213,7 @@ const TeamCreator: React.FC<Props> = ({ onTeamCreated }) => {
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-2">
                         {data &&
-                            data.players.map((player) => (
+                            data.players.map((player: Player) => (
                                 <div key={player.id}>
                                     <button
                                         type="button"

@@ -10,16 +10,21 @@ import GamesOverview from '@components/games/GamesOverview';
 import useSWR from 'swr';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
+import { GetServerSideProps } from 'next';
 
 const GamesPage: React.FC = () => {
     const router = useRouter();
-    const [loggedInUser, setLoggedInUser] = useState<User>(null);
+    const [loggedInUser, setLoggedInUser] = useState<User|null>(null);
     const { t } = useTranslation();
 
     const fetcher = async () => {
         let teamsResponse, gamesResponse;
 
-        if (loggedInUser.role === 'admin') {
+        if (!loggedInUser) {
+            return;
+        }
+
+        if (loggedInUser?.role === 'admin') {
             [teamsResponse, gamesResponse] = await Promise.all([
                 TeamService.getAllTeams(),
                 GameService.getAllGames(),
@@ -94,7 +99,7 @@ const GamesPage: React.FC = () => {
     );
 };
 
-export const getServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
     const { locale } = context;
     return {
         props: {

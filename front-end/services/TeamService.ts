@@ -1,7 +1,7 @@
 import { Team } from '../types';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-const token = typeof window !== 'undefined' ? JSON.parse(sessionStorage.getItem("loggedInUser"))?.token : null;
+const token = typeof window !== 'undefined' ? JSON.parse(sessionStorage.getItem("loggedInUser") || '{}')?.token : '';
 
 const getAllTeams = () => {
     return fetch(apiUrl + '/teams', {

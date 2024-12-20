@@ -2,8 +2,8 @@ import { get } from 'http';
 import { Team, User } from '../types';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-const token = typeof window !== 'undefined' ? JSON.parse(sessionStorage.getItem("loggedInUser"))?.token : null;
-const logInUser = (user: User) => {
+const token = typeof window !== 'undefined' ? JSON.parse(sessionStorage.getItem("loggedInUser") || '{}')?.token : '';
+const logInUser = (user: {email: string, password: string}) => {
     return fetch(apiUrl + '/users/login', {
         method: 'POST',
         headers: {

@@ -9,14 +9,20 @@ import { Plus } from 'lucide-react';
 import useSWR from 'swr';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
+import { GetServerSideProps } from 'next';
 
 const Teams: React.FC = () => {
     const router = useRouter();
-    const [loggedInUser, setLoggedInUser] = useState<User>(null);
+    const [loggedInUser, setLoggedInUser] = useState<User|null>(null);
     const { t } = useTranslation();
 
     const fetcher = async () => {
         let teamsResponse;
+
+        if (!loggedInUser) {
+            return;
+        }
+        
         if (loggedInUser?.role === 'admin') {
             teamsResponse = await TeamService.getAllTeams();
         } else {
@@ -86,7 +92,7 @@ const Teams: React.FC = () => {
     );
 };
 
-export const getServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
     const { locale } = context;
     return {
         props: {
