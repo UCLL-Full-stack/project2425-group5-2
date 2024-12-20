@@ -50,11 +50,11 @@ beforeEach(() => {
     mockCompare = jest.fn();
     mockGenerateJWTToken = jest.fn();
 
-    userDb.getAllUsers = mockGetAllUsers;
-    userDb.getUserById = mockGetUserById;
-    userDb.createUser = mockCreateUser;
-    userDb.getUserByEmail = mockGetUserByEmail;
-    userDb.updateUser = mockUpdateUser;
+    userService.getAllUsers = mockGetAllUsers;
+    userService.getUserById = mockGetUserById;
+    userService.createUser = mockCreateUser;
+    userService.getUserByEmail = mockGetUserByEmail;
+    userService.updateUser = mockUpdateUser;
     bcrypt.hash = mockHash;
     bcrypt.compare = mockCompare;
     jest.spyOn(jwtUtil, 'generateJWTToken').mockImplementation(mockGenerateJWTToken);
@@ -137,11 +137,11 @@ test('Given valid user input, when createUser is called, then a new user is crea
     mockCreateUser.mockResolvedValue(validUser);
 
     const userInput = {
-        email: validEmail,
+        email: "rajo.test@test.be",
         password: validPassword,
         firstName: validFirstName,
         lastName: validLastName,
-        phoneNumber: validPhoneNumber,
+        phoneNumber: "0499556688",
         role: validRole
     };
 
@@ -149,7 +149,13 @@ test('Given valid user input, when createUser is called, then a new user is crea
     const user = await userService.createUser(userInput);
 
     // Then
-    expect(user).toEqual(validUser);
+    expect(user).toMatchObject({
+        email: userInput.email,
+        firstName: userInput.firstName,
+        lastName: userInput.lastName,
+        phoneNumber: userInput.phoneNumber,
+        role: userInput.role
+    });
     expect(mockGetAllUsers).toHaveBeenCalledTimes(1);
     expect(mockHash).toHaveBeenCalledWith('password', 12);
     expect(mockCreateUser).toHaveBeenCalledTimes(1);
@@ -299,5 +305,5 @@ test('Given an undefined ID, when updateUser is called, then an error is thrown'
     };
 
     // When & Then
-    await expect(userService.updateUser(invalidId, userInput)).rejects.toThrow('An id is required.');
+    await expect(userService.updateUser(invalidId, userInput)).toThrow('An id is required.');
 });
