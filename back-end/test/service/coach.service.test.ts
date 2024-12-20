@@ -1,6 +1,7 @@
 import coachService from '../../service/coach.service';
 import coachDb from '../../repository/coach.db';
 import { Coach } from '../../model/coach';
+import { Role } from '../../types';
 
 const validId = 1;
 const invalidId = -1;
@@ -12,7 +13,23 @@ const validEmail = 'jasonbourne@ucll.be';
 const invalidEmail = '';
 const validPhoneNumber = '0423456789';
 const invalidPhoneNumber = '';
-const 
+const validPassword = 'password';
+const invalidPassword = '';
+const validRole = 'coach' as Role;
+const invalidRole = 'invalid' as Role;
+
+const validCoach = {
+    id: validId,
+    user: {
+        firstName: validFirstName,
+        lastName: validLastName,
+        email: validEmail,
+        phoneNumber: validPhoneNumber,
+        password: validPassword,
+    role: validRole,
+    },
+    
+};
 
 let mockGetAllCoaches: jest.Mock;
 let mockGetCoachById: jest.Mock;
@@ -32,11 +49,23 @@ afterEach(() => {
     jest.clearAllMocks();
 });
 
-test('givenValidId_whenGettingCoachById_thenCoachIsReturned', async () => {
-    // given
-    const validCoach = new Coach({
+    const validCoachInstance = new Coach({
         id: validId,
-        user: 
+        user: {
+            firstName: validFirstName,
+            lastName: validLastName,
+            email: validEmail,
+            phoneNumber: validPhoneNumber,
+            password: validPassword,
+            role: validRole,
+            getId: () => validId,
+            getFirstName: () => validFirstName,
+            getLastName: () => validLastName,
+            getEmail: () => validEmail,
+            getPhoneNumber: () => validPhoneNumber,
+            getPassword: () => validPassword,
+            getRole: () => validRole,
+        },
     });
 
     mockGetCoachById.mockResolvedValue(validCoach);

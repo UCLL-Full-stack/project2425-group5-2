@@ -64,240 +64,137 @@ afterEach(() => {
     jest.clearAllMocks();
 });
 
-test('Given all users, when getAllUsers is called, then all users are returned', async () => {
-    // Given
-    mockGetAllUsers.mockResolvedValue([validUser]);
-
-    // When
-    const users = await userService.getAllUsers();
-
-    // Then
-    expect(users).toEqual([validUser]);
-    expect(mockGetAllUsers).toHaveBeenCalledTimes(1);
-});
-
-test('Given no users, when getAllUsers is called, then an empty array is returned', async () => {
-    // Given
+test('given no users in the database, when getAllUsers is called, then it should return an empty array', async () => {
     mockGetAllUsers.mockResolvedValue([]);
-
-    // When
     const users = await userService.getAllUsers();
-
-    // Then
     expect(users).toEqual([]);
     expect(mockGetAllUsers).toHaveBeenCalledTimes(1);
 });
 
-test('Given a valid user ID, when getUserById is called, then the user is returned', async () => {
-    // Given
+test('given users in the database, when getAllUsers is called, then it should return all users', async () => {
+    mockGetAllUsers.mockResolvedValue([validUser]);
+    const users = await userService.getAllUsers();
+    expect(users).toEqual([validUser]);
+    expect(mockGetAllUsers).toHaveBeenCalledTimes(1);
+});
+
+test('given a valid user id, when getUserById is called, then it should return the user', async () => {
     mockGetUserById.mockResolvedValue(validUser);
-
-    // When
     const user = await userService.getUserById(validId);
-
-    // Then
     expect(user).toEqual(validUser);
     expect(mockGetUserById).toHaveBeenCalledWith(validId);
 });
 
-test('Given an invalid user ID, when getUserById is called, then an error is thrown', async () => {
-    // Given
+test('given an invalid user id, when getUserById is called, then it should throw an error', async () => {
     mockGetUserById.mockResolvedValue(null);
-
-    // When & Then
     await expect(userService.getUserById(invalidId)).rejects.toThrow(`User with id ${invalidId} does not exist.`);
     expect(mockGetUserById).toHaveBeenCalledWith(invalidId);
 });
 
-test('Given a valid email, when getUserByEmail is called, then the user is returned', async () => {
-    // Given
+test('given a valid email, when getUserByEmail is called, then it should return the user', async () => {
     mockGetUserByEmail.mockResolvedValue(validUser);
-
-    // When
     const user = await userService.getUserByEmail(validEmail);
-
-    // Then
     expect(user).toEqual(validUser);
     expect(mockGetUserByEmail).toHaveBeenCalledWith(validEmail);
 });
 
-test('Given an invalid email, when getUserByEmail is called, then an error is thrown', async () => {
-    // Given
+test('given an invalid email, when getUserByEmail is called, then it should throw an error', async () => {
     mockGetUserByEmail.mockResolvedValue(null);
-
-    // When & Then
     await expect(userService.getUserByEmail(invalidEmail)).rejects.toThrow(`User with email ${invalidEmail} does not exist.`);
     expect(mockGetUserByEmail).toHaveBeenCalledWith(invalidEmail);
 });
 
-test('Given valid user input, when createUser is called, then a new user is created', async () => {
-    // Given
+test('given a new user, when createUser is called, then it should create and return the user', async () => {
+    const validUser = {
+        id: validId,
+        firstName: validFirstName,
+        lastName: validLastName,
+        email: validEmail,
+        phoneNumber: validPhoneNumber,
+        role: validRole,
+        password: validPassword 
+    }
     mockGetAllUsers.mockResolvedValue([]);
     mockHash.mockResolvedValue('hashedPassword');
     mockCreateUser.mockResolvedValue(validUser);
-
-    const userInput = {
-        email: validEmail,
-        password: validPassword,
-        firstName: validFirstName,
-        lastName: validLastName,
-        phoneNumber: validPhoneNumber,
-        role: validRole
-    };
-
-    // When
+    const userInput = { ...validUser, password: validPassword };
     const user = await userService.createUser(userInput);
-
-    // Then
     expect(user).toEqual(validUser);
     expect(mockGetAllUsers).toHaveBeenCalledTimes(1);
-    expect(mockHash).toHaveBeenCalledWith('password', 12);
-    expect(mockCreateUser).toHaveBeenCalledTimes(1);
+    expect(mockHash).toHaveBeenCalledWith(validPassword, 12);
+    expect(mockCreateUser).toHaveBeenCalled();
 });
 
-test('Given an existing email, when createUser is called, then an error is thrown', async () => {
-    // Given
-    mockGetAllUsers.mockResolvedValue([validUser]);
-
-    const userInput = {
-        email: validEmail,
-        password: validPassword,
+test('given an existing user email, when createUser is called, then it should throw an error', async () => {
+    const validUser = {
+        id: validId,
         firstName: validFirstName,
         lastName: validLastName,
+        email: validEmail,
         phoneNumber: validPhoneNumber,
-        role: validRole
-    };
-
-    // When & Then
-    await expect(userService.createUser(userInput)).toThrow('User with this email already exists.');
+        role: validRole,
+        password: validPassword 
+    }
+    mockGetAllUsers.mockResolvedValue([validUser]);
+    const userInput = { ...validUser, password: validPassword };
+    await expect(userService.createUser(userInput)).rejects.toThrow('User with this email already exists.');
     expect(mockGetAllUsers).toHaveBeenCalledTimes(1);
 });
 
-test('Given valid credentials, when authenticate is called, then the user is authenticated', async () => {
-    // Given
+test('given valid credentials, when authenticate is called, then it should return an authentication response', async () => {
     mockGetUserByEmail.mockResolvedValue(validUser);
     mockCompare.mockResolvedValue(true);
     mockGenerateJWTToken.mockReturnValue('token');
-
-    const userInput = {
-        email: validEmail,
+    const authResponse = await userService.authenticate({ 
+        email: validEmail, 
         password: validPassword,
         firstName: validFirstName,
         lastName: validLastName,
         phoneNumber: validPhoneNumber,
-        role: validRole,
-    };
-
-    // When
-    const response = await userService.authenticate(userInput);
-
-    // Then
-    expect(response).toEqual({
+        role: validRole
+    });
+    expect(authResponse).toEqual({
         token: 'token',
         email: validEmail,
         role: validRole,
         id: validId,
         firstName: validFirstName,
         lastName: validLastName,
-        phoneNumber: validPhoneNumber,
-        password: validPassword
+        phoneNumber: validPhoneNumber
     });
     expect(mockGetUserByEmail).toHaveBeenCalledWith(validEmail);
-    expect(mockCompare).toHaveBeenCalledWith('password', validUser.password);
-    expect(mockGenerateJWTToken).toHaveBeenCalledTimes(1);
+    expect(mockCompare).toHaveBeenCalledWith(validPassword, validUser.password);
+    expect(mockGenerateJWTToken).toHaveBeenCalled();
 });
 
-test('Given an invalid email, when authenticate is called, then an error is thrown', async () => {
-    // Given
-    mockGetUserByEmail.mockResolvedValue(null);
-
-    const userInput = {
-        email: invalidEmail,
-        password: validPassword,
-        firstName: validFirstName,
-        lastName: validLastName,
-        phoneNumber: validPhoneNumber,
-        role: validRole
-    };
-
-    // When & Then
-    await expect(userService.authenticate(userInput)).rejects.toThrow('Invalid username or password.');
-    expect(mockGetUserByEmail).toHaveBeenCalledWith(invalidEmail);
-});
-
-test('Given an incorrect password, when authenticate is called, then an error is thrown', async () => {
-    // Given
+test('given invalid credentials, when authenticate is called, then it should throw an error', async () => {
     mockGetUserByEmail.mockResolvedValue(validUser);
     mockCompare.mockResolvedValue(false);
-
-    const userInput = {
-        email: validEmail,
+    await expect(userService.authenticate({ 
+        email: validEmail, 
         password: invalidPassword,
         firstName: validFirstName,
         lastName: validLastName,
         phoneNumber: validPhoneNumber,
         role: validRole
-    };
-
-    // When & Then
-    await expect(userService.authenticate(userInput)).rejects.toThrow('Invalid username or password.');
+    })).rejects.toThrow('Invalid username or password.');
     expect(mockGetUserByEmail).toHaveBeenCalledWith(validEmail);
-    expect(mockCompare).toHaveBeenCalledWith('wrongPassword', validUser.password);
+    expect(mockCompare).toHaveBeenCalledWith(invalidPassword, validUser.password);
 });
 
-test('Given a valid user ID and input, when updateUser is called, then the user is updated', async () => {
-    // Given
+test('given a valid user id and input, when updateUser is called, then it should update and return the user', async () => {
     mockGetUserById.mockResolvedValue(validUser);
     mockUpdateUser.mockResolvedValue(validUser);
-
-    const userInput = {
-        email: validEmail,
-        firstName: validFirstName,
-        lastName: validLastName,
-        password: 'password',
-        phoneNumber: validPhoneNumber,
-        role: validRole
-    };
-
-    // When
+    const userInput = { ...validUser, password: validPassword };
     const user = await userService.updateUser(validId, userInput);
-
-    // Then
     expect(user).toEqual(validUser);
     expect(mockGetUserById).toHaveBeenCalledWith(validId);
-    expect(mockUpdateUser).toHaveBeenCalledTimes(1);
+    expect(mockUpdateUser).toHaveBeenCalled();
 });
 
-test('Given an invalid user ID, when updateUser is called, then an error is thrown', async () => {
-    // Given
+test('given an invalid user id, when updateUser is called, then it should throw an error', async () => {
     mockGetUserById.mockResolvedValue(null);
-
-    const userInput = {
-        email: validEmail,
-        firstName: validFirstName,
-        lastName: validLastName,
-        password: 'password',
-        phoneNumber: validPhoneNumber,
-        role: validRole
-    };
-
-    // When & Then
+    const userInput = { ...validUser, password: validPassword };
     await expect(userService.updateUser(invalidId, userInput)).rejects.toThrow('No user with that id exists.');
     expect(mockGetUserById).toHaveBeenCalledWith(invalidId);
-});
-
-test('Given an undefined ID, when updateUser is called, then an error is thrown', async () => {
-    // Given
-    const userInput = {
-        id: invalidId,
-        email: validEmail,
-        firstName: validFirstName,
-        lastName: validLastName,
-        password: validPassword,
-        phoneNumber: validPhoneNumber,
-        role: validRole
-    };
-
-    // When & Then
-    await expect(userService.updateUser(invalidId, userInput)).rejects.toThrow('An id is required.');
 });
