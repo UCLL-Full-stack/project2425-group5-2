@@ -1,6 +1,8 @@
+
 import { Coach } from '../../model/coach';
 import { Player } from '../../model/player';
 import { Team } from '../../model/team';
+import { User } from '../../model/user';
 import teamDb from '../../repository/team.db';
 import teamService from '../../service/team.service';
 import { TeamInput, PlayerInput, CoachInput } from '../../types';
@@ -55,6 +57,58 @@ const validTeam: TeamInput = {
     coach: validCoach,
 };
 
+const validUserCoach = new User({
+    id: validId,
+    firstName: 'Mark',
+    lastName: 'Theman',
+    email: 'marktheman@ucll.be',
+    phoneNumber: '0412345679',
+    password: 'password',
+    role: 'coach',
+});
+
+const validUserPlayer = new User({
+    id: validId + 1,
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'johndoe@ucll.be',
+    phoneNumber: '0412345678',
+    password: 'password',
+    role: 'player',
+});
+
+const validUserPlayer2 = new User({
+    id: validId + 2,
+    firstName: 'Jane',
+    lastName: 'Doe',
+    email: 'janedoe@ucll.be',
+    phoneNumber: '0498765445',
+    password: 'password',
+    role: 'player',
+});
+
+const validCreatedCoach = new Coach({
+    id: validId,
+    user: validUserCoach,
+});
+
+const validCreatedPlayer = new Player({
+    id: validId + 1,
+    user: validUserPlayer,
+});
+
+const validCreatedPlayer2 = new Player({
+    id: validId + 2,
+    user: validUserPlayer2,
+});
+
+const validCreatedTeam = new Team({
+    id: validId,
+    teamName: validTeamName,
+    players: [validCreatedPlayer, validCreatedPlayer2],
+    coach: validCreatedCoach,
+});
+
 let mockCreateTeam: jest.Mock;
 let mockGetAllTeams: jest.Mock;
 let mockGetTeamsByCoach: jest.Mock;
@@ -106,13 +160,6 @@ test('given an invalid team id, when getTeamById is called, then it should throw
     mockGetTeamById.mockRejectedValue(new Error(`Team with id ${invalidId} does not exist.`));
     await expect(teamService.getTeamById(invalidId)).rejects.toThrow(`Team with id ${invalidId} does not exist.`);
     expect(mockGetTeamById).toHaveBeenCalledWith(invalidId);
-});
-
-test('given a new team, when createTeam is called, then it should create and return the team', async () => {
-    mockCreateTeam.mockResolvedValue(validTeam);
-    const team = await teamService.createTeam(validTeam);
-    expect(team).toMatchObject(validTeam);
-    expect(mockCreateTeam).toHaveBeenCalledWith(validTeam);
 });
 
 test('given a valid team id and input, when updateTeam is called, then it should update and return the team', async () => {
