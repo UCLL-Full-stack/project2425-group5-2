@@ -44,7 +44,7 @@ const getTeamsByUserId = async (userId: number): Promise<Team[]> => {
     const teams = (await teamDb.getTeamsByUserId(userId)) || [];
 
     if (teams.length === 0) {
-        throw new Error('No teams found for that coach.');
+        throw new Error('No teams found for that user.');
     }
 
     if (userId == undefined) {

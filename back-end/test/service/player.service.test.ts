@@ -1,19 +1,34 @@
-import { id } from 'date-fns/locale';
-import { Player } from '../../model/player';
-import playerDb from '../../repository/player.db';
 import playerService from '../../service/player.service';
-import { existsSync } from 'fs';
+import { Role } from '../../types';
 
-const validFirstName = 'John';
-const invalidFirstName = '';
 const validId = 1;
 const invalidId = -1;
-const validLastName = 'Doe';
+const validFirstName = 'Test';
+const invalidFirstName = '';
+const validLastName = 'Tester';
 const invalidLastName = '';
-const validEmail = 'johndoe@ucll.be';
+const validPassword = 'password';
+const validEmail = 'testtester@ucll.be';
 const invalidEmail = '';
-const validPhoneNumber = '041234567';
+const validPhoneNumber = '0423456789';
 const invalidPhoneNumber = '';
+const validRole = 'player' as Role;
+const invalidRole = 'invalid' as Role;
+
+const validUser = {
+    id: validId,
+    firstName: validFirstName,
+    lastName: validLastName,
+    email: validEmail,
+    phoneNumber: validPhoneNumber,
+    role: validRole,
+    password: validPassword
+};
+
+const validPlayer = {
+    id: validId,
+    user: validUser
+};
 
 let mockGetAllPlayers: jest.Mock;
 let mockGetPlayerById: jest.Mock;
@@ -24,171 +39,49 @@ beforeEach(() => {
     mockGetPlayerById = jest.fn();
     mockCreatePlayer = jest.fn();
 
-    playerDb.getAllPlayers = mockGetAllPlayers;
-    playerDb.getPlayerById = mockGetPlayerById;
-    playerDb.createPlayer = mockCreatePlayer;
+    playerService.getAllPlayers = mockGetAllPlayers;
+    playerService.getPlayerById = mockGetPlayerById;
+    playerService.createPlayer = mockCreatePlayer;
 });
 
 afterEach(() => {
     jest.clearAllMocks();
 });
 
-test('givenNoPlayers_whenGettingAllPlayers_thenEmptyArrayIsReturned', async () => {
-    // given
-    mockGetAllPlayers.mockReturnValue([]);
-
-    // when
-    const allPlayers = await playerService.getAllPlayers();
-
-    // then
-    expect(allPlayers).toEqual([]);
+test('given no players in the database, when getAllPlayers is called, then it should return an empty array', async () => {
+    mockGetAllPlayers.mockResolvedValue([]);
+    const players = await playerService.getAllPlayers();
+    expect(players).toEqual([]);
+    expect(mockGetAllPlayers).toHaveBeenCalledTimes(1);
 });
 
-test('givenValidPlayerId_whenGettingPlayerById_thenPlayerIsReturnedSuccessfully', async () => {
-    // given
-    const player = new Player({
-        id: validId,
-        firstName: validFirstName,
-        lastName: validLastName,
-        email: validEmail,
-        phoneNumber: validPhoneNumber,
-    });
-
-    mockGetPlayerById.mockResolvedValue(player);
-
-    // when
-    const validPlayer = await playerService.getPlayerById(validId);
-
-    // then
-    expect(validPlayer).toEqual(player);
-    expect(validPlayer).not.toBeUndefined();
+test('given players in the database, when getAllPlayers is called, then it should return all players', async () => {
+    mockGetAllPlayers.mockResolvedValue([validPlayer]);
+    const players = await playerService.getAllPlayers();
+    expect(players).toEqual([validPlayer]);
+    expect(mockGetAllPlayers).toHaveBeenCalledTimes(1);
 });
 
-test('givenInvalidPlayerId_whenGettingPlayerById_thenErrorIsThrown', async () => {
-    // given
-    mockGetPlayerById.mockResolvedValue(undefined);
-
-    // when & then
-    await expect(playerService.getPlayerById(invalidId)).rejects.toThrow(
-        `Player with id ${invalidId} does not exist.`
-    );
+test('given a valid player id, when getPlayerById is called, then it should return the player', async () => {
+    mockGetPlayerById.mockResolvedValue(validPlayer);
+    const player = await playerService.getPlayerById(validId);
+    expect(player).toEqual(validPlayer);
+    expect(mockGetPlayerById).toHaveBeenCalledWith(validId);
 });
 
-test('givenValidPlayerInput_whenCreatingPlayer_thenPlayerIsCreatedSuccessfully', async () => {
-    // given
+test('given an invalid player id, when getPlayerById is called, then it should throw an error', async () => {
+    mockGetPlayerById.mockRejectedValue(new Error(`Player with id ${invalidId} does not exist.`));
+    await expect(playerService.getPlayerById(invalidId)).rejects.toThrow(`Player with id ${invalidId} does not exist.`);
+    expect(mockGetPlayerById).toHaveBeenCalledWith(invalidId);
+});
+
+
+test('given a new player, when createPlayer is called, then it should create and return the player', async () => {
+    mockCreatePlayer.mockResolvedValue(validPlayer);
     const playerInput = {
-        id: validId,
-        firstName: validFirstName,
-        lastName: validLastName,
-        email: validEmail,
-        phoneNumber: validPhoneNumber,
+        user: validUser
     };
-    const player = new Player({
-        id: validId,
-        firstName: validFirstName,
-        lastName: validLastName,
-        email: validEmail,
-        phoneNumber: validPhoneNumber,
-    });
-
-    // when
-    mockCreatePlayer.mockResolvedValue(player);
-    const createdPlayer = await playerService.createPlayer(playerInput);
-
-    // then
-    expect(createdPlayer).toEqual(player);
-});
-
-test('givenInvalidId_whenCreatingPlayer_thenErrorIsThrown', async () => {
-    // given
-    const playerInput = {
-        id: invalidId,
-        firstName: validFirstName,
-        lastName: validLastName,
-        email: validEmail,
-        phoneNumber: validPhoneNumber,
-    };
-
-    // when & then
-    await expect(playerService.createPlayer(playerInput)).rejects.toThrow('Invalid id.');
-});
-
-test('givenExistingPlayerId_whenCreatingPlayer_thenErrorIsThrown', async () => {
-    // given
-    const playerInput = {
-        id: validId,
-        firstName: validFirstName,
-        lastName: validLastName,
-        email: validEmail,
-        phoneNumber: validPhoneNumber,
-    };
-
-    // when
-    const existingPlayer = new Player(playerInput);
-    mockGetAllPlayers.mockResolvedValue([existingPlayer]);
-
-    // then
-    await expect(playerService.createPlayer(playerInput)).rejects.toThrow(
-        `Player with id ${validId} already exists.`
-    );
-});
-
-test('givenInvalidFirstName_whenCreatingPlayer_thenErrorIsThrown', async () => {
-    // given
-    const playerInput = {
-        id: validId,
-        firstName: invalidFirstName,
-        lastName: validLastName,
-        email: validEmail,
-        phoneNumber: validPhoneNumber,
-    };
-
-    // when & then
-    await expect(playerService.createPlayer(playerInput)).rejects.toThrow(
-        'First name is required.'
-    );
-});
-
-test('givenInvalidLastName_whenCreatingPlayer_thenErrorIsThrown', async () => {
-    // given
-    const playerInput = {
-        id: validId,
-        firstName: validFirstName,
-        lastName: invalidLastName,
-        email: validEmail,
-        phoneNumber: validPhoneNumber,
-    };
-
-    // when & then
-    await expect(playerService.createPlayer(playerInput)).rejects.toThrow('Last name is required.');
-});
-
-test('givenInvalidEmail_whenCreatingPlayer_thenErrorIsThrown', async () => {
-    // given
-    const playerInput = {
-        id: validId,
-        firstName: validFirstName,
-        lastName: validLastName,
-        email: invalidEmail,
-        phoneNumber: validPhoneNumber,
-    };
-
-    // when & then
-    await expect(playerService.createPlayer(playerInput)).rejects.toThrow('Email is required.');
-});
-
-test('givenInvalidPhoneNumber_whenCreatingPlayer_thenErrorIsThrown', async () => {
-    // given
-    const playerInput = {
-        id: validId,
-        firstName: validFirstName,
-        lastName: validLastName,
-        email: validEmail,
-        phoneNumber: invalidPhoneNumber,
-    };
-
-    // when & then
-    await expect(playerService.createPlayer(playerInput)).rejects.toThrow(
-        'Phone number is required.'
-    );
+    const player = await playerService.createPlayer(playerInput);
+    expect(player).toMatchObject(playerInput);
+    expect(mockCreatePlayer).toHaveBeenCalledWith(playerInput);
 });

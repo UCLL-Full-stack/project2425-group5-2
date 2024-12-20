@@ -21,9 +21,12 @@ const ProfilePage: React.FC = () => {
 
     const fetcher = async () => {
         const userResponse = await UserService.getUserById(Number(id));
+
         if (userResponse.ok) {
             const user = await userResponse.json();
             return user;
+        } else {
+            throw new Error(t('general.fetchError'));
         }
     };
 
@@ -35,7 +38,7 @@ const ProfilePage: React.FC = () => {
         }
     }, []);
 
-    const { data, isLoading, error } = useSWR(loggedInUser ? 'User' : null, fetcher);
+    const { data, isLoading, error } = useSWR(loggedInUser ? `profile-${id}` : null, fetcher);
 
     if (!loggedInUser) {
         return <div>{t('general.loading')}</div>;

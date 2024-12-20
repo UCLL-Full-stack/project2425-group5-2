@@ -25,7 +25,11 @@ const ProfileOverview: React.FC<Props> = ({ user }) => {
         if (user.role === 'admin') {
             teamsResponse = await TeamService.getAllTeams();
         } else {
-            teamsResponse = await TeamService.getTeamsByUserId(user.id);
+            if (loggedInUser?.id !== undefined) {
+                teamsResponse = await TeamService.getTeamsByUserId(user.id);
+            } else {
+                throw new Error(t('general.fetchError'));
+            }
         }
 
         if (teamsResponse.ok) {
@@ -44,13 +48,9 @@ const ProfileOverview: React.FC<Props> = ({ user }) => {
         }
     }, []);
 
-    useInterval(() => {
-        mutate(loggedInUser ? `teams-${user.id}` : null, fetcher());
-    }, 500);
-
     const { data, isLoading, error } = useSWR(loggedInUser ? `teams-${user.id}` : null, fetcher);
 
-    if (!user || !loggedInUser) {
+    if (!user || !loggedInUser || isLoading) {
         return <p>{t('general.loading')}</p>;
     }
 

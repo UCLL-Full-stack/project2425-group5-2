@@ -23,9 +23,9 @@ const ProfileEditor: React.FC<Props> = ({ user, handleLogout }) => {
     const { t } = useTranslation();
 
     useEffect(() => {
-            const user = sessionStorage.getItem('loggedInUser');
-            if (user) {
-                const parsedUser = JSON.parse(user);
+            const tempUser = sessionStorage.getItem('loggedInUser');
+            if (tempUser) {
+                const parsedUser = JSON.parse(tempUser);
                 setLoggedInUser(parsedUser);
             }
         }, []);
@@ -169,7 +169,7 @@ const ProfileEditor: React.FC<Props> = ({ user, handleLogout }) => {
                         {t('profileEditor.save')}
                     </button>
                 </div>
-                <div className="flex justify-center pt-6"><p className='text-white text-lg'>t('profileEditor.saveMessages')</p></div>
+                <div className="flex justify-center pt-6"><p className='text-white text-lg'>{t('profileEditor.saveMessage')}</p></div>
             </form>
         </div>
     );

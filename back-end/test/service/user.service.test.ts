@@ -1,9 +1,6 @@
 import userService from '../../service/user.service';
-import userDb from '../../repository/user.db';
 import bcrypt from 'bcrypt';
 import * as jwtUtil from '../../util/jwt';
-import coachService from '../../service/coach.service';
-import playerService from '../../service/player.service';
 import { Role } from '../../types';
 
 const validId = 1;
