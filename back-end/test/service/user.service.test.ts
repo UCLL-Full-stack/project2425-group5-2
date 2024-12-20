@@ -20,6 +20,7 @@ const validRole = 'coach' as Role;
 const invalidRole = 'invalid' as Role;
 const validPassword = 'password';
 const invalidPassword = '';
+const hashedPassword = 'hashedpassword';
 
 const validUser = {
     id: validId,
@@ -86,7 +87,10 @@ test('given a valid user id, when getUserById is called, then it should return t
 });
 
 test('given an invalid user id, when getUserById is called, then it should throw an error', async () => {
-    mockGetUserById.mockResolvedValue(null);
+    // Given
+    mockGetUserById.mockRejectedValue(new Error(`User with id ${invalidId} does not exist.`));
+
+    // When & Then
     await expect(userService.getUserById(invalidId)).rejects.toThrow(`User with id ${invalidId} does not exist.`);
     expect(mockGetUserById).toHaveBeenCalledWith(invalidId);
 });
@@ -99,31 +103,23 @@ test('given a valid email, when getUserByEmail is called, then it should return 
 });
 
 test('given an invalid email, when getUserByEmail is called, then it should throw an error', async () => {
-    mockGetUserByEmail.mockResolvedValue(null);
+    mockGetUserByEmail.mockRejectedValue(new Error(`User with email ${invalidEmail} does not exist.`));
     await expect(userService.getUserByEmail(invalidEmail)).rejects.toThrow(`User with email ${invalidEmail} does not exist.`);
     expect(mockGetUserByEmail).toHaveBeenCalledWith(invalidEmail);
 });
 
 test('given a new user, when createUser is called, then it should create and return the user', async () => {
-    const validUser = {
-        id: validId,
-        firstName: validFirstName,
-        lastName: validLastName,
-        email: validEmail,
-        phoneNumber: validPhoneNumber,
-        role: validRole,
-        password: validPassword 
-    }
-    mockGetAllUsers.mockResolvedValue([]);
-    mockHash.mockResolvedValue('hashedPassword');
+    // Given
+    mockGetUserById.mockResolvedValue(validUser);
+    mockHash.mockResolvedValue(hashedPassword);
     mockCreateUser.mockResolvedValue(validUser);
 
     const userInput = {
-        email: "rajo.test@test.be",
+        email: validEmail,
         password: validPassword,
         firstName: validFirstName,
         lastName: validLastName,
-        phoneNumber: "0499556688",
+        phoneNumber: validPhoneNumber,
         role: validRole
     };
 
@@ -138,9 +134,14 @@ test('given a new user, when createUser is called, then it should create and ret
         phoneNumber: userInput.phoneNumber,
         role: userInput.role
     });
-    expect(mockGetAllUsers).toHaveBeenCalledTimes(1);
-    expect(mockHash).toHaveBeenCalledWith(validPassword, 12);
-    expect(mockCreateUser).toHaveBeenCalled();
+    expect(mockCreateUser).toHaveBeenCalledWith({
+        email: validEmail,
+        password: validPassword,
+        firstName: validFirstName,
+        lastName: validLastName,
+        phoneNumber: validPhoneNumber,
+        role: validRole
+    });
 });
 
 test('given an existing user email, when createUser is called, then it should throw an error', async () => {
@@ -153,7 +154,7 @@ test('given an existing user email, when createUser is called, then it should th
         role: validRole,
         password: validPassword 
     }
-    mockGetAllUsers.mockResolvedValue([validUser]);
+    mockGetUserByEmail.mockRejectedValue(new Error('User with this email already exists.'));
     const userInput = { ...validUser, password: validPassword };
     await expect(userService.createUser(userInput)).rejects.toThrow('User with this email already exists.');
     expect(mockGetAllUsers).toHaveBeenCalledTimes(1);

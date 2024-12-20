@@ -1,29 +1,53 @@
 import { Coach } from '../../model/coach';
 import { Player } from '../../model/player';
 import { Team } from '../../model/team';
+import { User } from '../../model/user';
 import teamDb from '../../repository/team.db';
+import { Role } from '../../types';
+
+
+const validUser1 = new User({
+    id: 1,
+    firstName: "John",
+    lastName: "Doe",
+    email: "johndoe@ucll.be",
+    phoneNumber: "0412345678",
+    password: "password123",
+    role: "player" as Role,
+});
+
+const validUser2 = new User({
+    id: 2,
+    firstName: "jane",
+    lastName: "Doe",
+    email: "janedoe@ucll.be",
+    phoneNumber: "0412345677",
+    password: "password123",
+    role: "player" as Role,
+});
+
+const validUser5 = new User({
+    id: 5,
+    firstName: "Helena",
+    lastName: "Doe",
+    email: "helenadoe@ucll.be",
+    phoneNumber: "0412345678",
+    password: "password123",
+    role: "coach" as Role,
+});
+
+
+const validCoach = new Coach({id: 5, user: validUser5});
+const validPlayer = new Player({id: 1, user: validUser1});
+const validPlayer2 = new Player({id: 2, user: validUser2});
 
 const validTeamName = 'UCLLTeam';
-const validId = 1;
+const validId = 3;
 const invalidId = -1;
-const validCoach = new Coach({
-    firstName: 'Mark',
-    lastName: 'Theman',
-    email: 'marktheman@ucll.be',
-    phoneNumber: '0412345679',
-});
-const validPlayer = new Player({
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'johndoe@ucll.be',
-    phoneNumber: '0412345678',
-});
-const validPlayer2 = new Player({
-    firstName: 'Jane',
-    lastName: 'Doe',
-    email: 'janedoe@ucll.be',
-    phoneNumber: '0498765445',
-});
+
+
+
+
 
 test('givenValidValues_whenCreatingTeam_thenTeamIsCreated', () => {
     //given
