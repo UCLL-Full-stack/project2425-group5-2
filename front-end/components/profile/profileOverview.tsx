@@ -5,18 +5,35 @@ import { User, Team } from '../../types';
 import { useRouter } from 'next/navigation';
 import { ChevronDown, ChevronUp, Edit } from 'lucide-react';
 import { useTranslation } from 'next-i18next';
+import TeamService from '@services/TeamService';
+import useSWR from 'swr';
 
 type Props = {
     user: User;
-    teams: Array<Team>;
 };
 
-const ProfileOverview: React.FC<Props> = ({ user, teams }) => {
+const ProfileOverview: React.FC<Props> = ({ user }) => {
     const [expandedTeamId, setExpandedTeamId] = useState<number | null>(null);
     const router = useRouter();
     const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
 
     const { t } = useTranslation();
+
+    const fetcher = async () => {
+        let teamsResponse;
+        if (user.role === 'admin') {
+            teamsResponse = await TeamService.getAllTeams();
+        } else {
+            teamsResponse = await TeamService.getTeamsByUserId(user.id);
+        }
+
+        if (teamsResponse.ok) {
+            const teams = await teamsResponse.json();
+            return teams;
+        } else {
+            throw new Error(t('general.fetchError'));
+        }
+    };
 
     useEffect(() => {
         const tempUser = sessionStorage.getItem('loggedInUser');
@@ -25,6 +42,8 @@ const ProfileOverview: React.FC<Props> = ({ user, teams }) => {
             setLoggedInUser(parsedUser);
         }
     }, []);
+
+    const { data, isLoading, error } = useSWR(loggedInUser ? `teams-${user.id}` : null, fetcher);
 
     if (!user || !loggedInUser) {
         return <p>{t('general.loading')}</p>;
@@ -97,7 +116,7 @@ const ProfileOverview: React.FC<Props> = ({ user, teams }) => {
                 <h3 className="text-2xl font-bold mb-4 text-gray-900">
                     {t('profileOverview.teams')}
                 </h3>
-                {teams.length > 0 ? (
+                {data && data.length > 0 ? (
                     <table className="w-full">
                         <thead className="bg-secondary text-white">
                             <tr>
@@ -110,7 +129,7 @@ const ProfileOverview: React.FC<Props> = ({ user, teams }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {teams.map((team) => (
+                            {data.map((team) => (
                                 <React.Fragment key={team.id}>
                                     <tr className="border-b border-gray-200 hover:bg-gray-100 transition-colors duration-200">
                                         <td className="px-6 py-4">

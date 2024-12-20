@@ -22,18 +22,11 @@ const ProfilePage: React.FC = () => {
     const { id } = useParams();
 
     const fetcher = async () => {
-        let teamsResponse, userResponse;
-        if (loggedInUser?.role === 'admin') {
-            teamsResponse = await TeamService.getAllTeams();
-        } else {
-            teamsResponse = await TeamService.getTeamsByUserId(loggedInUser.id);
-        }
-        userResponse = await UserService.getUserById(Number(id));
+        const userResponse = await UserService.getUserById(Number(id));
 
-        if (teamsResponse.ok && userResponse.ok) {
-            const teams = await teamsResponse.json();
+        if (userResponse.ok) {
             const user = await userResponse.json();
-            return {teams, user};
+            return user;
         } else {
             throw new Error(t('general.fetchError'));
         }
@@ -47,11 +40,7 @@ const ProfilePage: React.FC = () => {
         }
     }, []);
 
-    const { data, isLoading, error } = useSWR(loggedInUser ? 'Teams' : null, fetcher);
-
-    const editProfileRoute = () => {
-        router.push(`/profile/edit/${loggedInUser?.id}`);
-    };
+    const { data, isLoading, error } = useSWR(loggedInUser ? `profile-${id}` : null, fetcher);
 
     if (!loggedInUser) {
         return (
@@ -76,7 +65,7 @@ const ProfilePage: React.FC = () => {
                         </h1>
                     </div>
                     <div className="bg-white p-6 rounded-lg shadow-md">
-                        {data && <ProfileOverview user={data.user} teams={data.teams} />}
+                        {data && <ProfileOverview user={data} />}
                     </div>
                 </div>
             </div>
