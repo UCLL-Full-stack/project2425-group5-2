@@ -6,6 +6,8 @@ import Head from 'next/head';
 import Layout from '@components/layout/Layout';
 import ProfileOverview from '@components/profile/ProfileOverview';
 import { User } from '../../types';
+import TeamService from '@services/TeamService';
+import { Edit } from 'lucide-react';
 import useSWR from 'swr';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
