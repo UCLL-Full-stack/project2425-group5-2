@@ -12,6 +12,7 @@ const validEmail = 'jasonbourne@ucll.be';
 const invalidEmail = '';
 const validPhoneNumber = '0423456789';
 const invalidPhoneNumber = '';
+const 
 
 let mockGetAllCoaches: jest.Mock;
 let mockGetCoachById: jest.Mock;
@@ -35,10 +36,7 @@ test('givenValidId_whenGettingCoachById_thenCoachIsReturned', async () => {
     // given
     const validCoach = new Coach({
         id: validId,
-        firstName: validFirstName,
-        lastName: validLastName,
-        email: validEmail,
-        phoneNumber: validPhoneNumber,
+        user: 
     });
 
     mockGetCoachById.mockResolvedValue(validCoach);
