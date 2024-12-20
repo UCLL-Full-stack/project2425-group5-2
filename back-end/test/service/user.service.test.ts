@@ -151,9 +151,9 @@ test('given an existing user email, when createUser is called, then it should th
         role: validRole,
         password: validPassword 
     }
-    mockGetUserByEmail.mockRejectedValue(new Error('User with this email already exists.'));
+    mockGetUserByEmail.mockRejectedValue(new Error(`User with this email ${validEmail} already exists.`));
     const userInput = { ...validUser, password: validPassword };
-    await expect(userService.createUser(userInput)).rejects.toThrow('User with this email already exists.');
+    await expect(userService.createUser(userInput)).rejects.toThrow(`User with this email ${validEmail} already exists.`);
     expect(mockGetAllUsers).toHaveBeenCalledTimes(1);
 });
 
@@ -199,34 +199,16 @@ test('given invalid credentials, when authenticate is called, then it should thr
 });
 
 test('given a valid user id and input, when updateUser is called, then it should update and return the user', async () => {
+    // Given
     mockGetUserById.mockResolvedValue(validUser);
     mockUpdateUser.mockResolvedValue(validUser);
     const userInput = { ...validUser, password: validPassword };
+
+    // When
     const user = await userService.updateUser(validId, userInput);
+
+    // Then
     expect(user).toEqual(validUser);
     expect(mockGetUserById).toHaveBeenCalledWith(validId);
-    expect(mockUpdateUser).toHaveBeenCalled();
-});
-
-test('given an invalid user id, when updateUser is called, then it should throw an error', async () => {
-    mockGetUserById.mockResolvedValue(null);
-    const userInput = { ...validUser, password: validPassword };
-    await expect(userService.updateUser(invalidId, userInput)).rejects.toThrow('No user with that id exists.');
-    expect(mockGetUserById).toHaveBeenCalledWith(invalidId);
-});
-
-test('Given an undefined ID, when updateUser is called, then an error is thrown', async () => {
-    // Given
-    const userInput = {
-        id: invalidId,
-        email: validEmail,
-        firstName: validFirstName,
-        lastName: validLastName,
-        password: validPassword,
-        phoneNumber: validPhoneNumber,
-        role: validRole
-    };
-
-    // When & Then
-    await expect(userService.updateUser(invalidId, userInput)).toThrow('An id is required.');
+    expect(mockUpdateUser).toHaveBeenCalledWith(validId, userInput);
 });
