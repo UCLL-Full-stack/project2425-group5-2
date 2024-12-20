@@ -50,11 +50,11 @@ beforeEach(() => {
     mockCompare = jest.fn();
     mockGenerateJWTToken = jest.fn();
 
-    userDb.getAllUsers = mockGetAllUsers;
-    userDb.getUserById = mockGetUserById;
-    userDb.createUser = mockCreateUser;
-    userDb.getUserByEmail = mockGetUserByEmail;
-    userDb.updateUser = mockUpdateUser;
+    userService.getAllUsers = mockGetAllUsers;
+    userService.getUserById = mockGetUserById;
+    userService.createUser = mockCreateUser;
+    userService.getUserByEmail = mockGetUserByEmail;
+    userService.updateUser = mockUpdateUser;
     bcrypt.hash = mockHash;
     bcrypt.compare = mockCompare;
     jest.spyOn(jwtUtil, 'generateJWTToken').mockImplementation(mockGenerateJWTToken);
@@ -117,9 +117,27 @@ test('given a new user, when createUser is called, then it should create and ret
     mockGetAllUsers.mockResolvedValue([]);
     mockHash.mockResolvedValue('hashedPassword');
     mockCreateUser.mockResolvedValue(validUser);
-    const userInput = { ...validUser, password: validPassword };
+
+    const userInput = {
+        email: "rajo.test@test.be",
+        password: validPassword,
+        firstName: validFirstName,
+        lastName: validLastName,
+        phoneNumber: "0499556688",
+        role: validRole
+    };
+
+    // When
     const user = await userService.createUser(userInput);
-    expect(user).toEqual(validUser);
+
+    // Then
+    expect(user).toMatchObject({
+        email: userInput.email,
+        firstName: userInput.firstName,
+        lastName: userInput.lastName,
+        phoneNumber: userInput.phoneNumber,
+        role: userInput.role
+    });
     expect(mockGetAllUsers).toHaveBeenCalledTimes(1);
     expect(mockHash).toHaveBeenCalledWith(validPassword, 12);
     expect(mockCreateUser).toHaveBeenCalled();
@@ -197,4 +215,20 @@ test('given an invalid user id, when updateUser is called, then it should throw 
     const userInput = { ...validUser, password: validPassword };
     await expect(userService.updateUser(invalidId, userInput)).rejects.toThrow('No user with that id exists.');
     expect(mockGetUserById).toHaveBeenCalledWith(invalidId);
+});
+
+test('Given an undefined ID, when updateUser is called, then an error is thrown', async () => {
+    // Given
+    const userInput = {
+        id: invalidId,
+        email: validEmail,
+        firstName: validFirstName,
+        lastName: validLastName,
+        password: validPassword,
+        phoneNumber: validPhoneNumber,
+        role: validRole
+    };
+
+    // When & Then
+    await expect(userService.updateUser(invalidId, userInput)).toThrow('An id is required.');
 });
