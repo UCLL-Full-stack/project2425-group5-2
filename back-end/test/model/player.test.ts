@@ -1,54 +1,79 @@
-import { Player } from "../../model/player";
-import playerService from "../../service/player.service";
+import { Player } from '../../model/player';
+import { User } from '../../model/user';
+import { Role } from '../../types';
 
-const validFirstName = "John";
-const invalidFirstName = "";
-const validLastName = "Doe";
-const invalidLastName = "";
-const validEmail = "johndoe@ucll.be";
-const invalidEmail = "";
-const validPhoneNumber = "0412345678";
-const invalidPhoneNumber = "";
 const validId = 1;
-const invalidId = -1;
+const validFirstName = 'John';
+const validLastName = 'Doe';
+const validEmail = 'johndoe@ucll.be';
+const validPhoneNumber = '0412345678';
+const validPassword = 'password123';
+const validRole = 'coach' as Role;
 
-
-test('givenValidValues_whenCreatingPlayer_thenPlayerisCreatedSuccessfully', () => {
-    //given
-    const validPlayer = new Player({id: validId, firstName: validFirstName, lastName: validLastName, email: validEmail, phoneNumber: validPhoneNumber});({firstName: validFirstName, lastName: validLastName, email: validEmail, phoneNumber: validPhoneNumber});
-    //when
-    //then
-    expect(validPlayer.getId()).toEqual(validId);
-    expect(validPlayer.getFirstName()).toEqual(validFirstName);
-    expect(validPlayer.getLastName()).toEqual(validLastName);
-    expect(validPlayer.getEmail()).toEqual(validEmail);
-    expect(validPlayer.getPhoneNumber()).toEqual(validPhoneNumber);
+const validUser = new User({
+    id: validId,
+    firstName: validFirstName,
+    lastName: validLastName,
+    email: validEmail,
+    phoneNumber: validPhoneNumber,
+    password: validPassword,
+    role: validRole,
 });
 
-test('givenInvalidFirstName_whenCreatingPlayer_thenErrorIsThrown', () => {
-    //given
-    //when
-    //then
-        expect(() => new Player({firstName: invalidFirstName, lastName: validLastName, email: validEmail, phoneNumber: validPhoneNumber})).toThrow("First name is required.");
+test('givenValidUser_whenCreatingPlayer_thenPlayerIsCreated', () => {
+    // given
+    const expectedId = validId;
+    const expectedUser = validUser;
+
+    // when
+    const player = new Player({ id: expectedId, user: expectedUser });
+    const actualId = player.getId();
+    const actualUser = player.getUser();
+
+    // then
+    expect(actualId).toBe(expectedId);
+    expect(actualUser).toBe(expectedUser);
+});
+
+test('givenInvalidUser_whenCreatingPlayer_thenErrorIsThrown', () => {
+    // given
+    const invalidUser = null as any;
+
+    // when & then
+    expect(() => {
+        new Player({ id: validId, user: invalidUser });
+    }).toThrow('Player must be a user');
+});
+
+test('givenTwoEqualPlayers_whenCheckingEquality_thenPlayersAreEqual', () => {
+    // given
+    const player1 = new Player({ id: validId, user: validUser });
+    const player2 = new Player({ id: validId, user: validUser });
+
+    // when
+    const areEqual = player1.equals(player2);
+
+    // then
+    expect(areEqual).toBe(true);
+});
+
+test('givenTwoDifferentPlayers_whenCheckingEquality_thenPlayersAreNotEqual', () => {
+    // given
+    const player1 = new Player({ id: validId, user: validUser });
+    const differentUser = new User({
+        id: 2,
+        firstName: 'Jane',
+        lastName: 'Doe',
+        email: 'janedoe@ucll.be',
+        phoneNumber: '0498765445',
+        password: 'differentpassword',
+        role: 'player' as Role,
     });
+    const player2 = new Player({ id: 2, user: differentUser });
 
-test('givenInvalidLastName_whenCreatingPlayer_thenErrorIsThrown', () => {
-    //given
-    //when
-    //then
-        expect(() => new Player({firstName: validFirstName, lastName: invalidLastName, email: validEmail, phoneNumber: validPhoneNumber})).toThrow("Last name is required.");
-});
+    // when
+    const areEqual = player1.equals(player2);
 
-test('givenInvalidEmail_whenCreatingPlayer_thenErrorIsThrown', () => {
-    //given
-    //when
-    //then
-        expect(() => new Player({firstName: validFirstName, lastName: validLastName, email: invalidEmail, phoneNumber: validPhoneNumber})).toThrow("Email is required.");
-});
-
-test('givenInvalidPhoneNumber_whenCreatingPlayer_thenErrorIsThrown', () => {
-    //given
-    //when
-    //then
-        expect(() => new Player({firstName: validFirstName, lastName: validLastName, email: validEmail, phoneNumber: invalidPhoneNumber})).toThrow("Phone number is required.");
+    // then
+    expect(areEqual).toBe(false);
 });
